@@ -1,0 +1,5840 @@
+{
+  "ipad": [
+    {
+      "id": 1,
+      "group": {
+        "zh": "iPad Pro 13\"",
+        "en": "iPad Pro 13\"",
+        "es": "iPad Pro 13\""
+      },
+      "name": {
+        "zh": "Pro 13 (M4 2024 / M5 2025)",
+        "en": "Pro 13 (M4 2024 / M5 2025)",
+        "es": "Pro 13 (M4 2024 / M5 2025)"
+      },
+      "years": {
+        "zh": "M4/M5",
+        "en": "M4/M5",
+        "es": "M4/M5"
+      },
+      "caseComp": {
+        "zh": "⚠️ 专用 (M4/M5极薄/比老款薄1mm+ 老款壳会松)",
+        "en": "⚠️ Dedicated (M4/M5 ultra-thin/1mm+ thinner than old - old cases will be loose)",
+        "es": "⚠️ Dedicado (M4/M5 ultrafino/1mm+ más delgado que antiguo - fundas antiguas flojas)"
+      },
+      "filmComp": {
+        "zh": "💰 13寸组A (Pro13/Air13通用)",
+        "en": "💰 13-inch Group A (Pro13/Air13 universal)",
+        "es": "💰 Grupo A 13 pulgadas (Pro13/Air13 universal)"
+      },
+      "note": {
+        "zh": "全面屏/Face ID/无Home键",
+        "en": "Full screen/Face ID/No Home button",
+        "es": "Pantalla completa/Face ID/Sin botón Home"
+      },
+      "specialWarning": true,
+      "order": 1
+    },
+    {
+      "id": 2,
+      "group": {
+        "zh": "iPad Air 13\"",
+        "en": "iPad Air 13\"",
+        "es": "iPad Air 13\""
+      },
+      "name": {
+        "zh": "Air 13 (M2 2024 / M4 2026)",
+        "en": "Air 13 (M2 2024 / M4 2026)",
+        "es": "Air 13 (M2 2024 / M4 2026)"
+      },
+      "years": {
+        "zh": "M2/M4",
+        "en": "M2/M4",
+        "es": "M2/M4"
+      },
+      "caseComp": {
+        "zh": "⚠️ 专用 (横向摄像头/注意老款Air4/5壳不通用)",
+        "en": "⚠️ Dedicated (Landscape camera/old Air4/5 cases incompatible)",
+        "es": "⚠️ Dedicado (Cámara horizontal/fundas Air4/5 antiguas no compatibles)"
+      },
+      "filmComp": {
+        "zh": "💰 13寸组A (Pro13/Air13通用)",
+        "en": "💰 13-inch Group A (Pro13/Air13 universal)",
+        "es": "💰 Grupo A 13 pulgadas (Pro13/Air13 universal)"
+      },
+      "note": {
+        "zh": "全面屏/横向摄像头",
+        "en": "Full screen/Landscape camera",
+        "es": "Pantalla completa/Cámara horizontal"
+      },
+      "specialWarning": true,
+      "order": 2
+    },
+    {
+      "id": 3,
+      "group": {
+        "zh": "iPad Pro 12.9\"",
+        "en": "iPad Pro 12.9\"",
+        "es": "iPad Pro 12.9\""
+      },
+      "name": {
+        "zh": "Pro 12.9 (2018/20/21/22)",
+        "en": "Pro 12.9 (2018/20/21/22)",
+        "es": "Pro 12.9 (2018/20/21/22)"
+      },
+      "years": {
+        "zh": "3/4/5/6代",
+        "en": "3rd/4th/5th/6th Gen",
+        "es": "Gen 3/4/5/6"
+      },
+      "caseComp": {
+        "zh": "通用 (3-6代孔位微差)",
+        "en": "Universal (Gen 3-6 slight cutout differences)",
+        "es": "Universal (Gen 3-6 diferencias menores)"
+      },
+      "filmComp": {
+        "zh": "12.9寸全屏组",
+        "en": "12.9-inch Full Screen Group",
+        "es": "Grupo Pantalla Completa 12.9"
+      },
+      "note": {
+        "zh": "全面屏/Face ID",
+        "en": "Full screen/Face ID",
+        "es": "Pantalla completa/Face ID"
+      },
+      "specialWarning": true,
+      "order": 3
+    },
+    {
+      "id": 4,
+      "group": {
+        "zh": "iPad Pro 12.9\"",
+        "en": "iPad Pro 12.9\"",
+        "es": "iPad Pro 12.9\""
+      },
+      "name": {
+        "zh": "Pro 12.9 (2015/2017)",
+        "en": "Pro 12.9 (2015/2017)",
+        "es": "Pro 12.9 (2015/2017)"
+      },
+      "years": {
+        "zh": "1/2代",
+        "en": "1st/2nd Gen",
+        "es": "Gen 1/2"
+      },
+      "caseComp": {
+        "zh": "通用 (1-2代通用)",
+        "en": "Universal (Gen 1-2 universal)",
+        "es": "Universal (Gen 1-2 universal)"
+      },
+      "filmComp": {
+        "zh": "12.9寸Home键组",
+        "en": "12.9-inch Home Button Group",
+        "es": "Grupo Botón Home 12.9"
+      },
+      "note": {
+        "zh": "有Home键/大边框",
+        "en": "With Home button/Large bezels",
+        "es": "Con botón Home/Bordes grandes"
+      },
+      "specialWarning": false,
+      "order": 4
+    },
+    {
+      "id": 5,
+      "group": {
+        "zh": "iPad Pro 11\"",
+        "en": "iPad Pro 11\"",
+        "es": "iPad Pro 11\""
+      },
+      "name": {
+        "zh": "Pro 11 (M4 2024 / M5 2025)",
+        "en": "Pro 11 (M4 2024 / M5 2025)",
+        "es": "Pro 11 (M4 2024 / M5 2025)"
+      },
+      "years": {
+        "zh": "M4/M5",
+        "en": "M4/M5",
+        "es": "M4/M5"
+      },
+      "caseComp": {
+        "zh": "⚠️ 专用 (M4/M5极薄/比老款薄1mm+ 老款壳会松)",
+        "en": "⚠️ Dedicated (M4/M5 ultra-thin/1mm+ thinner than old - old cases will be loose)",
+        "es": "⚠️ Dedicado (M4/M5 ultrafino/1mm+ más delgado que antiguo - fundas antiguas flojas)"
+      },
+      "filmComp": {
+        "zh": "11寸M4专用组 (膜尺寸特殊)",
+        "en": "11-inch M4 Dedicated Group (special film size)",
+        "es": "Grupo M4 Dedicado 11 pulgadas (tamaño especial)"
+      },
+      "note": {
+        "zh": "全面屏/Face ID",
+        "en": "Full screen/Face ID",
+        "es": "Pantalla completa/Face ID"
+      },
+      "specialWarning": true,
+      "order": 5
+    },
+    {
+      "id": 6,
+      "group": {
+        "zh": "iPad Pro 11\"",
+        "en": "iPad Pro 11\"",
+        "es": "iPad Pro 11\""
+      },
+      "name": {
+        "zh": "Pro 11 (2018/20/21/22)",
+        "en": "Pro 11 (2018/20/21/22)",
+        "es": "Pro 11 (2018/20/21/22)"
+      },
+      "years": {
+        "zh": "1/2/3/4代",
+        "en": "1st/2nd/3rd/4th Gen",
+        "es": "Gen 1/2/3/4"
+      },
+      "caseComp": {
+        "zh": "通用 (1-4代通用)",
+        "en": "Universal (Gen 1-4 universal)",
+        "es": "Universal (Gen 1-4 universal)"
+      },
+      "filmComp": {
+        "zh": "💰 11寸通用组 (iPad10/Air4/5/Air11/Pro11旧款 膜通用)",
+        "en": "💰 11-inch Universal (iPad10/Air4/5/Air11/Pro11 old film universal)",
+        "es": "💰 Grupo Universal 11 pulgadas (iPad10/Air4/5/Air11/Pro11 antiguo)"
+      },
+      "note": {
+        "zh": "全面屏/Face ID",
+        "en": "Full screen/Face ID",
+        "es": "Pantalla completa/Face ID"
+      },
+      "specialWarning": true,
+      "order": 6
+    },
+    {
+      "id": 7,
+      "group": {
+        "zh": "iPad Air 11\"",
+        "en": "iPad Air 11\"",
+        "es": "iPad Air 11\""
+      },
+      "name": {
+        "zh": "Air 11 (M2 2024 / M4 2026)",
+        "en": "Air 11 (M2 2024 / M4 2026)",
+        "es": "Air 11 (M2 2024 / M4 2026)"
+      },
+      "years": {
+        "zh": "M2/M4",
+        "en": "M2/M4",
+        "es": "M2/M4"
+      },
+      "caseComp": {
+        "zh": "⚠️ 专用 (横向摄像头/老款Air4/5壳会遮挡摄像头)",
+        "en": "⚠️ Dedicated (Landscape camera/old Air4/5 cases block camera)",
+        "es": "⚠️ Dedicado (Cámara horizontal/fundas Air4/5 tapan cámara)"
+      },
+      "filmComp": {
+        "zh": "💰 11寸通用组 (iPad10/Air4/5/Air11/Pro11旧款 膜通用)",
+        "en": "💰 11-inch Universal (iPad10/Air4/5/Air11/Pro11 old film universal)",
+        "es": "💰 Grupo Universal 11 pulgadas (iPad10/Air4/5/Air11/Pro11 antiguo)"
+      },
+      "note": {
+        "zh": "全面屏/横向摄像头",
+        "en": "Full screen/Landscape camera",
+        "es": "Pantalla completa/Cámara horizontal"
+      },
+      "specialWarning": true,
+      "order": 7
+    },
+    {
+      "id": 8,
+      "group": {
+        "zh": "iPad Air 4/5",
+        "en": "iPad Air 4/5",
+        "es": "iPad Air 4/5"
+      },
+      "name": {
+        "zh": "Air 4 (2020) / Air 5 (2022)",
+        "en": "Air 4 (2020) / Air 5 (2022)",
+        "es": "Air 4 (2020) / Air 5 (2022)"
+      },
+      "years": {
+        "zh": "4/5代",
+        "en": "4th/5th Gen",
+        "es": "Gen 4/5"
+      },
+      "caseComp": {
+        "zh": "通用 (Air 4/5通用)",
+        "en": "Universal (Air 4/5 universal)",
+        "es": "Universal (Air 4/5 universal)"
+      },
+      "filmComp": {
+        "zh": "💰 11寸通用组 (iPad10/Air4/5/Air11/Pro11旧款 膜通用)",
+        "en": "💰 11-inch Universal (iPad10/Air4/5/Air11/Pro11 old film universal)",
+        "es": "💰 Grupo Universal 11 pulgadas (iPad10/Air4/5/Air11/Pro11 antiguo)"
+      },
+      "note": {
+        "zh": "全面屏/侧边指纹",
+        "en": "Full screen/Side fingerprint",
+        "es": "Pantalla completa/Lector de huellas lateral"
+      },
+      "specialWarning": false,
+      "order": 8
+    },
+    {
+      "id": 9,
+      "group": {
+        "zh": "iPad 标准版",
+        "en": "iPad Standard",
+        "es": "iPad Estándar"
+      },
+      "name": {
+        "zh": "iPad 10 (2022) / iPad 11 (2025)",
+        "en": "iPad 10 (2022) / iPad 11 (2025)",
+        "es": "iPad 10 (2022) / iPad 11 (2025)"
+      },
+      "years": {
+        "zh": "10/11代",
+        "en": "10th/11th Gen",
+        "es": "Gen 10/11"
+      },
+      "caseComp": {
+        "zh": "通用 (10/11代通用)",
+        "en": "Universal (10/11 Gen universal)",
+        "es": "Universal (Gen 10/11 universal)"
+      },
+      "filmComp": {
+        "zh": "💰 11寸通用组 (iPad10/Air4/5/Air11/Pro11旧款 膜通用)",
+        "en": "💰 11-inch Universal (iPad10/Air4/5/Air11/Pro11 old film universal)",
+        "es": "💰 Grupo Universal 11 pulgadas (iPad10/Air4/5/Air11/Pro11 antiguo)"
+      },
+      "note": {
+        "zh": "全面屏/直角边设计",
+        "en": "Full screen/Square edge design",
+        "es": "Pantalla completa/Diseño de bordes rectos"
+      },
+      "specialWarning": false,
+      "order": 9
+    },
+    {
+      "id": 10,
+      "group": {
+        "zh": "iPad 标准版",
+        "en": "iPad Standard",
+        "es": "iPad Estándar"
+      },
+      "name": {
+        "zh": "iPad 7 / 8 / 9 (2019-2021)",
+        "en": "iPad 7 / 8 / 9 (2019-2021)",
+        "es": "iPad 7 / 8 / 9 (2019-2021)"
+      },
+      "years": {
+        "zh": "7/8/9代",
+        "en": "7th/8th/9th Gen",
+        "es": "Gen 7/8/9"
+      },
+      "caseComp": {
+        "zh": "通用 (7/8/9代通用)",
+        "en": "Universal (7/8/9 Gen universal)",
+        "es": "Universal (Gen 7/8/9 universal)"
+      },
+      "filmComp": {
+        "zh": "10.2寸组",
+        "en": "10.2-inch Group",
+        "es": "Grupo 10.2 pulgadas"
+      },
+      "note": {
+        "zh": "有Home键/非全贴合屏",
+        "en": "With Home button/Non-laminated screen",
+        "es": "Con botón Home/Pantalla no laminada"
+      },
+      "specialWarning": false,
+      "order": 10
+    },
+    {
+      "id": 11,
+      "group": {
+        "zh": "iPad Pro/Air",
+        "en": "iPad Pro/Air",
+        "es": "iPad Pro/Air"
+      },
+      "name": {
+        "zh": "Pro 10.5 / Air 3 (2019)",
+        "en": "Pro 10.5 / Air 3 (2019)",
+        "es": "Pro 10.5 / Air 3 (2019)"
+      },
+      "years": {
+        "zh": "Pro 10.5/Air 3",
+        "en": "Pro 10.5/Air 3",
+        "es": "Pro 10.5/Air 3"
+      },
+      "caseComp": {
+        "zh": "通用 (孔位基本兼容)",
+        "en": "Universal (Cutouts basically compatible)",
+        "es": "Universal (Cortes básicamente compatibles)"
+      },
+      "filmComp": {
+        "zh": "10.5寸组",
+        "en": "10.5-inch Group",
+        "es": "Grupo 10.5 pulgadas"
+      },
+      "note": {
+        "zh": "有Home键/超窄边框",
+        "en": "With Home button/Ultra-narrow bezels",
+        "es": "Con botón Home/Bordes ultrafinos"
+      },
+      "specialWarning": false,
+      "order": 11
+    },
+    {
+      "id": 12,
+      "group": {
+        "zh": "iPad mini",
+        "en": "iPad mini",
+        "es": "iPad mini"
+      },
+      "name": {
+        "zh": "mini 6 (2021) / mini 7 (2024)",
+        "en": "mini 6 (2021) / mini 7 (2024)",
+        "es": "mini 6 (2021) / mini 7 (2024)"
+      },
+      "years": {
+        "zh": "6/7代",
+        "en": "6th/7th Gen",
+        "es": "Gen 6/7"
+      },
+      "caseComp": {
+        "zh": "通用 (外观完全一致)",
+        "en": "Universal (Identical appearance)",
+        "es": "Universal (Apariencia idéntica)"
+      },
+      "filmComp": {
+        "zh": "mini 6/7组",
+        "en": "mini 6/7 Group",
+        "es": "Grupo mini 6/7"
+      },
+      "note": {
+        "zh": "全面屏/顶部指纹",
+        "en": "Full screen/Top fingerprint",
+        "es": "Pantalla completa/Lector de huellas superior"
+      },
+      "specialWarning": false,
+      "order": 12
+    },
+    {
+      "id": 13,
+      "group": {
+        "zh": "iPad mini",
+        "en": "iPad mini",
+        "es": "iPad mini"
+      },
+      "name": {
+        "zh": "mini 4 / mini 5",
+        "en": "mini 4 / mini 5",
+        "es": "mini 4 / mini 5"
+      },
+      "years": {
+        "zh": "4/5代",
+        "en": "4th/5th Gen",
+        "es": "Gen 4/5"
+      },
+      "caseComp": {
+        "zh": "通用 (仅麦克风孔位微差)",
+        "en": "Universal (Only mic hole slightly different)",
+        "es": "Universal (Solo麦克风孔位略有不同)"
+      },
+      "filmComp": {
+        "zh": "mini 4/5组",
+        "en": "mini 4/5 Group",
+        "es": "Grupo mini 4/5"
+      },
+      "note": {
+        "zh": "有Home键",
+        "en": "With Home button",
+        "es": "Con botón Home"
+      },
+      "specialWarning": false,
+      "order": 13
+    },
+    {
+      "id": 14,
+      "group": {
+        "zh": "iPad 早期款",
+        "en": "iPad Early Models",
+        "es": "iPad Modelos Antiguos"
+      },
+      "name": {
+        "zh": "iPad 5 / 6 / Air 1 / Air 2",
+        "en": "iPad 5 / 6 / Air 1 / Air 2",
+        "es": "iPad 5 / 6 / Air 1 / Air 2"
+      },
+      "years": {
+        "zh": "5/6/Air 1/2",
+        "en": "5th/6th/Air 1/2",
+        "es": "Gen 5/6/Air 1/2"
+      },
+      "caseComp": {
+        "zh": "不通用 (厚度/开孔各异)",
+        "en": "Not Universal (Different thickness/openings)",
+        "es": "No Universal (Grosor/agujeros diferentes)"
+      },
+      "filmComp": {
+        "zh": "9.7寸组",
+        "en": "9.7-inch Group",
+        "es": "Grupo 9.7 pulgadas"
+      },
+      "note": {
+        "zh": "有Home键/经典尺寸",
+        "en": "With Home button/Classic size",
+        "es": "Con botón Home/Tamaño clásico"
+      },
+      "specialWarning": false,
+      "order": 14
+    }
+  ],
+  "watch": [
+    {
+      "id": 1,
+      "group": { "zh": "Ultra 系列", "en": "Ultra Series", "es": "Serie Ultra" },
+      "name": { "zh": "Ultra 3 (2025) / Ultra 2 / Ultra 1", "en": "Ultra 3 (2025) / Ultra 2 / Ultra 1", "es": "Ultra 3 (2025) / Ultra 2 / Ultra 1" },
+      "years": { "zh": "49mm", "en": "49mm", "es": "49mm" },
+      "bandGroup": { "zh": "大表带组", "en": "Large Band Group", "es": "Banda Grande" },
+      "caseComp": { "zh": "⌚ 专用 (49mm Ultra)", "en": "⌚ Dedicated (49mm Ultra)", "es": "⌚ Dedicado (49mm Ultra)" },
+      "filmComp": { "zh": "⚠️ 纯平蓝宝石镜面，与弧面屏系列完全不通用", "en": "⚠️ Flat sapphire screen, not compatible with curved Series", "es": "⚠️ Pantalla plana de zafiro, incompatible con Series curvas" },
+      "screenFeature": { "zh": "纯平蓝宝石镜面", "en": "Flat Sapphire", "es": "Zafiro Plano" },
+      "note": { "zh": "Ultra 专属尺寸", "en": "Ultra exclusive size", "es": "Tamaño exclusivo Ultra" },
+      "specialWarning": true,
+      "order": 1
+    },
+    {
+      "id": 2,
+      "group": { "zh": "Series 11/10", "en": "Series 11/10", "es": "Series 11/10" },
+      "name": { "zh": "Series 11 (2025) / Series 10", "en": "Series 11 (2025) / Series 10", "es": "Series 11 (2025) / Series 10" },
+      "years": { "zh": "46mm", "en": "46mm", "es": "46mm" },
+      "bandGroup": { "zh": "大表带组", "en": "Large Band Group", "es": "Banda Grande" },
+      "caseComp": { "zh": "💰 专用 (46mm新规)", "en": "💰 Dedicated (46mm new)", "es": "💰 Dedicado (46mm nuevo)" },
+      "filmComp": { "zh": "⚠️ 广角 OLED/弧面，必须专用，不兼容旧款45mm", "en": "⚠️ Wide OLED/curved, must be dedicated, not compatible with old 45mm", "es": "⚠️ OLED amplio/curvo, debe ser dedicado, no compatible con 45mm antiguo" },
+      "screenFeature": { "zh": "弧面", "en": "Curved", "es": "Curvo" },
+      "note": { "zh": "全新薄型设计", "en": "New slim design", "es": "Nuevo diseño delgado" },
+      "specialWarning": true,
+      "order": 2
+    },
+    {
+      "id": 3,
+      "group": { "zh": "Series 11/10", "en": "Series 11/10", "es": "Series 11/10" },
+      "name": { "zh": "Series 11 (2025) / Series 10", "en": "Series 11 (2025) / Series 10", "es": "Series 11 (2025) / Series 10" },
+      "years": { "zh": "42mm", "en": "42mm", "es": "42mm" },
+      "bandGroup": { "zh": "小表带组", "en": "Small Band Group", "es": "Banda Pequeña" },
+      "caseComp": { "zh": "💰 专用 (42mm新规)", "en": "💰 Dedicated (42mm new)", "es": "💰 Dedicado (42mm nuevo)" },
+      "filmComp": { "zh": "⚠️ 广角 OLED/弧面，必须专用", "en": "⚠️ Wide OLED/curved, must be dedicated", "es": "⚠️ OLED amplio/curvo, debe ser dedicado" },
+      "screenFeature": { "zh": "弧面", "en": "Curved", "es": "Curvo" },
+      "note": { "zh": "42mm连接位属小码表带", "en": "42mm uses small band connector", "es": "42mm usa conector de banda pequeña" },
+      "specialWarning": true,
+      "order": 3
+    },
+    {
+      "id": 4,
+      "group": { "zh": "主力系列 (大)", "en": "Main Series (Large)", "es": "Serie Principal (Grande)" },
+      "name": { "zh": "Series 9 / Series 8 / Series 7", "en": "Series 9 / Series 8 / Series 7", "es": "Series 9 / Series 8 / Series 7" },
+      "years": { "zh": "45mm", "en": "45mm", "es": "45mm" },
+      "bandGroup": { "zh": "大表带组", "en": "Large Band Group", "es": "Banda Grande" },
+      "caseComp": { "zh": "💰 通用 (45mm组)", "en": "💰 Universal (45mm group)", "es": "💰 Universal (grupo 45mm)" },
+      "filmComp": { "zh": "💰 与41mm壳膜通用，全面屏/窄边框", "en": "💰 Compatible with 41mm case/film", "es": "💰 Compatible con caso/película de 41mm" },
+      "screenFeature": { "zh": "弧面", "en": "Curved", "es": "Curvo" },
+      "note": { "zh": "与S8/S7通用", "en": "Compatible with S8/S7", "es": "Compatible con S8/S7" },
+      "specialWarning": false,
+      "order": 4
+    },
+    {
+      "id": 5,
+      "group": { "zh": "主力系列 (小)", "en": "Main Series (Small)", "es": "Serie Principal (Pequeña)" },
+      "name": { "zh": "Series 9 / Series 8 / Series 7", "en": "Series 9 / Series 8 / Series 7", "es": "Series 9 / Series 8 / Series 7" },
+      "years": { "zh": "41mm", "en": "41mm", "es": "41mm" },
+      "bandGroup": { "zh": "小表带组", "en": "Small Band Group", "es": "Banda Pequeña" },
+      "caseComp": { "zh": "💰 通用 (41mm组)", "en": "💰 Universal (41mm group)", "es": "💰 Universal (grupo 41mm)" },
+      "filmComp": { "zh": "💰 与45mm壳膜通用，全面屏/窄边框", "en": "💰 Compatible with 45mm case/film", "es": "💰 Compatible con caso/película de 45mm" },
+      "screenFeature": { "zh": "弧面", "en": "Curved", "es": "Curvo" },
+      "note": { "zh": "与S8/S7通用", "en": "Compatible with S8/S7", "es": "Compatible con S8/S7" },
+      "specialWarning": false,
+      "order": 5
+    },
+    {
+      "id": 6,
+      "group": { "zh": "SE/标准系列 (大)", "en": "SE/Standard Series (Large)", "es": "SE/Serie Estándar (Grande)" },
+      "name": { "zh": "SE 3 (2025) / SE 2 / Series 6 / Series 5 / Series 4", "en": "SE 3 (2025) / SE 2 / Series 6 / Series 5 / Series 4", "es": "SE 3 (2025) / SE 2 / Series 6 / Series 5 / Series 4" },
+      "years": { "zh": "44mm", "en": "44mm", "es": "44mm" },
+      "bandGroup": { "zh": "大表带组", "en": "Large Band Group", "es": "Banda Grande" },
+      "caseComp": { "zh": "💰 通用 (44mm组)", "en": "💰 Universal (44mm group)", "es": "💰 Universal (grupo 44mm)" },
+      "filmComp": { "zh": "💰 与40mm壳膜通用，经典全面屏", "en": "💰 Compatible with 40mm case/film", "es": "💰 Compatible con caso/película de 40mm" },
+      "screenFeature": { "zh": "弧面", "en": "Curved", "es": "Curvo" },
+      "note": { "zh": "SE系列外壳模具通用", "en": "SE series case mold universal", "es": "Molde de caso SE universal" },
+      "specialWarning": false,
+      "order": 6
+    },
+    {
+      "id": 7,
+      "group": { "zh": "SE/标准系列 (小)", "en": "SE/Standard Series (Small)", "es": "SE/Serie Estándar (Pequeña)" },
+      "name": { "zh": "SE 3 (2025) / SE 2 / Series 6 / Series 5 / Series 4", "en": "SE 3 (2025) / SE 2 / Series 6 / Series 5 / Series 4", "es": "SE 3 (2025) / SE 2 / Series 6 / Series 5 / Series 4" },
+      "years": { "zh": "40mm", "en": "40mm", "es": "40mm" },
+      "bandGroup": { "zh": "小表带组", "en": "Small Band Group", "es": "Banda Pequeña" },
+      "caseComp": { "zh": "💰 通用 (40mm组)", "en": "💰 Universal (40mm group)", "es": "💰 Universal (grupo 40mm)" },
+      "filmComp": { "zh": "💰 与44mm壳膜通用，经典全面屏", "en": "💰 Compatible with 44mm case/film", "es": "💰 Compatible con caso/película de 44mm" },
+      "screenFeature": { "zh": "弧面", "en": "Curved", "es": "Curvo" },
+      "note": { "zh": "SE系列外壳模具通用", "en": "SE series case mold universal", "es": "Molde de caso SE universal" },
+      "specialWarning": false,
+      "order": 7
+    },
+    {
+      "id": 8,
+      "group": { "zh": "早期系列 (大)", "en": "Early Series (Large)", "es": "Serie Antigua (Grande)" },
+      "name": { "zh": "Series 3 / Series 2 / Series 1", "en": "Series 3 / Series 2 / Series 1", "es": "Series 3 / Series 2 / Series 1" },
+      "years": { "zh": "42mm", "en": "42mm", "es": "42mm" },
+      "bandGroup": { "zh": "大表带组", "en": "Large Band Group", "es": "Banda Grande" },
+      "caseComp": { "zh": "⚠️ 专用 (42mm老款)", "en": "⚠️ Dedicated (42mm old)", "es": "⚠️ Dedicado (42mm antiguo)" },
+      "filmComp": { "zh": "⚠️ 非全面屏/厚身，与新系列不通用", "en": "⚠️ Non-full screen/thick body, not compatible with new series", "es": "⚠️ Pantalla no completa/cuerpo grueso, no compatible con series nuevas" },
+      "screenFeature": { "zh": "非全面屏/厚身", "en": "Non-full screen/Thick", "es": "No pantalla completa/Grueso" },
+      "note": { "zh": "早期款式", "en": "Early model", "es": "Modelo antiguo" },
+      "specialWarning": true,
+      "order": 8
+    },
+    {
+      "id": 9,
+      "group": { "zh": "早期系列 (小)", "en": "Early Series (Small)", "es": "Serie Antigua (Pequeña)" },
+      "name": { "zh": "Series 3 / Series 2 / Series 1", "en": "Series 3 / Series 2 / Series 1", "es": "Series 3 / Series 2 / Series 1" },
+      "years": { "zh": "38mm", "en": "38mm", "es": "38mm" },
+      "bandGroup": { "zh": "小表带组", "en": "Small Band Group", "es": "Banda Pequeña" },
+      "caseComp": { "zh": "⚠️ 专用 (38mm老款)", "en": "⚠️ Dedicated (38mm old)", "es": "⚠️ Dedicado (38mm antiguo)" },
+      "filmComp": { "zh": "⚠️ 非全面屏/厚身，与新系列不通用", "en": "⚠️ Non-full screen/thick body, not compatible with new series", "es": "⚠️ Pantalla no completa/cuerpo grueso, no compatible con series nuevas" },
+      "screenFeature": { "zh": "非全面屏/厚身", "en": "Non-full screen/Thick", "es": "No pantalla completa/Grueso" },
+      "note": { "zh": "早期款式", "en": "Early model", "es": "Modelo antiguo" },
+      "specialWarning": true,
+      "order": 9
+    }
+  ],
+  "film": {
+    "fullGlue": {
+      "SAM A12": [
+        {
+          "brand": "SAM",
+          "models": "A02S/A02-4G/A03-4G/A03 CORE-4G/A03S-4G/A/A12 /A12S-4G/A04-4G/A04E-4G/A04S-4G/A13-4G/A13-5G/A23-4G/A23-5G(偏小一点)/A32-5G/F02S-4G/F04-4G/F12-4G/F23-5G/M02/M02S/M04-4G/M12-4G/M13-5G/M23-5G/M32-5G/M335G/A70(稍小）/A70S（稍小）"
+        },
+        {
+          "brand": "OPPO",
+          "models": "A1X(5G)/A8/A11/A11X/A15/A15S/A16K(4G)/A31/A16/A16E/A16K/A16S(4G)/A17(4G)/A17K(4G)/A35(5G)/A53S(5G)/A54S(4G)/A55(5G)/A56(5G)/A57(4G)/A57(5G)/A57S(4G)/A57E(4G)/A58(5G)/A58X(5G)/A59 5G/A77(5G)/A77S(4G)/A78(5G)/A97(5G)/A5 2020/A9 2020/OnePlus Nord N20SE(4G)/OnePlus Nord N300(5G)/A38/A18"
+        },
+        {
+          "brand": "REALME",
+          "models": "Realme 5/5S/5i/6i/7i(Globle)/9i/C3/C3i/C11/C12/C15/C15 Qualcomm Edition/C20/(4G)/C20A(4G)/  C21(4G)/C21Y(4G)/C25(4G)/C25S(4G)/C25Y(4G)/C30(4G)/C30S(4G)/C33(4G)/C35(4G)/  Q2i/Q5i(5G)/V3(5G)/V11(5G)/V20/V23(5G)/REALME 10(5G)/10S(5G)/10T(5G)/V23i(5G)/V30(5G)/V30T(5G)/Narzo10/Narzo10A/Narzo20/Narzo20A/Narzo30A/Narzo50A/Narzo50A Prime/Narzo50i/Narzo50(5G)"
+        },
+        {
+          "brand": "VIVO",
+          "models": "VIVO Y01/Y01A(4G)/Y02(4G)/Y02S(4G)/Y02A/Y03/Y3S 2021/Y11 2023(4G)/Y11S/Y12A(4G)/Y12S/Y15S/Y15A/Y16(4G)/Y17S/Y20/Y20A/Y20i/Y20S/Y20S(G)/Y20T(4G)/Y21/Y21S/Y21T/Y22S(4G)/Y28-5G/Y30G(4G)/Y31(4G)/Y31S(5G)/Y32(4G)/Y33S(4G)/Y33S(5G)/Y35(4G)/Y35(5G)/Y35M(5G)/Y35M+(5G)/Y35+(5G)/Y36i/Y37/Y51 2020/Y51A/Y52(5G)/Y52S/Y52T(5G)/Y53S(4G)/Y53S(5G)/Y55(5G)/Y55S(5G)/Y56(5G)/Y72(5G)/Y72T(5G)/Y73T(5G)/Y75S 2022/Y76S(5G)/Y77(5G)/Y77E(5G)/T1-5G(2022)//T1X(5G)/T1X(4G)/T2X(5G)/iQOO U1X/iQOO U3/iQOO U3X/iQOO U5/iQOO U5X/iQOO Z3/iQOO Z5X/iQOO Z6X/iQOO U5E/iQOO Z6 LITE(5G)/iQOO Z7i(5G)"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "RM 9A/RM 9AT/RM 9C/MI 10 LITE/POCO C31/POCO C50(4G)/POCO C51/POCO M4(5G)/POCO M5(4G)/RM 10(5G)/RM 10A(4G)/RM 10X(5G)/RM 10XPRO/RM NOTE 11E(5G)/RM NOTE 11R/RM 11 Prime(4G/5G)/RM A1(4G)/RM A1+(4G稍小)/RM A2(4G)/RM A2+ (4G)"
+        },
+        {
+          "brand": "HONOR",
+          "models": "HN X5(4G)/X6(4G)/X8(5G)/70 Lite(5G) NOVA Y61/ENJOY 50Z/HONOR X5/X5 PLUS/X6/X6A/ X6B/X8 5G/X8A 5G//PLAY 6C/20/30/40/70 LITE/OPPO RENO 13"
+        }
+      ],
+      "RM NOTE9S": [
+        {
+          "brand": "SAM",
+          "models": "SAM A80/A90(4G)/M54(5G)/SAM F54(5G)/A71/A73"
+        },
+        {
+          "brand": "HUAWEI",
+          "models": "P SMART 2021/Y7A/HN 10X LITE/畅享20SE/NOVA Y90/畅享50 Pro/NOVA 10SE(4G)/HN X8A(4G)/NOVA 12 SE"
+        },
+        {
+          "brand": "VIVO",
+          "models": "VIVO X27 PRO/VIVO T2(5G)/iQOO Neo5SE(5G)/iQOO NEO 5S(5G)/iQOO NEO6/iQOO NEO 6SE/iQOO Z6(5G)/iQOO Z7X(5G)"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "RM K30 PRO/K30/K30i(5G)/K30S(5G)/K40/K40 PRO/K40 PRO+/K40S/K50 Ultra/K60E/  NOTE9 PRO(5G)/NOTE 9S/NOTE9 PRO MAX/NOTE 10 PRO(4G)/NOTE 10 PRO(CHIAN 5G)/NOTE 10 PRO  NOTE 11 PRO(5G)/NOTE 11 PRO+(5G)/NOTE 11 E PRO/NOTE 12 5G/NOTE12R PRO-5G/NOTE12 PRO-4G  MI 10T LITE(5G)/MI 10T/MI 10T PRO/MI 10i(5G)/MI 11i(5G)/MI 11T/MI11T PRO/MI 11X(5G)/MI 11X PRO(5G)/  POCO X2/POCO X3/POCO X3 Pro/POCO X3 NFC/POCO F2 PRO/POCO M2 PRO/POCO F3(5G)/POCO F4(5G)/POCO F5(5G)/POCO F5 PRO(5G)/POCO M5S"
+        },
+        {
+          "brand": "REALME",
+          "models": "REALME C67 4G"
+        }
+      ],
+      "SAM A71": [
+        {
+          "brand": "SAM",
+          "models": "A71(4G)/A71(5G)/A73(5G)/A81/A91/A21/A21S/M51(4G)/M52(5G)/M53(5G)/M62(4G)/F62(4G)/Note10 LITE(4G)/S10 LITE(4G)/SAM A Quantum(5G)"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "POCO X3 GT(5G)/POCO F3 GT(5G)/POCO F4 GT(5G)/POCO X5PRO(5G)/K30 5G RACING/K30 5G RACING EIDTION/K30 5G SPEED EIDTION/RM K40 Gaming/RM K50 Gaming/RM K60/RM K60 Pro"
+        }
+      ],
+      "RM 10-4G": [
+        {
+          "brand": "HUAWEI",
+          "models": "HN 30S/HN 30/HW NOVA7/NOVA7 SE/P40 LITE(5G)/NOVA 7SE Youth(5G)"
+        },
+        {
+          "brand": "OPPO",
+          "models": "ACE2/RENO2/RENO2Z/RENO2F/A54(5G)/A72/A74(5G)/A92/A73(5G)/A93(5G)/K7X/K9X(5G)/A52"
+        },
+        {
+          "brand": "REALME",
+          "models": "REALME 6/6S/7/7(5G)/8(4G)/8(5G)/8 Pro(4G)/Narzo/Narzo20 Pro/Narzo30(4G)/ Narzo30(5G)/Narzo30 Pro(5G)/Q2(5G)/V13(5G)/V5/Q3(5G)/Q3i(5G)/X7 PRO"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "RM NOTE 10(5G)/RM NOTE 10T(5G)/RM NOTE11 SE(5G)/POCO M3 PRO(4G/5G)/RM 10(4G)/RM 10 Prime(4G)"
+        }
+      ],
+      "VIVO S5": [
+        {
+          "brand": "OPPO",
+          "models": "RENO 5(5G)/RENO 5(4G)/RENO 5K/RENO 6(4G)/RENO 7(5G)/FIND X3 LITE(5G)/K9(5G)/K9 PRO(5G)/A94/RENO 6 5G"
+        },
+        {
+          "brand": "VIVO",
+          "models": "V17 PRO/S5/X30/X30 PRO/IQOO 3(5G)/V19/V19 NEO"
+        },
+        {
+          "brand": "REALME",
+          "models": "REALME Q3 PRO(5G)/X50 PRO/X50 PRO PLAYER/X7 MAX(5G)/GT(5G)/GT NEO(5G)/GT NEO Flash(5G)/GT NEO 2T(5G)"
+        }
+      ],
+      "HN X10": [
+        {
+          "brand": "HONOR",
+          "models": "X10/9X/play 7T Pro/畅享20 PLUS/优畅享20 Plus/HW Y9A"
+        },
+        {
+          "brand": "OPPO",
+          "models": "A36(4G)/A76(4G)/A96(4G)/K10(4G)/K10(5G)/K10 PRO(5G)/RENO 8 PRO(5G)/IQOO 9SE(5G)/"
+        },
+        {
+          "brand": "REALME",
+          "models": "GT NEO2(5G)/GT NEO 3(5G)/GT2(5G)/GT 2 PRO/Q5(5G)/Q5PRO(5G)/GT NEO 5(5G)"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "RM K50/K50 PPRO/NOTE11(5G)/NOTE 11T(5G)/NOTE 11S(5G)/POCO M4 PRO(5G)/ MI 13T/T PRO"
+        }
+      ],
+      "OPPO RNEO 8": [
+        {
+          "brand": "OPPO",
+          "models": "RENO 4(5G)/RENO 4(4G)/RENO 4 LITE/RENO 4SE(5G)/RENO 4F/RENO 5F(4G)/RENO 5Z(5G)/RENO 5 LITE(4G)/RENO 6Z(5G)/RENO 6 Lite(4G)/RENO 7(4G)/RENO 7SE(5G)/RENO 7Z(5G)/RENO 7 LITE(5G)/RENO 8(4G)/RENO 8(5G)/RENO 8Z/RENO 8 LITE(5G)/RENO 8T(4G)/A74(4G)/A93(4G)/A94(4G)/A95(4G)/A95(5G)/A96/F17 PRO/F19(4G)/F19S(4G)/F19 PRO(4G)/F19 PRO+(5G)/F21 PRO(4G/5G)/Find X5 LITE(5G)/A78 4G"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "RM Note10(4G)/RM Note 10S(4G)/RM Note 11S(4G)/RM Note 12S(4G)/RM Note11(4G)/POCO M4 PRO(4G)/POCO M5S(4G)"
+        },
+        {
+          "brand": "REALME",
+          "models": "REALME X7/X9 PRO(5G)/7 PRO/9(4G)/9 PRO+(5G)/10(4G)/Narzo50 Pro(5G)"
+        }
+      ],
+      "NOVA 12i": [
+        {
+          "brand": "OPPO",
+          "models": "RENO 11F 5G/ OPPO A96 4G"
+        }
+      ],
+      "SAM S21FE": [
+        {
+          "brand": "XIAOMI",
+          "models": "RM K20/RM K20 PRO/MI 9T/MI 9T PRO"
+        },
+        {
+          "brand": "HUAWEI",
+          "models": "HW NOVA4/NOVA 5i/NOVA 6 SE/NOVA 7i/HN V20/HN MAGIC2/P20 LITE 2019/P40LITE(4G)"
+        },
+        {
+          "brand": "VIVO",
+          "models": "VIVO NEX2/X27/V15PRO/OPPO RENO(6.4)"
+        }
+      ],
+      "MI 11 LITE": [
+        {
+          "brand": "VIVO",
+          "models": "VIVO X50(4G/5G)/X60/X60T(5G)/X70(5G)/IQOO5/IQOO8(5G)/IQOO9(5G)"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "MI 11 LITE(4G)/MI 11 LITE(5G)/MI 11 LITE 5G NE/MI 12 LITE"
+        }
+      ],
+      "VIVO X21": [
+        {
+          "brand": "OPPO",
+          "models": "OPPO R15/A3/A5/A3S/A12E/F7/REALME 2/REALME C1"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "MI 8 LITE/RM NOTE6"
+        },
+        {
+          "brand": "VIVO",
+          "models": "VIVO X21/X21i/Y83/Y83S/Y81/Y81S/Y85/VIVO Z1i(4G)/Z3X/VIVO V9/V9PRO/V9Youth/"
+        }
+      ],
+      "VIVO S9": [
+        {
+          "brand": "VIVO",
+          "models": "VIVO S7/S7T(5G)/S9(5G)/S10(5G)/S10PRO(5G)/S12(5G)/V23(5G)/V20 PRO(5G)"
+        }
+      ],
+      "RM NOTE9-4G": [
+        {
+          "brand": "XIAOMI",
+          "models": "RM NOTE9(4G)/RM 10X(4G)/RM NOTE9T(5G)"
+        },
+        {
+          "brand": "VIVO",
+          "models": "VIVO NEX/Z1 PRO/Z5X/Z5X 2020(4G)/V15/Y50/Y50T(4G)/Y30/Y70S/Y70T(5G)/Y51S"
+        }
+      ],
+      "RENO 3": [
+        {
+          "brand": "OPPO",
+          "models": "RENO3/RENO3A/A91/K7/F15/F17/FIND X2 LITE/A73 2020(4G)"
+        },
+        {
+          "brand": "VIVO",
+          "models": "S6/S7E/S9E(5G)/S10E(5G)/S15E/Y71T(5G)/Y73S/G1/Y70 2020(4G)/Y73 2021(4G)/VIVO T1(680-4G)/T1(778G-5G)/ Y100(5G)/V20/V20 SE/V21(4G/5G)/V21E(4G/5G)/V23E(4G/5G)/X50E(5G)/iQOO Z6PRO(5G)/iQOO Z7(5G)"
+        }
+      ],
+      "OPPO A5S": [
+        {
+          "brand": "SAM",
+          "models": "SAM A10/A10S/M01S/M10"
+        },
+        {
+          "brand": "OPPO",
+          "models": "OPPO A5S/A7/AX7/A7N/A12/A12S(4G)/A11K/REALME 3/REALME 3i"
+        },
+        {
+          "brand": "VIVO",
+          "models": "VIVO Y90/Y91/Y91C/Y91i/Y93/Y93S/Y95/Y97/Z3/Z3i/V11i/Y1S/U1"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "RM 8/8A"
+        }
+      ],
+      "OPPO R17": [
+        {
+          "brand": "OPPO",
+          "models": "17/R17 PRO/R15X/REALME U1/RENO Z/RENO A/REALME XT/REALME X2/K5/R19"
+        },
+        {
+          "brand": "VIVO",
+          "models": "Z5/X21S/X23/V11/V11 PRO/Y3/Y3S/Y11/Y12/Y15/Y17/X50 LITE/Y7S/Y9S/S1/S1 PRO/Z1X/U3X/U10"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "MI CC9/MI 9/MI 9 PRO-5G/MI 9X/MI 10 SE/RM NOTE7/RM NOTE7 PRO/RM NOTE8"
+        }
+      ],
+      "OPPO A9": [
+        {
+          "brand": "XIAOMI",
+          "models": "EDMI NOTE 8 PRO/REDMI 9T/POCO M3"
+        },
+        {
+          "brand": "OPPO",
+          "models": "OPPO A9/A9X/F11"
+        },
+        {
+          "brand": "VIVO",
+          "models": "VIVO Y5S/U3/U20/Y19/VIVO Z5i"
+        }
+      ],
+      "RM NOTE12": [
+        {
+          "brand": "XIAOMI",
+          "models": "RM NOTE12-4G/5G/NOTE12S/POCO X5/NOTE 12R PRO"
+        },
+        {
+          "brand": "OPPO",
+          "models": "OP A98/ REALME C55 / OP A60 / OP A79 / OP A58 4G / C67 /V50S/ REALME 12  (OP A79 Probar con el modelo RM NOTE 12) / OPPO A80 / OP A5 PRO / OP A3 PRO"
+        },
+        {
+          "brand": "HW",
+          "models": "HN 50SE/NOVA 9SE/NOVA 11i-4G"
+        },
+        {
+          "brand": "VIVO",
+          "models": "Y36-4G/Y36-5G/Y78-5G"
+        }
+      ],
+      "SAM J4 PLUS": [
+        {
+          "brand": "SAM",
+          "models": "SAM J4 PLUS/J6 PLUS/A7 2018/A6 PLUS"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "RM NOTE5 PRO"
+        }
+      ],
+      "SAM A31": [
+        {
+          "brand": "SAM",
+          "models": "SAM A31/A32-4G/A33/A22(4G)/F22(4G)/M22(4G)/M32(4G)"
+        }
+      ],
+      "SAM A22-5G": [
+        {
+          "brand": "SAM",
+          "models": "A03S-165MM/A22(5G)/F13(4G)/F42(5G)/A14（稍小）"
+        },
+        {
+          "brand": "REALME",
+          "models": "REALME C11 2021(4G)/C31(4G)/C53 / realme c51 / C61"
+        }
+      ],
+      "RM 10C": [
+        {
+          "brand": "XIAOMI",
+          "models": "RM 10C/POCO C40/RM 12C/POCO C55"
+        }
+      ],
+      "RM NOTE12 PRO": [
+        {
+          "brand": "XIAOMI",
+          "models": "RM NOTE12 PRO-5G/NOTE12 PRO+(5G)/NOTE12 PRO SPEED"
+        }
+      ],
+      "OPPO A53-2020": [
+        {
+          "brand": "OPPO",
+          "models": "A11S/A32-2020/A33-2020/A53-2020/A53S/A54-4G/A55-4G/A92S"
+        },
+        {
+          "brand": "REALME",
+          "models": "REALME 6 PRO/7i/8i/9i/9 PRO/C17/NARZO 50/HN X10/X20/REALME X50-5G/IQOO NEO3-5G/REALME X3/IQOO NEO5/5 LITE/I+NORD N100"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "RM NOTE11-5G/NOTE11T-5G/POCO M4 PRO-5G"
+        }
+      ],
+      "SAM A50": [
+        {
+          "brand": "SAM",
+          "models": "A20/A30/A50/M30/M30S/A30S/A40S/A50S/M10S/M21/M21S/M21-2021/M31/M31 PRIME/F41/M21S"
+        }
+      ],
+      "SAM A05S": [
+        {
+          "brand": "SAM",
+          "models": "A06/REDMI 13C/A05"
+        }
+      ],
+      "SAM A34": [
+        {
+          "brand": "SAM",
+          "models": "A15 (4G/5G)/A25(5G)/M34 (5G)/F34(5G)/M15 5G"
+        }
+      ],
+      "SAM A35": [
+        {
+          "brand": "SAM",
+          "models": "A35 / A55"
+        }
+      ],
+      "RM 12": [
+        {
+          "brand": "XIAOMI",
+          "models": "POCO M6 PRO/RM NOTE12R-5G/REDMI 13"
+        }
+      ],
+      "RM NOTE13 PRO-5G": [
+        {
+          "brand": "XIAOMI",
+          "models": "POCO X6 PRO-5G/RM K70-5G/K70E-5G/K70 PRO/RM NOTE13 PRO-4G(两边稍小）"
+        },
+        {
+          "brand": "HUAWEI",
+          "models": "HN X20-5G/HN 50 LITE"
+        },
+        {
+          "brand": "REALME",
+          "models": "REALME 8S-5G/REALME 7 PRO-5G"
+        }
+      ],
+      "RM NOTE13-5G": [
+        {
+          "brand": "XIAOMI",
+          "models": "RM NOTE13-4G /NOTE13 PRO-4G"
+        }
+      ],
+      "RM 12T/12T PRO": [
+        {
+          "brand": "XIAOMI",
+          "models": "13T/13T PRO"
+        }
+      ],
+      "XIAOMI 13": [
+        {
+          "brand": "XIAOMI",
+          "models": "MI 14"
+        }
+      ],
+      "单独/专用型号": [
+        {
+          "brand": "REDMI",
+          "models": "RM NOTE 13 4G 给RM NOTE 13 5G 个别有白边"
+        },
+        {
+          "brand": "REDMI",
+          "models": "RM NOTE 13 PRO 4G"
+        },
+        {
+          "brand": "REDMI",
+          "models": "REDMI 12/REDMI A3/ REDMI 13C 4G/REDMI 13"
+        },
+        {
+          "brand": "REDMI",
+          "models": "REDMI 13C 5G/POCO M6 5G"
+        },
+        {
+          "brand": "REDMI",
+          "models": "RM 14C/14R-5G/REDMI A5"
+        },
+        {
+          "brand": "XIAOMI",
+          "models": "MI 14T-5G/MI 14T PRO-5G/POCO F6 PRO"
+        },
+        {
+          "brand": "SAM",
+          "models": "A25 5g 专用*ESPECIFICO /可用A15顶*SE PUEDE USAR CASO URGENTE  /ATENCION！！el modelo A25 5G global es unico, especifico"
+        },
+        {
+          "brand": "SAM",
+          "models": "A05"
+        },
+        {
+          "brand": "SAM",
+          "models": "S23 FE / SAM A54"
+        },
+        {
+          "brand": "SAM",
+          "models": "S24 FE"
+        },
+        {
+          "brand": "SAM",
+          "models": "A06"
+        },
+        {
+          "brand": "SAM",
+          "models": "A16"
+        },
+        {
+          "brand": "SAM",
+          "models": "A36/A56/ Nothing CMF Phone 1 5G"
+        },
+        {
+          "brand": "HUAWEI",
+          "models": "HONOR X7B/HONOR 90 SMART"
+        },
+        {
+          "brand": "HUAWEI",
+          "models": "HONOR X8B/HONOR 200 LITE/NOVA 12 5G/NOVA 11 4G"
+        },
+        {
+          "brand": "HUAWEI",
+          "models": "HONOR 20 / NOVA 5T"
+        },
+        {
+          "brand": "HUAWEI",
+          "models": "HONOR 90 LITE"
+        },
+        {
+          "brand": "OPPO",
+          "models": "RENO 12 曲面/ RENO 12 PRO 曲面"
+        },
+        {
+          "brand": "OPPO",
+          "models": "RENO 12F / RENO 13F /RENO 13"
+        },
+        {
+          "brand": "OPPO",
+          "models": "RENO 13 PRO"
+        },
+        {
+          "brand": "REDMI",
+          "models": "REDMI A3"
+        },
+        {
+          "brand": "VIVO",
+          "models": "VIVO T3X 5G/Y28 4G/Y37 PRO/Y38 5G/Y58/Y200I 5G/IQOO Z9X 5G"
+        },
+        {
+          "brand": "OPPO",
+          "models": "OPPO A1 5G/A2 5G/A3 PRO(INDIA)/A3 4G/5G/A3X/A58 4G/A60/A79 5G/A98 5G/K11X 5G/K12X/F23 5G/REALME C55/C63 5G/C65  4G/5G/ C67 4G/5G/V50S/11 5G/11X 5G/12 5G/ 12X  5G/12X INDIA 5G/12 LITE/REALME 13 5G/NARZO N55/60X 5G/N65 5G/70X 5G"
+        }
+      ],
+      "2,5D TAB": [
+        {
+          "brand": "APPLE",
+          "models": "IPAD PRO 13 2024/ IPAD AIR 13 2024"
+        }
+      ]
+    },
+    "twoPointFiveD": [
+      {
+        "brand": "VIVO",
+        "model": "Y20/Y20i",
+        "compatible_with": "A11X"
+      },
+      {
+        "brand": "OPPO",
+        "model": "A9 2020",
+        "compatible_with": "A11X"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 10 LITE",
+        "compatible_with": "A11X"
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme5",
+        "compatible_with": "A11X"
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G8 Power lite",
+        "compatible_with": "A11X"
+      },
+      {
+        "brand": "SAM",
+        "model": "A02S",
+        "compatible_with": "A11X"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅玩 20",
+        "compatible_with": "A11X"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀play5T青",
+        "compatible_with": "A11X"
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "Nord n100",
+        "compatible_with": "A32"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚5.3",
+        "compatible_with": "A11X"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y20S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A5 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 10X 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme5S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO Fusion",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A02",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova Y60",
+        "compatible_with": "A70"
+      },
+      {
+        "brand": "HONOR",
+        "model": "畅享 20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "1+7T",
+        "compatible_with": "A9"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚G10",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y11S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A8",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 10X PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme5i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G9 印度",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M02",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Psmart 2021",
+        "compatible_with": "A71"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 play 30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "Nord n10 5G",
+        "compatible_with": "Reno 4SE"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚G20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A31",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11e",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC15",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G9 play",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A12",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y7A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 X8 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "Nord N200 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚C20 plus",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y12S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A15",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 10 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC12",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E7 plus",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M02S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 20se",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 x6",
+        "compatible_with": ""
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "Nord CE 5G",
+        "compatible_with": "Reno 5"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚G21",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y51 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A15S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO M4 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeV3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A32 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova 8i",
+        "compatible_with": "A92S"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 play 6C",
+        "compatible_with": ""
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "Nord 2 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚G11",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y51A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A55 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO M5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme navzo 20A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G10",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M12",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Mate 50",
+        "compatible_with": "IQOO7"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 70 LITE",
+        "compatible_with": ""
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "Nord CE2 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚C21 plus",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOOU3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A35",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 A1",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme navzo 20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "F02S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Mate 50e",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀10x lite",
+        "compatible_with": "A71"
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "1+9RT",
+        "compatible_with": "S1"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚8.3 5G",
+        "compatible_with": "Play 4"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y20 2021",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A53S 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 11 prime 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeQ2i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E7 Power",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "F12",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 20plus",
+        "compatible_with": "K30 PRO"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀play 5 5G",
+        "compatible_with": "A9"
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "1+6T",
+        "compatible_with": "X23"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚 8V 5G UN",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y20A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A16",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 11 prime",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC11",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E7i power",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M12",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y9A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 x20",
+        "compatible_with": "A92S"
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "1+7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚 3.4",
+        "compatible_with": "Reno 2 半"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y31",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A16S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 A1+",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G10 Power",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A03S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "P20 Lite 2019",
+        "compatible_with": "Nova 5i"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 play5 活力",
+        "compatible_with": ""
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "1+8T",
+        "compatible_with": "荣耀 30"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚5.4",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y20G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A56 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米NOTE11R-5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme6i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G50",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M32 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova6se",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 50lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "1+8T 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚6.2",
+        "compatible_with": "S6"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y31S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A54S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米A2",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme navzo 10A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A03 CORE",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova7i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 x40i",
+        "compatible_with": "K30 PRO"
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "1+9R",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚7.2",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO U3X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A16K",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米A2+",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme navzo 10",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A03",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "P40 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 V20",
+        "compatible_with": "Nova 5i"
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "1+9",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚2.3",
+        "compatible_with": "X23"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y72 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A16E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "POCO C50-4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC3i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E22",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A13 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Psmart Z",
+        "compatible_with": "S1"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 x20se",
+        "compatible_with": "Nova8se 活力"
+      },
+      {
+        "brand": "ONE PLUS",
+        "model": "1+Nord",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚X71",
+        "compatible_with": "X27"
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO Z3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A57",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "POCO C51-4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme7i 全球",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E22i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A13 4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y9S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 play5T PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚4.2",
+        "compatible_with": "畅玩 8"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y30G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A77 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11R",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme C20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO edge 20",
+        "compatible_with": "A71"
+      },
+      {
+        "brand": "SAM",
+        "model": "三星A04",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Psmart Pro 2019",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 9X",
+        "compatible_with": "S1"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚2.2",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y52S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A97",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note9pro",
+        "compatible_with": "SAM A71"
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme V11 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO EDGE 20 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "三星A04S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova 5T",
+        "compatible_with": "S20 FE"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀30 青春",
+        "compatible_with": "S6"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚1.3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y52",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A77 4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note9 Pro max",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme novzo30A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO S30 PRO",
+        "compatible_with": "CIVI"
+      },
+      {
+        "brand": "SAM",
+        "model": "三星A04E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 Z",
+        "compatible_with": "S6"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 V30PRO",
+        "compatible_with": "V30"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚C10",
+        "compatible_with": "畅享 30 plus"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y53S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A57S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note9s",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC21",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "Edge 30 Fusion",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "三星A04 CORE",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 20Pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀play4 pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚C20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y12A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A57E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note9pro 外",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC25",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E32",
+        "compatible_with": "F3"
+      },
+      {
+        "brand": "SAM",
+        "model": "A90 5G",
+        "compatible_with": "A70"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova8se",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "Magic2",
+        "compatible_with": "X27"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚G300",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y21",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A17",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCOX3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme C20A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E32S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A70S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Novae8se 4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 magic4 lite",
+        "compatible_with": "X30"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚C21",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y33S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A77S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCOX3 NFC",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeV25S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E22S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A42",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova6",
+        "compatible_with": "V30"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 Play 6T PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚5.1 plus/X5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y21S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A58-5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 10T lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC11 2021",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO One 5G",
+        "compatible_with": "G5G Plus"
+      },
+      {
+        "brand": "SAM",
+        "model": "M42",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 9",
+        "compatible_with": "X23"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 50SE",
+        "compatible_with": "X30I"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚6.1 plus/X6",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y20T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A78-5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note9 Pro 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC21Y",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO edges",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "S10 lite",
+        "compatible_with": "A71"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y7 PRO 2019",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 X8",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚7.1/X6",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y3S 2021",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A58X-5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 10i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC25Y",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G100",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "Note 10 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y7 Prime 2019",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 X9 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚X7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "T1X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A17K",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note10 Pro max",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme V11S 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO edge 2021",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M51",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y7 2019",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 play 40 plus",
+        "compatible_with": "畅玩 30 plus"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚8.1/X7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOOZ5X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A53 4G",
+        "compatible_with": "A32"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note10 pro 印度",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme navzo 50A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G60S",
+        "compatible_with": "G60"
+      },
+      {
+        "brand": "SAM",
+        "model": "F62",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova 5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 8S",
+        "compatible_with": "畅玩 8"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚3.2/VIVO Y3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y15S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A33 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note10 Pro 外",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme navzo 50i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G200 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M62",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova 5 pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 play3E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚3V/VIVO Y3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y76S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A53S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 POCO X3 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme C35",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO edge S30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A72",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "P50",
+        "compatible_with": "X27"
+      },
+      {
+        "brand": "HONOR",
+        "model": "畅玩 8S 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚C3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y74S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A55 4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 11T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme nar 20 50A Prime",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO edgeX30",
+        "compatible_with": "K30 PRO"
+      },
+      {
+        "brand": "SAM",
+        "model": "A73 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "p50e",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 9A",
+        "compatible_with": "畅享 10E"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚X10",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y15A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "K9S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 11T PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme C31",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO edge 30 pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A20S",
+        "compatible_with": "A9"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova9se",
+        "compatible_with": "X30I"
+      },
+      {
+        "brand": "HONOR",
+        "model": "畅玩 9A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚X20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y54S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A11S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note10 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme Q5i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G82",
+        "compatible_with": "Nova8se 活力"
+      },
+      {
+        "brand": "SAM",
+        "model": "A80",
+        "compatible_with": "K30 PRO"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova y70 plus",
+        "compatible_with": "畅玩 30 plus"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 X7",
+        "compatible_with": "畅享 30 plus"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚XR20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y76 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A36",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11pro 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme v23",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G71S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "Xcover pro",
+        "compatible_with": "Reno 2 半"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y5 2019",
+        "compatible_with": "畅玩 8"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 Play 6T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚G50",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y55S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A76",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11 pro+",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "NARZO 50 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G62 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A11",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y6P",
+        "compatible_with": "畅享 10E"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 8A",
+        "compatible_with": "荣耀 10 青春"
+      },
+      {
+        "brand": "NOKIA",
+        "model": "诺基亚X100/X10",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y32",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A96 国外",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO X4 PRO 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "C30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G32",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M11",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 20e",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀8A PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO U5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "K10",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11E pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "NARZO 50I prime",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "Edge 2022",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A52 4G",
+        "compatible_with": "S20 FE"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Psmart+2019",
+        "compatible_with": "荣耀 10 青春"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 20i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y33S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "K10X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11 pro+",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme 9i 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G9 plus",
+        "compatible_with": "Play 4"
+      },
+      {
+        "brand": "SAM",
+        "model": "A52 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Psmart 2019",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀20 lite外",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y55 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "F11",
+        "compatible_with": "A9"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note12 pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme C33",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G stylus 2021",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A52S 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y6 2019",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 8A prime",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y75 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno ACE",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note12 pro+",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "REALME 10-5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G stylus 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A53 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y6 PRO 2019",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 8A 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y33",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno4Z",
+        "compatible_with": "A92S"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "POCO X5 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "REALME 10S-5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO ONE Hyper",
+        "compatible_with": "Reno 2 半"
+      },
+      {
+        "brand": "SAM",
+        "model": "A20",
+        "compatible_with": "X23"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 9s",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 20E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "T1 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "RENO 8 pro",
+        "compatible_with": "K30PRO"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note8pro",
+        "compatible_with": "A9"
+      },
+      {
+        "brand": "REALME",
+        "model": "REALME C51",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO Fusion+",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 9e",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 20S",
+        "compatible_with": "荣耀 20"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y33S 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno8pro+",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "C30S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G31",
+        "compatible_with": "S20FE"
+      },
+      {
+        "brand": "SAM",
+        "model": "A50",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "P30 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 play4T PRO",
+        "compatible_with": "荣耀 20 青春"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y01",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno8pro(china)",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9 Prime",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme7i",
+        "compatible_with": "A32"
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G41",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M10",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y6S 2019",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 30i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO Z6",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A95 5G",
+        "compatible_with": "Reno4SE"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO M2",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC17",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G71",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Psmart 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 play4T",
+        "compatible_with": "荣耀 play3"
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO U5X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A95",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 POCO M3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme8i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G52",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova5Z",
+        "compatible_with": "荣耀 20"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀9C",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y21G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno7se 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note9 4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme Q3S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "Edge 30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A50S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 10s",
+        "compatible_with": "荣耀 20 青春"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀10青春",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO U5E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "K9X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米9 power",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeQ3T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G72",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A30S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y8P",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀20/荣耀20 pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y77 国外",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A96",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeGT2 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "Edge 30/veo",
+        "compatible_with": "S21"
+      },
+      {
+        "brand": "SAM",
+        "model": "M10S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "PSmartS",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 play3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "T1X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno6 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 K40PRO+",
+        "compatible_with": "IQOO7"
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme9i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO One Zoom",
+        "compatible_with": "X23"
+      },
+      {
+        "brand": "SAM",
+        "model": "M30S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova 7",
+        "compatible_with": "荣耀 30"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 20lite（中国）",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y30 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno7 5G外",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 POCO F3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme9 RPO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO ONE Macro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M31",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "P40lite 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀V30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y02S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Findx5 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "黑鲨4",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme navzo 50",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G8 plus",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M21",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova 7SE",
+        "compatible_with": "荣耀 30s"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 30S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y77E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "RENO 8 pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "黑鲨4 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme V25",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G8 play",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "F41",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 10",
+        "compatible_with": "荣耀 play3"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y35",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno5K",
+        "compatible_with": "Reno5"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 11X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme9 5G 速",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M31 Prime",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Y7 P",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀9X lite/荣耀 8X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y77E T1",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno5F",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 11X PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme 9 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G8 Power",
+        "compatible_with": "X27"
+      },
+      {
+        "brand": "SAM",
+        "model": "M21S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "P40 lite e",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 9s/畅玩 7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y22S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A94",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 K40 游",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeX2PRO",
+        "compatible_with": "A9"
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G Power",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M21 2021",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova Y90",
+        "compatible_with": "荣耀 X30i"
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 X10",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOOZ6X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno5 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note10 Pro 中国",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeX50 5G",
+        "compatible_with": "A92S"
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G stylus",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A21",
+        "compatible_with": "X27 PRO"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova 10Z",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 play4",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y22S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "F19 PRO/PRO+",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO X3 GT",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeX3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G8",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A21S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "G7 plus/麦芒4",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 X10MAX",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y75S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Findx3 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "黑鲨 4S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme 6PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M52 5G",
+        "compatible_with": "X30I"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "G9 plus/麦芒5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 X30i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y16",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "F19",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "黑鲨 4S PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeX50M",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO GFast",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M523",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Mate10lite/麦芒6",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 X30 MAX",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOOZ6 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A74 4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme GT neo3",
+        "compatible_with": "IQOO7"
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G Power 2021",
+        "compatible_with": "X27 PRO"
+      },
+      {
+        "brand": "SAM",
+        "model": "三星 xcover6pro",
+        "compatible_with": "Xcover pro2"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Mate9lite/荣耀 6X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "畅享 30plus",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y52T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno 5Z",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO M4 PRO 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "GT2 大师探索版",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G22",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A10",
+        "compatible_with": "Y93"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Mate20lite/麦芒7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HONOR",
+        "model": "荣耀 X30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y73T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A94 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11T 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeX7",
+        "compatible_with": "Reno 4SE"
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO edge 20 lite",
+        "compatible_with": "X30I"
+      },
+      {
+        "brand": "SAM",
+        "model": "A10S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 10plus",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y02A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "K9",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 11i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeQ2PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO edge 20 轻",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "F52 5G",
+        "compatible_with": "Z6"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "畅享 10e",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y11-2023",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno 6",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 11i 超",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme V15 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G play 2021",
+        "compatible_with": "红米 9A"
+      },
+      {
+        "brand": "SAM",
+        "model": "A20E",
+        "compatible_with": "畅玩 8"
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova8se活力",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y35+",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno6Z",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 K50 电",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme X7印度",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G Pure",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A40",
+        "compatible_with": ""
+      },
+      {
+        "brand": "HUAWEI",
+        "model": "Nova 10SE",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y61",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno6 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 K40S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeGT 5G",
+        "compatible_with": "Reno5"
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E6 plus",
+        "compatible_with": "荣耀 10 青春"
+      },
+      {
+        "brand": "SAM",
+        "model": "A10E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "K9 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 K50",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme8",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E6S 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A01",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO7 印度",
+        "compatible_with": "A71"
+      },
+      {
+        "brand": "OPPO",
+        "model": "F19S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 K50 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme8PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E6i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A31",
+        "compatible_with": "畅享 10E"
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOOZ5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno7 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11s 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeGT NEO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO X30 PRO",
+        "compatible_with": "荣耀 60"
+      },
+      {
+        "brand": "SAM",
+        "model": "A32 4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "T1",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno7 Z 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "黑鲨 5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeQ3 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "Eege 30 ultra",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A22 4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOOZ5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno7 国外",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "黑鲨 5 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeGT NEO闪",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G42",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M32",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V27E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "F21 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "黑鲨 5RS",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeQ3 PRO嘉",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "F22",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOONEO5SE",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "F21 PRO 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 POCO F4 GT",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeX7MAX 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO One vision",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M22",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "U3",
+        "compatible_with": "A9"
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno 7 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "K50 ultra",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeGT大师",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO One Action",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A33 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y19",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Realme 8 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 12T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeGT NEO2T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G5G plus",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A23",
+        "compatible_with": "红米 9A"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y5S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno8Z",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 12T pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme9 PRO+",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G9 Power",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M33",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "U20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "F11 PRO",
+        "compatible_with": "S1"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 POCOX2",
+        "compatible_with": "K30"
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme 9",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO G60",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "F23",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Z5i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno 10倍",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 K30i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "NARZO 50 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "MOTO",
+        "model": "MOTO E40/E30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M23",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO NEO5",
+        "compatible_with": "IQOO7"
+      },
+      {
+        "brand": "OPPO",
+        "model": "K3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 POCOF2 PRO",
+        "compatible_with": "K30 PRO"
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeX",
+        "compatible_with": "S1"
+      },
+      {
+        "brand": "SAM",
+        "model": "三星M13",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOONEO5S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno2Z",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 K30 Uitra",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme3PRO",
+        "compatible_with": "X23"
+      },
+      {
+        "brand": "SAM",
+        "model": "三星F13",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO NEO6",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno2F",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 10T",
+        "compatible_with": "K30S"
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme5 pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "三星M53",
+        "compatible_with": "荣耀 x30i"
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOOZ6 内",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A91",
+        "compatible_with": "S6"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 10T PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeQ",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "M40/A60",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "NEXA/S",
+        "compatible_with": "S1"
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note10 5G",
+        "compatible_with": "Nova8SE 活力"
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeXT",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A51 4G/5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V15",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "F15",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO M3 PRO 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeX2",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A71 4G/5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V17",
+        "compatible_with": "S5"
+      },
+      {
+        "brand": "OPPO",
+        "model": "Findx2 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note10T 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme2 pro",
+        "compatible_with": "Y93"
+      },
+      {
+        "brand": "SAM",
+        "model": "S20FE 4G/5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "X30/X30 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "K7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 10",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeU1",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A22 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "R17",
+        "compatible_with": "X23"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 10 prime",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "F42 5G/A22 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V19 indonesia",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "RX17 Pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 10 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme3i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A14 / RM 13C",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V19 NEO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "K1",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 10 prime 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC2",
+        "compatible_with": "荣耀 10 青春"
+      },
+      {
+        "brand": "SAM",
+        "model": "A24",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V20SE",
+        "compatible_with": "S6"
+      },
+      {
+        "brand": "OPPO",
+        "model": "R15X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11se",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC2 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A34",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V20",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "RenoZ",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "HONOR 50 LITE",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC2S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "SAM",
+        "model": "A54",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "X50E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "RenoA",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO M5S",
+        "compatible_with": "S20FE"
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme6i印度",
+        "compatible_with": "荣耀 30"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y73S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "K5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11-4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeV5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y70 2020",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A7X",
+        "compatible_with": "X23 短"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeX7PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S7E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno",
+        "compatible_with": "X27"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note12S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V20 2021",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "F9",
+        "compatible_with": "Y93"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note10 4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme7PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V21E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note10S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme navzo 20PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y73",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A5S/AX5S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO M4 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme7 全球",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S10E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A7N",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeQ2",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y71T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A12",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note7",
+        "compatible_with": "X23"
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme6",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V23E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A11K",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 9",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme6S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V20 PRO",
+        "compatible_with": "S7"
+      },
+      {
+        "brand": "OPPO",
+        "model": "A12S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 9X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme navzo",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S7T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A1K",
+        "compatible_with": "荣耀 10 青春"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note7 pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme7 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S9",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "ACE2",
+        "compatible_with": "荣耀 30"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme novzo30 pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S10",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A52",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 Y3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeV13 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S10 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A72",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note7s",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme8 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S12",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A92",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note8",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeQ3i 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V23 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A72 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米CC9",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeQ3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V11/V11 PRO",
+        "compatible_with": "X23"
+      },
+      {
+        "brand": "OPPO",
+        "model": "K7X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 9lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme navzo 30",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A73 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 9pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme navzo 30 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y12",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A53 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note8 2021",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme 8S 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y15",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A93 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note8T",
+        "compatible_with": "X23 短"
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme 9 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y17",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A93S 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "K20",
+        "compatible_with": "X27"
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeGTNEO2",
+        "compatible_with": "荣耀 30S"
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO NEO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A54 4G/5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "K20 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeGT2",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S1 外",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A74 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 9T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme Q5 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V17 NEO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno7Pro 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 9T PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "GTNEO 3T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "K10 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note11T PRO",
+        "compatible_with": "X27 PRO"
+      },
+      {
+        "brand": "REALME",
+        "model": "Realme2/A5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Z1X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "F17 PRO",
+        "compatible_with": "RENO4"
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC1/A5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno4 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO F4",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeC1 2019/A5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Z5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A93 4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米K50i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "REALME",
+        "model": "RealmeX50PRO/player",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y11",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno4F",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO F3 GT",
+        "compatible_with": "X60"
+      },
+      {
+        "brand": "REALME",
+        "model": "REALMLE C55",
+        "compatible_with": "红米NOTE12"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y9S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A9/A9X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 8A",
+        "compatible_with": "Y93"
+      },
+      {
+        "brand": "VIVO",
+        "model": "V17 Russia",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno2",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 8",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S1 Prime",
+        "compatible_with": "X23 短"
+      },
+      {
+        "brand": "OPPO",
+        "model": "A11",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 8A PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "X50 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno3 pro",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note9",
+        "compatible_with": "Z5X"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y3S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A92S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 10X 4G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "NEX2",
+        "compatible_with": "X27"
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno4",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note9 5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V15 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A32",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 note9T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S1 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "F17",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO X4 GT",
+        "compatible_with": "红米 10C"
+      },
+      {
+        "brand": "VIVO",
+        "model": "V17 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "A73 4G/F17",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9C",
+        "compatible_with": "红米 9A"
+      },
+      {
+        "brand": "VIVO",
+        "model": "V19",
+        "compatible_with": ""
+      },
+      {
+        "brand": "OPPO",
+        "model": "Reno5 4G/5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9C NFC",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO9",
+        "compatible_with": "X30I"
+      },
+      {
+        "brand": "OPPO",
+        "model": "A98",
+        "compatible_with": "红米NOTE12"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9 印度",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "X60T",
+        "compatible_with": "X60"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO8",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9AT",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "X70",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 POCO C3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO9 外",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9 Activ",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V11i",
+        "compatible_with": "Y93"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 POCO C31",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Z3/Z3i",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9A Sport",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y1S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9i Sport",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y70T",
+        "compatible_with": "Z5X"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 10A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO NEO3",
+        "compatible_with": "Z6"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 CC9E",
+        "compatible_with": "荣耀 10 青春"
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOOZ1",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 A3",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOOZ1X",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 12 LITE",
+        "compatible_with": "荣耀 30"
+      },
+      {
+        "brand": "VIVO",
+        "model": "V21",
+        "compatible_with": "畅享 10E"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "小米 11 LITE",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V25",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 K30 4G/5G",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "V25E",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米K30PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "X80 lite",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 9A",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y50",
+        "compatible_with": "荣耀 30S"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "K30S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y30 外",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 K40/K40 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y70S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 10C",
+        "compatible_with": "红米10C"
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y51S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 12C",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOOU1",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "FOCO C55",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y50T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "POCO C40",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO10",
+        "compatible_with": "荣耀 X30i"
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "红米 NOTE12",
+        "compatible_with": "红米NOTE12"
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO9T",
+        "compatible_with": ""
+      },
+      {
+        "brand": "XIAOMI",
+        "model": "POCO X5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y77 国内",
+        "compatible_with": "三星A71"
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOONEO7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "X23",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y97/Y93/Y91/Y90",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y95/Y91i/Y93S",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "NEX",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "X27",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S1",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "X27 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Z5X/Z1 PRO",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "U10/Y12i/S9E/Y3专用",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S5",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO5/X50",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Z6",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S6",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "S7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "X60",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "IQOO7",
+        "compatible_with": ""
+      },
+      {
+        "brand": "VIVO",
+        "model": "Y75-4G",
+        "compatible_with": ""
+      }
+    ],
+    "privacy": [
+      {
+        "screenType": "屏内摄像头**中-6.67寸",
+        "size": "165.8 x 76.7",
+        "mainModel": "红米NOTE9S",
+        "compatible": "红米NOTE9 PRO/小米POCOX3/小米10T LITE/Y7A/P SMART 2021/Realme C55/Realme C67/Realme 12lite/Y200l/IQOO Z9X/Infinix Smart 9/Infinix Hot 50i/Infinix Hot 50 Pro/Infinix Hot 50 5G/Relame12 5G/Relame12X 5G/Realme13 5G"
+      },
+      {
+        "screenType": "屏内摄像头**中-6.43寸",
+        "size": "160.5 x 74.5",
+        "mainModel": "红米NOTE10 4G（国外版）",
+        "compatible": "红米NOTE10 4G（国外版）/红米NOTE10S/红米NOTE11 4G国外版/红米NOTE11S 4G国外版/红米NOTE12S"
+      },
+      {
+        "screenType": "屏内摄像头**中-6.67寸",
+        "size": "164 x 76.5",
+        "mainModel": "红米NOTE10 PRO 国内版",
+        "compatible": "红米NOTE10 PRO 国内版/国外版/红米NOTE12 PRO 4G5G/NOTE12 PRO PLUS/POCP F5PRO/荣耀80pro/S18E"
+      },
+      {
+        "screenType": "水滴屏**6.71寸",
+        "size": "169.6 x 76.6",
+        "mainModel": "红米10C",
+        "compatible": "POCO C40/红米12C/小米POCO C55/红米11A/红米A3"
+      },
+      {
+        "screenType": "屏内摄像头**中-6.79寸",
+        "size": "168.6 x 76.3",
+        "mainModel": "红米12",
+        "compatible": "infinix note30/tecno pova5/tecno spark 10 pro/红米13"
+      },
+      {
+        "screenType": "",
+        "size": "",
+        "mainModel": "红米14C",
+        "compatible": "redmi 14R/POCO C75"
+      },
+      {
+        "screenType": "水滴屏**6.7寸",
+        "size": "164.3 x 76.7",
+        "mainModel": "Samsung Galaxy A70",
+        "compatible": "SAM A16/A26"
+      },
+      {
+        "screenType": "屏内摄像头**中-6.5寸",
+        "size": "158.5 x 73.6",
+        "mainModel": "Samsung Galaxy A51",
+        "compatible": "A51/红米NOTE10 5G国内版/红米10 4G/红米NOTE11 国外版（手机尺寸159.9*73.9）/三星A53 5G"
+      },
+      {
+        "screenType": "屏内摄像头**中-6.7寸",
+        "size": "163.6 x 76",
+        "mainModel": "Samsung Galaxy A71",
+        "compatible": "A71/A72/三星A73 5G/M51/红米NOTE10 LITE/荣耀10X LITE/POCO X3 NFC/VIVO T1/REalme GT NEO3/POCO X5 PRO"
+      },
+      {
+        "screenType": "水滴屏**6.5寸",
+        "size": "164.2 x 76.1",
+        "mainModel": "Samsung Galaxy A32 5G",
+        "compatible": "A32 5G/A02/M12/三星A12/A02S欧版/A022/M02"
+      },
+      {
+        "screenType": "屏内摄像头**中-6.5寸",
+        "size": "159.9 x 75.1",
+        "mainModel": "Samsung Galaxy A52",
+        "compatible": "A52 4G/5G/A52S"
+      },
+      {
+        "screenType": "水滴屏**6.6寸",
+        "size": "167.7 x 78",
+        "mainModel": "Samsung Galaxy A14",
+        "compatible": "A14 4G/5G"
+      },
+      {
+        "screenType": "水滴屏**6.5寸",
+        "size": "162.1 x 77.6",
+        "mainModel": "Samsung Galaxy A24",
+        "compatible": "A24 4G/A15/A25"
+      },
+      {
+        "screenType": "屏内摄像头**中-6.6寸",
+        "size": "161.7 x 78",
+        "mainModel": "Samsung Galaxy A35",
+        "compatible": "A35/A55/M35/SA QUANTUM5"
+      }
+    ]
+  },
+  "settings": {
+    "siteName": "配件指南",
+    "version": "v1.0",
+    "note": ""
+  }
+}

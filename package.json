@@ -1,0 +1,19 @@
+{
+  "name": "accessory-guide",
+  "version": "1.0.0",
+  "description": "配件兼容性查询系统",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^9.4.3",
+    "cors": "^2.8.6",
+    "express": "^4.22.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^1.4.5-lts.1",
+    "xlsx": "^0.18.5"
+  }
+}

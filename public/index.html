@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEMCO ACCESORIOS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface2: #f1f5f9;
+  --surface3: #e2e8f0;
+  --border: #e2e8f0;
+  --border2: #cbd5e1;
+  --text: #0f172a;
+  --text2: #475569;
+  --text3: #94a3b8;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-green: #22c55e;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --shadow: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit}
+
+/* ===== NAV ===== */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:0;height:64px}
+.nav-logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:17px;margin-right:48px;letter-spacing:-0.3px}
+.nav-tabs{display:flex;gap:4px;flex:1}
+.nav-tab{padding:0 20px;height:64px;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--text2);border-bottom:2px solid transparent;transition:all 0.2s;position:relative}
+.nav-tab:hover{color:var(--text);background:rgba(99,102,241,0.04)}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.nav-tab svg{width:16px;height:16px;opacity:0.7}
+.nav-actions{display:flex;align-items:center;gap:12px;margin-left:auto}
+.nav-badge{font-size:11px;padding:4px 10px;border-radius:20px;background:var(--surface2);color:var(--text3);font-family:'JetBrains Mono',monospace;font-weight:500}
+
+/* ===== LAYOUT ===== */
+.page{display:none;max-width:1200px;margin:0 auto;padding:40px 24px}
+.page.active{display:block}
+
+/* ===== SEARCH ===== */
+.search-hero{margin-bottom:36px}
+.search-hero h1{font-size:28px;font-weight:700;margin-bottom:8px;letter-spacing:-0.5px}
+.search-hero p{color:var(--text2);font-size:14px}
+.search-box{position:relative;margin-top:20px}
+.search-box input{width:100%;padding:16px 52px 16px 20px;border:2px solid var(--border);border-radius:var(--radius);font-size:15px;background:var(--surface);color:var(--text);transition:all 0.2s;outline:none;box-shadow:var(--shadow-sm)}
+.search-box input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(99,102,241,0.1)}
+.search-box input::placeholder{color:var(--text3)}
+.search-icon{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+
+/* ===== FILTER PILLS ===== */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;align-items:center}
+.filter-label{font-size:13px;color:var(--text3);margin-right:6px;font-weight:500}
+.pill{padding:8px 16px;border-radius:24px;border:1.5px solid var(--border2);background:var(--surface);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.15s}
+.pill:hover{border-color:var(--accent);color:var(--accent);background:rgba(99,102,241,0.04)}
+.pill.on{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(99,102,241,0.3)}
+
+/* ===== LANGUAGE SWITCHER ===== */
+.lang-switcher{display:flex;gap:4px;margin-right:8px}
+.desktop-lang{display:flex!important}
+.mobile-lang-select{display:none}
+.lang-btn{padding:4px 8px;font-size:11px}
+
+/* ===== SECTION GROUPS ===== */
+.section-group{margin-bottom:32px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm)}
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:linear-gradient(to right,var(--surface),var(--surface2));border-bottom:1px solid var(--border)}
+.section-title{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.2px}
+.section-count{font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;background:var(--surface);padding:4px 12px;border-radius:16px;border:1px solid var(--border)}
+.section-body{overflow:hidden}
+
+/* ===== DEVICE CARDS ===== */
+.device-card{background:var(--surface);padding:24px;border-bottom:1px solid var(--border);transition:background 0.15s}
+.device-card:last-child{border-bottom:none}
+.device-card:hover{background:var(--surface2)}
+.device-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.device-name{font-size:16px;font-weight:600;letter-spacing:-0.2px}
+.device-gen{font-size:11px;color:var(--text3);margin-left:10px;font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:3px 8px;border-radius:6px;vertical-align:middle}
+.device-note{font-size:13px;color:var(--accent-amber);margin-top:8px;display:flex;align-items:center;gap:6px;font-weight:500}
+.device-note.warn{color:var(--accent-red)}
+.device-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.device-info-box{padding:16px;border-radius:var(--radius-sm);background:var(--surface2);border:1px solid var(--border)}
+.device-info-box .label{font-size:11px;color:var(--text3);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px}
+.device-info-box .value{font-size:14px;color:var(--text);font-weight:500;line-height:1.5}
+.device-info-box.case .label{color:var(--accent-blue)}
+.device-info-box.film .label{color:var(--accent-purple)}
+
+/* ===== FILM CARDS ===== */
+.film-group-card{background:var(--surface);border-bottom:1px solid var(--border)}
+.film-group-card:last-child{border-bottom:none}
+.film-group-header{display:flex;align-items:center;gap:12px;padding:18px 20px;cursor:pointer;user-select:none;transition:background 0.15s}
+.film-group-header:hover{background:var(--surface2)}
+.film-name-badge{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;padding:5px 12px;background:linear-gradient(135deg,var(--accent),var(--accent-purple));color:#fff;border-radius:8px;letter-spacing:0.3px}
+.film-brand-count{font-size:13px;color:var(--text2)}
+.film-group-body{display:none;padding:8px 20px 20px}
+.film-group-body.open{display:block}
+.film-brand-row{margin-bottom:12px;padding:14px 16px;border-radius:var(--radius-sm);background:var(--surface2);border:1px solid var(--border)}
+.brand-pill{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;margin-bottom:8px;letter-spacing:0.3px}
+.brand-SAM{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e}
+.brand-OPPO{background:linear-gradient(135deg,#ede9fe,#ddd6fe);color:#5b21b6}
+.brand-VIVO{background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1e40af}
+.brand-XIAOMI,.brand-REDMI{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#991b1b}
+.brand-HUAWEI,.brand-HW{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46}
+.brand-HONOR{background:linear-gradient(135deg,#fce7f3,#fbcfe8);color:#9d174d}
+.brand-REALME{background:linear-gradient(135deg,#fff7ed,#fed7aa);color:#9a3412}
+.brand-MOTO{background:linear-gradient(135deg,#f3f4f6,#e5e7eb);color:#374151}
+.brand-APPLE{background:linear-gradient(135deg,#e0f2fe,#bae6fd);color:#0369a1}
+.brand-default{background:linear-gradient(135deg,#f3f4f6,#e5e7eb);color:#374151}
+.film-models-text{font-size:13px;color:var(--text2);line-height:1.8}
+.highlight{background:linear-gradient(120deg,#fef08a 0%,#fde047 100%);color:#713f12;border-radius:4px;padding:1px 4px}
+
+/* ===== 2.5D TABLE ===== */
+.td-list{padding:8px 20px 20px}
+.td-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:6px;background:var(--surface2);border:1px solid var(--border);transition:all 0.15s}
+.td-item:hover{background:var(--surface3);border-color:var(--border2)}
+.td-model{font-size:14px;font-weight:500}
+.td-compat{font-size:12px;color:var(--accent-blue);font-family:'JetBrains Mono',monospace;background:var(--surface);padding:4px 10px;border-radius:6px;border:1px solid var(--border)}
+
+/* ===== PRIVACY ===== */
+.priv-card{background:var(--surface);border-bottom:1px solid var(--border);padding:20px}
+.priv-card:last-child{border-bottom:none}
+.priv-main{font-size:15px;font-weight:600;margin-bottom:8px}
+.priv-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.priv-tag{font-size:12px;padding:4px 12px;border-radius:16px;background:var(--surface2);color:var(--text2);border:1px solid var(--border);font-weight:500}
+.priv-compat{font-size:13px;color:var(--text2);line-height:1.7}
+
+/* ===== EMPTY STATE ===== */
+.empty{text-align:center;padding:64px 24px;color:var(--text3)}
+.empty svg{width:48px;height:48px;margin-bottom:16px;opacity:0.4}
+.empty p{font-size:15px;font-weight:500}
+
+/* ===== ADMIN PAGE ===== */
+.admin_layout{display:grid;grid-template-columns:240px 1fr;gap:28px;align-items:start}
+.admin-sidebar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:sticky;top:88px;box-shadow:var(--shadow-sm)}
+.admin-sidebar-item{display:flex;align-items:center;gap:12px;padding:14px 20px;font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.15s;border-bottom:1px solid var(--border)}
+.admin-sidebar-item:last-child{border-bottom:none}
+.admin-sidebar-item:hover{background:var(--surface2);color:var(--text)}
+.admin-sidebar-item.active{background:var(--accent);color:#fff}
+.admin-sidebar-item svg{width:18px;height:18px;flex-shrink:0}
+.admin-main{}
+.admin-panel{display:none}
+.admin-panel.active{display:block}
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.admin-title{font-size:20px;font-weight:700;letter-spacing:-0.3px}
+
+/* ===== STAT CARDS ===== */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow-sm);transition:all 0.2s}
+.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.stat-label{font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.stat-value{font-size:32px;font-weight:700;font-family:'JetBrains Mono',monospace;background:linear-gradient(135deg,var(--accent),var(--accent-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* ===== TABLE ===== */
+.data-table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.data-table th{padding:14px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);background:var(--surface2);border-bottom:1px solid var(--border);text-align:left}
+.data-table td{padding:14px 16px;font-size:14px;border-bottom:1px solid var(--border);vertical-align:top}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--surface2)}
+
+/* ===== BUTTONS ===== */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(99,102,241,0.3)}
+.btn-primary:hover{background:var(--accent-light);transform:translateY(-1px);box-shadow:0 4px 12px rgba(99,102,241,0.4)}
+.btn-secondary{background:var(--surface);color:var(--text);border:1.5px solid var(--border2)}
+.btn-secondary:hover{background:var(--surface2);border-color:var(--accent)}
+.btn-danger{background:#fee2e2;color:#991b1b;border:1.5px solid #fecaca}
+.btn-danger:hover{background:#fca5a5}
+.btn-sm{padding:7px 12px;font-size:13px}
+.btn-icon{padding:8px;border-radius:8px}
+
+/* ===== MODAL ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+.modal-overlay.hidden{display:none}
+.modal{background:var(--surface);border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:24px;border-bottom:1px solid var(--border)}
+.modal-head h3{font-size:18px;font-weight:700;letter-spacing:-0.3px}
+.modal-body{padding:28px}
+.modal-foot{display:flex;justify-content:flex-end;gap:12px;padding:20px 24px;border-top:1px solid var(--border);background:var(--surface2)}
+
+/* ===== FORM ===== */
+.form-group{margin-bottom:20px}
+.form-label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.6px}
+.form-input{width:100%;padding:12px 14px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;background:var(--surface);color:var(--text);outline:none;transition:all 0.2s}
+.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(99,102,241,0.1)}
+.form-textarea{resize:vertical;min-height:90px}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%2364748b' d='M7 7l3-3 3 3M7 13l3 3 3-3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:40px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-check{display:flex;align-items:center;gap:10px}
+.form-check input[type=checkbox]{width:18px;height:18px;cursor:pointer;border-radius:4px}
+
+/* ===== LOGIN ===== */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%)}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:48px;width:400px;box-shadow:var(--shadow-lg)}
+.login-logo{text-align:center;margin-bottom:36px}
+.login-logo-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--accent),var(--accent-purple));border-radius:14px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-family:'JetBrains Mono',monospace;font-weight:700;margin-bottom:16px;box-shadow:0 8px 24px rgba(99,102,241,0.3)}
+.login-logo h1{font-size:20px;font-weight:700;letter-spacing:-0.3px}
+.login-logo p{font-size:13px;color:var(--text3);margin-top:4px}
+.error-msg{background:#fee2e2;color:#991b1b;padding:12px 14px;border-radius:var(--radius-sm);font-size:14px;margin-bottom:20px;display:none}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:28px;right:28px;z-index:300;display:flex;flex-direction:column;gap:10px}
+.toast-item{padding:14px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;box-shadow:var(--shadow-md);animation:slideIn 0.25s ease;color:#fff}
+.toast-item.success{background:linear-gradient(135deg,#22c55e,#16a34a)}
+.toast-item.error{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.toast-item.info{background:linear-gradient(135deg,#6366f1,#4f46e5)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .admin_layout{grid-template-columns:1fr}
+  .admin-sidebar{position:static}
+  .device-grid{grid-template-columns:1fr}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr}
+  .nav-tabs .nav-tab span{display:none}
+  .page{padding:16px 12px}
+  .stat-value{font-size:24px}
+  
+  /* Mobile: info cards - stack vertically */
+  .info-cards-grid,
+  .info-cards-single{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:12px!important;
+    margin-bottom:16px!important
+  }
+  .info-cards-grid>div,
+  .info-cards-single>div{
+    width:100%!important;
+    margin:0!important;
+    padding:12px!important;
+    font-size:11px!important;
+    box-sizing:border-box!important
+  }
+  
+  /* Mobile: filter bars - horizontal scroll */
+  .filter-bar{
+    flex-wrap:nowrap!important;
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    padding-bottom:8px!important;
+    gap:8px!important;
+    margin-bottom:16px!important;
+    background:transparent!important;
+    border:none!important;
+    border-radius:0!important
+  }
+  .filter-bar .pill{
+    white-space:nowrap;
+    flex-shrink:0;
+    padding:6px 12px;
+    font-size:12px
+  }
+  .filter-bar .filter-label{
+    flex-shrink:0;
+    font-size:12px
+  }
+  
+  /* Mobile: nav improvements */
+  .nav{padding:0 12px!important}
+  .nav-inner{padding:0!important;gap:0!important}
+  .nav-logo span{display:none!important}
+  .nav-logo img{width:28px!important;height:28px!important}
+  .nav-actions{gap:8px!important}
+  .nav-badge{display:none}
+  
+  /* Mobile: search box */
+  .search-box{font-size:14px!important;margin-top:12px!important}
+  .search-box input{padding:10px 12px 10px 36px!important;font-size:14px!important}
+  
+  /* Mobile: device cards */
+  .device-card{padding:12px!important}
+  .device-name{font-size:14px!important}
+  .device-info-box{padding:10px!important;font-size:11px!important}
+  .device-info-box .label{font-size:10px!important}
+  .device-info-box .value{font-size:11px!important}
+  
+  /* Mobile: section headers */
+  .section-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:4px
+  }
+  .section-title{font-size:14px!important}
+  .section-count{font-size:11px!important}
+  
+  /* Mobile: results */
+  #ipad-results,
+  #watch-results,
+  #film-results{
+    font-size:12px
+  }
+  
+  /* Mobile: language dropdown */
+  .desktop-lang{display:none!important}
+  .mobile-lang-select{
+    display:inline-block!important;
+    padding:6px 8px!important;
+    font-size:12px!important;
+    border:1px solid var(--border2)!important;
+    border-radius:8px!important;
+    background:var(--surface)!important;
+    color:var(--text)!important;
+    cursor:pointer!important;
+    min-width:60px
+  }
+  
+  /* Mobile: nav version badge hidden */
+  .nav-badge{display:none!important}
+  
+  /* Mobile: nav overflow */
+  .nav{overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch}
+  .nav-inner{overflow:visible!important}
+  
+  /* Mobile: admin buttons */
+  #admin-btn span{display:none}
+  
+  /* Mobile: info cards */
+  #ipad-page>div:nth-child(2)>div,
+  #ipad-page>div:nth-child(3)>div,
+  #watch-page>div:nth-child(2)>div,
+  #watch-page>div:nth-child(3)>div,
+  #watch-page>div:nth-child(4)>div{
+    width:100%!important;
+    margin:0!important;
+    padding:12px!important;
+    font-size:11px!important;
+    box-sizing:border-box!important
+  }
+  
+  /* Mobile: filter bars - horizontal scroll */
+  .filter-bar{
+    flex-wrap:nowrap!important;
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    padding-bottom:8px!important;
+    gap:8px!important;
+    margin-bottom:16px!important;
+    background:transparent!important;
+    border:none!important
+  }
+  .filter-bar .pill{
+    white-space:nowrap;
+    flex-shrink:0;
+    padding:6px 12px;
+    font-size:12px
+  }
+  .filter-bar .filter-label{
+    flex-shrink:0;
+    font-size:12px
+  }
+  
+  /* Mobile: nav improvements */
+  .nav{padding:0 12px!important}
+  .nav-inner{padding:0!important}
+  .nav-logo span{display:none!important}
+  .nav-actions{gap:8px!important}
+  .nav-badge{display:none}
+  
+  /* Mobile: search box */
+  .search-box{font-size:14px!important}
+  .search-box input{padding:10px 12px 10px 36px!important}
+  
+  /* Mobile: device cards */
+  .device-card{padding:12px!important}
+  .device-name{font-size:14px!important}
+  .device-info-box{padding:10px!important}
+  
+  /* Mobile: section headers */
+  .section-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:4px
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="login-page" class="login-wrap" style="display:none">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">AG</div>
+      <h1>TEMCO ACCESORIOS 后台</h1>
+      <p>TEMCO ACCESORIOS Admin</p>
+    </div>
+    <div id="login-error" class="error-msg"></div>
+    <div class="form-group">
+      <label class="form-label">用户名</label>
+      <input id="login-username" class="form-input" type="text" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label class="form-label">密码</label>
+      <input id="login-password" class="form-input" type="password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="doLogin()">登 录</button>
+    <p style="text-align:center;margin-top:20px;font-size:12px;color:var(--text3)"><a href="/" onclick="showFront();return false" style="color:var(--accent-blue)">← 返回前台</a></p>
+  </div>
+</div>
+
+<!-- MAIN NAV -->
+<nav class="nav" id="main-nav" style="display:none">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <img src="/Logo.png" alt="Logo" style="width:36px;height:36px;border-radius:8px;object-fit:contain" />
+      <span>TEMCO ACCESORIOS</span>
+    </div>
+    <div class="nav-tabs" id="nav-tabs">
+      <a class="nav-tab" data-page="film" onclick="switchPage('film');return false" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+        <span>钢化膜通用</span>
+      </a>
+      <a class="nav-tab active" data-page="ipad" onclick="switchPage('ipad');return false" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+        <span>iPad</span>
+      </a>
+      <a class="nav-tab" data-page="watch" onclick="switchPage('watch');return false" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><path d="M9 2h6l1 4H8zM9 22h6l1-4H8z"/></svg>
+        <span>Watch</span>
+      </a>
+    </div>
+    <div class="nav-actions">
+      <!-- Desktop language switcher -->
+      <div class="lang-switcher desktop-lang">
+        <button class="pill btn-sm lang-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
+        <button class="pill btn-sm lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+        <button class="pill btn-sm lang-btn" data-lang="zh" onclick="setLanguage('zh')">中文</button>
+      </div>
+      <!-- Mobile language dropdown -->
+      <select class="mobile-lang-select" onchange="setLanguage(this.value)">
+        <option value="es">ES</option>
+        <option value="en">EN</option>
+        <option value="zh">中文</option>
+      </select>
+      <span id="nav-version" class="nav-badge">v1.0</span>
+      <button id="admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()">后台管理</button>
+      <button id="logout-btn" class="btn btn-secondary btn-sm" style="display:none" onclick="doLogout()">退出</button>
+    </div>
+  </div>
+</nav>
+
+<!-- IPAD PAGE -->
+<div id="ipad-page" class="page">
+  <div class="search-hero">
+    <h1 data-i18n="title_ipad">iPad 配件兼容性</h1>
+    <p data-i18n="subtitle_ipad">查询不同 iPad 型号的保护壳和钢化膜通用情况</p>
+    <div class="search-box" style="margin-top:16px">
+      <input id="ipad-search" type="text" data-i18n-placeholder="search_ipad" placeholder="搜索 iPad 型号 (如: Pro 11, 2021)..." oninput="loadiPad()">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/></svg>
+    </div>
+  </div>
+  
+  <!-- 财富密码 & 避坑指南 -->
+  <div class="info-cards-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+    <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;padding:16px;border:1px solid #f59e0b">
+      <div style="font-weight:700;font-size:13px;color:#92400e;margin-bottom:10px;display:flex;align-items:center;gap:6px" id="ipad-film-title"></div>
+      <div style="font-size:12px;color:#78350f;line-height:1.7" id="ipad-film-content"></div>
+    </div>
+    <div style="background:linear-gradient(135deg,#fee2e2,#fecaca);border-radius:12px;padding:16px;border:1px solid #ef4444">
+      <div style="font-weight:700;font-size:13px;color:#991b1b;margin-bottom:10px;display:flex;align-items:center;gap:6px" id="ipad-case-title"></div>
+      <div style="font-size:12px;color:#7f1d1d;line-height:1.7" id="ipad-case-content"></div>
+    </div>
+  </div>
+  
+  <!-- 外形筛选器 -->
+  <div class="filter-bar" id="ipad-shape-filter" style="margin-bottom:20px">
+    <span class="filter-label" data-i18n="filter_shape">外形:</span>
+    <button class="pill" data-shape="" onclick="setiPadShape('', this)" data-i18n="filter_all">全部</button>
+    <button class="pill" data-shape="fullscreen" onclick="setiPadShape('fullscreen', this)" data-i18n="filter_fullscreen">全面屏 (无Home键)</button>
+    <button class="pill" data-shape="homebutton" onclick="setiPadShape('homebutton', this)" data-i18n="filter_homebutton">有Home键</button>
+  </div>
+  
+  <div id="ipad-results"></div>
+</div>
+
+<!-- WATCH PAGE -->
+<div id="watch-page" class="page">
+  <div class="search-hero">
+    <h1 data-i18n="title_watch">Apple Watch 配件兼容性</h1>
+    <p data-i18n="subtitle_watch">查询各代 Apple Watch 的保护壳和表带通用情况</p>
+    <div class="search-box" style="margin-top:16px">
+      <input id="watch-search" type="text" data-i18n-placeholder="search_watch" placeholder="搜索 Watch 型号..." oninput="loadWatch()">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/></svg>
+    </div>
+  </div>
+  
+  <!-- Apple Watch 知识卡 -->
+  <div class="info-cards-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+    <div style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:12px;padding:16px;border:1px solid #3b82f6">
+      <div style="font-weight:700;font-size:13px;color:#1e40af;margin-bottom:10px;display:flex;align-items:center;gap:6px" id="watch-band-title"></div>
+      <div style="font-size:12px;color:#1e3a8a;line-height:1.7" id="watch-band-content"></div>
+    </div>
+    <div style="background:linear-gradient(135deg,#fee2e2,#fecaca);border-radius:12px;padding:16px;border:1px solid #ef4444">
+      <div style="font-weight:700;font-size:13px;color:#991b1b;margin-bottom:10px;display:flex;align-items:center;gap:6px" id="watch-case-title"></div>
+      <div style="font-size:12px;color:#7f1d1d;line-height:1.7" id="watch-case-content"></div>
+    </div>
+  </div>
+  
+  <!-- 新款变动提示 -->
+  <div class="info-cards-single" style="background:linear-gradient(135deg,#f0fdf4,#bbf7d0);border-radius:12px;padding:14px 16px;border:1px solid #22c55e;margin-bottom:20px">
+    <div style="font-weight:700;font-size:13px;color:#166534;margin-bottom:8px;display:flex;align-items:center;gap:6px" id="watch-new-title"></div>
+    <div style="font-size:12px;color:#166534;line-height:1.7" id="watch-new-content"></div>
+  </div>
+  
+  <!-- 表带组筛选器 -->
+  <div class="filter-bar" id="watch-band-filter" style="margin-bottom:12px">
+    <span class="filter-label" data-i18n="filter_band_group">表带组:</span>
+    <button class="pill" data-band="" onclick="setWatchBand('', this)" data-i18n="filter_all">全部</button>
+    <button class="pill" data-band="small" onclick="setWatchBand('small', this)" data-i18n="filter_small_band">小码 (38-42mm)</button>
+    <button class="pill" data-band="large" onclick="setWatchBand('large', this)" data-i18n="filter_large_band">大码 (44-49mm)</button>
+  </div>
+  
+  <!-- 屏幕类型筛选器 -->
+  <div class="filter-bar" id="watch-screen-filter" style="margin-bottom:20px">
+    <span class="filter-label" data-i18n="filter_screen">屏幕:</span>
+    <button class="pill" data-screen="" onclick="setWatchScreen('', this)" data-i18n="filter_all">全部</button>
+    <button class="pill" data-screen="flat" onclick="setWatchScreen('flat', this)" data-i18n="filter_flat">纯平 (Ultra)</button>
+    <button class="pill" data-screen="curved" onclick="setWatchScreen('curved', this)" data-i18n="filter_curved">弧面 (Series)</button>
+    <button class="pill" data-screen="classic" onclick="setWatchScreen('classic', this)" data-i18n="filter_classic">经典 (早期款)</button>
+  </div>
+  
+  <div id="watch-results"></div>
+</div>
+
+<!-- FILM PAGE -->
+<div id="film-page" class="page">
+  <div class="search-hero">
+    <h1 data-i18n="title_film">钢化膜通用型号查询</h1>
+    <p data-i18n="subtitle_film">全胶钢化膜通用型号兼容性对照</p>
+    <div class="search-box">
+      <input id="film-search" type="text" data-i18n-placeholder="search_film" placeholder="搜索型号，如 A71、POCO X3、Reno5..." oninput="loadFilm()">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/></svg>
+    </div>
+  </div>
+  <div id="brand-filters" class="filter-bar"></div>
+  <div id="film-results"></div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="admin-page" class="page">
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-item active" data-panel="dashboard" onclick="switchPanel('dashboard',this)">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+        <span data-i18n="admin_dashboard">概览</span>
+      </div>
+      <div class="admin-sidebar-item" data-panel="ipad-mgmt" onclick="switchPanel('ipad-mgmt',this)">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm3 14a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+        <span data-i18n="admin_ipad_mgmt">iPad 管理</span>
+      </div>
+      <div class="admin-sidebar-item" data-panel="watch-mgmt" onclick="switchPanel('watch-mgmt',this)">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+        <span data-i18n="admin_watch_mgmt">Watch 管理</span>
+      </div>
+      <div class="admin-sidebar-item" data-panel="film-mgmt" onclick="switchPanel('film-mgmt',this)">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"/><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+        <span data-i18n="admin_film_mgmt">膜数据管理</span>
+      </div>
+      <div class="admin-sidebar-item" data-panel="users-mgmt" onclick="switchPanel('users-mgmt',this)">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg>
+        <span data-i18n="admin_users_mgmt">用户管理</span>
+      </div>
+      <div class="admin-sidebar-item" data-panel="trans-mgmt" onclick="switchPanel('trans-mgmt',this)">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM8 7.5a.5.5 0 01.5.5v3a.5.5 0 01-.5.5h-1a.5.5 0 010-1h1v-3a.5.5 0 01.5-.5zm0 6a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 010-1h1v-1a.5.5 0 01.5-.5zm6-2.5a.5.5 0 01.5-.5h1a.5.5 0 010 1h-1a.5.5 0 01-.5-.5zm-1 4a.5.5 0 010 1h-1a.5.5 0 010-1h1zm-3 0a.5.5 0 010 1H9a.5.5 0 010-1h1z"/></svg>
+        <span data-i18n="tab_translations">多语言管理</span>
+      </div>
+      <div class="admin-sidebar-item" data-panel="settings-mgmt" onclick="switchPanel('settings-mgmt',this)">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+        <span data-i18n="admin_settings_mgmt">系统设置</span>
+      </div>
+      <div class="admin-sidebar-item" onclick="showFront()" style="margin-top:8px;border-top:2px solid var(--border)">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 110-2h4a1 1 0 011 1v4a1 1 0 11-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 112 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 110 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 110-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+        <span data-i18n="admin_view_front">查看前台</span>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <!-- DASHBOARD -->
+      <div id="panel-dashboard" class="admin-panel active">
+        <div class="admin-header"><h2 class="admin-title" data-i18n="admin_dashboard">数据概览</h2></div>
+        <div class="stat-grid" id="stat-grid">
+          <div class="stat-card"><div class="stat-label" data-i18n="stat_ipad">iPad 型号</div><div class="stat-value" id="stat-ipad">—</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="stat_watch">Watch 型号</div><div class="stat-value" id="stat-watch">—</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="stat_film">全胶防静电膜</div><div class="stat-value" id="stat-fg">—</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="stat_2d">2.5D 膜条目</div><div class="stat-value" id="stat-2d">—</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="stat_privacy">防窥膜</div><div class="stat-value" id="stat-priv">—</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="stat_users">管理用户</div><div class="stat-value" id="stat-users">—</div></div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="quick_actions">快速操作</h3>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-secondary" onclick="switchPanel('ipad-mgmt',document.querySelector('[data-panel=ipad-mgmt]'))" data-i18n="admin_ipad_mgmt">管理 iPad 数据</button>
+            <button class="btn btn-secondary" onclick="switchPanel('film-mgmt',document.querySelector('[data-panel=film-mgmt]'))" data-i18n="admin_film_mgmt">管理膜数据</button>
+            <button class="btn btn-secondary" onclick="switchPanel('users-mgmt',document.querySelector('[data-panel=users-mgmt]'))" data-i18n="admin_users_mgmt">管理用户</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- IPAD MGMT -->
+      <div id="panel-ipad-mgmt" class="admin-panel">
+        <div class="admin-header">
+          <h2 class="admin-title" data-i18n="admin_ipad_mgmt">iPad 型号管理</h2>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span style="font-size:12px;color:var(--text3)">编辑语言:</span>
+            <button class="pill btn-sm" data-admin-lang="zh" onclick="setAdminLang('zh')" style="padding:4px 8px;font-size:11px">中文</button>
+            <button class="pill btn-sm" data-admin-lang="en" onclick="setAdminLang('en')" style="padding:4px 8px;font-size:11px">EN</button>
+            <button class="pill btn-sm" data-admin-lang="es" onclick="setAdminLang('es')" style="padding:4px 8px;font-size:11px">ES</button>
+            <button class="btn btn-primary" onclick="openModal('ipad')" data-i18n="btn_add_ipad" style="margin-left:8px">+ 新增型号</button>
+          </div>
+        </div>
+        <table class="data-table" id="ipad-admin-table">
+          <thead><tr><th data-i18n="th_name">型号名称</th><th data-i18n="th_series">系列</th><th data-i18n="th_gen">代次</th><th data-i18n="device_case">保护壳</th><th data-i18n="device_film">钢化膜</th><th data-i18n="th_action">操作</th></tr></thead>
+          <tbody id="ipad-admin-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- WATCH MGMT -->
+      <div id="panel-watch-mgmt" class="admin-panel">
+        <div class="admin-header">
+          <h2 class="admin-title" data-i18n="admin_watch_mgmt">Apple Watch 管理</h2>
+          <button class="btn btn-primary" onclick="openModal('watch')" data-i18n="btn_add_watch">+ 新增型号</button>
+        </div>
+        <table class="data-table">
+          <thead><tr><th data-i18n="th_name">型号名称</th><th data-i18n="th_series">系列</th><th data-i18n="th_gen">代次</th><th data-i18n="device_case">保护壳</th><th data-i18n="th_action">操作</th></tr></thead>
+          <tbody id="watch-admin-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- FILM MGMT -->
+      <div id="panel-film-mgmt" class="admin-panel">
+        <div class="admin-header">
+          <h2 class="admin-title" data-i18n="admin_film_mgmt">全胶防静电膜管理</h2>
+          <button class="btn btn-primary" onclick="openModal('film')" data-i18n="btn_add_film">+ 新增膜组</button>
+        </div>
+        <table class="data-table">
+          <thead><tr><th data-i18n="th_film_model">膜型号</th><th data-i18n="th_brands">品牌数</th><th data-i18n="th_models">型号数</th><th data-i18n="th_action">操作</th></tr></thead>
+          <tbody id="film-admin-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- USERS MGMT -->
+      <div id="panel-users-mgmt" class="admin-panel">
+        <div class="admin-header">
+          <h2 class="admin-title" data-i18n="admin_users_mgmt">用户管理</h2>
+          <button class="btn btn-primary" onclick="openModal('user')" data-i18n="btn_add_user">+ 新增用户</button>
+        </div>
+        <table class="data-table">
+          <thead><tr><th data-i18n="th_username">用户名</th><th data-i18n="th_role">角色</th><th data-i18n="th_created">创建时间</th><th data-i18n="th_action">操作</th></tr></thead>
+          <tbody id="users-admin-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- TRANSLATIONS -->
+      <div id="panel-trans-mgmt" class="admin-panel">
+        <div class="admin-header"><h2 class="admin-title">多语言管理</h2></div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px">
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">中文 (简体)</h3>
+          <div id="trans-zh" style="max-height:400px;overflow-y:auto"></div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px">
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">English</h3>
+          <div id="trans-en" style="max-height:400px;overflow-y:auto"></div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px">
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">Español</h3>
+          <div id="trans-es" style="max-height:400px;overflow-y:auto"></div>
+        </div>
+        <button class="btn btn-primary" onclick="saveTranslations()">保存翻译</button>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="panel-settings-mgmt" class="admin-panel">
+        <div class="admin-header"><h2 class="admin-title">系统设置</h2></div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:480px">
+          <div class="form-group">
+            <label class="form-label">当前 Logo</label>
+            <div style="margin-bottom:8px">
+              <img id="current-logo" src="/Logo.png" style="height:48px;border-radius:8px;border:1px solid var(--border)" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">上传新 Logo</label>
+            <input id="set-logo" type="file" accept="image/*" style="font-size:13px">
+            <p style="font-size:11px;color:var(--text3);margin-top:4px">支持 PNG、JPG，建议尺寸 200x200</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">站点名称</label>
+            <input id="set-sitename" class="form-input" type="text" placeholder="TEMCO ACCESORIOS">
+          </div>
+          <div class="form-group">
+            <label class="form-label">版本号</label>
+            <input id="set-version" class="form-input" type="text" placeholder="v1.0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">备注说明</label>
+            <textarea id="set-note" class="form-input form-textarea" placeholder="系统说明..."></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">保存设置</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <h3 id="modal-title">新增</h3>
+      <button class="btn btn-secondary btn-sm btn-icon" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal()" data-i18n="btn_cancel">取消</button>
+      <button class="btn btn-primary" id="modal-save" onclick="saveModal()" data-i18n="btn_save">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ STATE ============
+let token = localStorage.getItem('ag_token') || '';
+let currentPage = 'film';
+let filmType = 'fg';
+let filmBrand = '';
+let modalMode = '';
+let modalData = null;
+let currentLang = localStorage.getItem('ag_lang') || 'es';
+let translations = {};
+let adminLang = 'zh'; // Admin panel editing language for iPad/Watch
+
+// Film lazy load
+let filmData = [];
+let filmLoadedCount = 20;
+const FILM_LOAD_COUNT = 10;
+let filmSearchQ = '';
+let filmSearchBrand = '';
+let filmIsLoading = false;
+let filmAllLoaded = false;
+
+// iPad lazy load
+let ipadData = [];
+let ipadLoadedCount = 20;
+const IPAD_LOAD_COUNT = 10;
+let ipadSearchQ = '';
+let ipadIsLoading = false;
+let ipadAllLoaded = false;
+let ipadShapeFilter = ''; // '', 'fullscreen', 'homebutton'
+
+// Watch lazy load
+let watchData = [];
+let watchLoadedCount = 20;
+const WATCH_LOAD_COUNT = 10;
+let watchSearchQ = '';
+let watchIsLoading = false;
+let watchAllLoaded = false;
+let watchBandFilter = ''; // '', 'small', 'large'
+let watchScreenFilter = ''; // '', 'flat', 'curved', 'classic'
+
+// ============ INFO CARDS TRANSLATIONS ============
+function renderIpadInfoCards() {
+  // iPad film card
+  const filmTitleEl = document.getElementById('ipad-film-title');
+  const filmContentEl = document.getElementById('ipad-film-content');
+  if (filmTitleEl) filmTitleEl.innerHTML = `<span style="font-size:16px">💰</span> ${t('ipad_film_title')}`;
+  if (filmContentEl) filmContentEl.innerHTML = `<div style="margin-bottom:6px">${t('ipad_film_super')}</div><div>${t('ipad_film_13inch')}</div>`;
+  
+  // iPad case card
+  const caseTitleEl = document.getElementById('ipad-case-title');
+  const caseContentEl = document.getElementById('ipad-case-content');
+  if (caseTitleEl) caseTitleEl.innerHTML = `<span style="font-size:16px">⚠️</span> ${t('ipad_case_title')}`;
+  if (caseContentEl) caseContentEl.innerHTML = `<div style="margin-bottom:6px">${t('ipad_case_camera')}</div><div>${t('ipad_case_thickness')}</div>`;
+}
+
+function renderWatchInfoCards() {
+  // Watch band card
+  const bandTitleEl = document.getElementById('watch-band-title');
+  const bandContentEl = document.getElementById('watch-band-content');
+  if (bandTitleEl) bandTitleEl.innerHTML = `<span style="font-size:16px">⌚</span> ${t('watch_band_title')}`;
+  if (bandContentEl) bandContentEl.innerHTML = `<div style="margin-bottom:6px">${t('watch_band_small')}</div><div style="margin-bottom:4px;color:#2563eb;font-size:11px">${t('watch_band_small_note')}</div><div>${t('watch_band_large')}</div>`;
+  
+  // Watch case card
+  const caseTitleEl = document.getElementById('watch-case-title');
+  const caseContentEl = document.getElementById('watch-case-content');
+  if (caseTitleEl) caseTitleEl.innerHTML = `<span style="font-size:16px">🛡️</span> ${t('watch_case_title')}`;
+  if (caseContentEl) caseContentEl.innerHTML = `<div style="margin-bottom:4px">${t('watch_case_46mm')}</div><div style="margin-bottom:4px">${t('watch_case_45_41')}</div><div style="margin-bottom:4px">${t('watch_case_44_40')}</div><div>${t('watch_case_ultra')}</div>`;
+  
+  // Watch new models card
+  const newTitleEl = document.getElementById('watch-new-title');
+  const newContentEl = document.getElementById('watch-new-content');
+  if (newTitleEl) newTitleEl.innerHTML = `<span style="font-size:16px">✨</span> ${t('watch_new_title')}`;
+  if (newContentEl) newContentEl.innerHTML = `<div style="margin-bottom:4px">${t('watch_new_se3')}</div><div>${t('watch_new_s11')}</div>`;
+}
+
+// ============ I18N ============
+function t(key) {
+  return translations[currentLang]?.[key] || translations.zh?.[key] || key;
+}
+
+// Get localized value from field that might be string or {zh,en,es}
+function getLocalized(field, lang) {
+  if (!field) return '';
+  if (typeof field === 'string') return field;
+  return field[lang] || field.zh || '';
+}
+
+async function loadTranslations() {
+  try {
+    const r = await fetch(`/api/translations?lang=${currentLang}`);
+    const data = await r.json();
+    translations[currentLang] = data.texts;
+  } catch (e) {
+    console.error('Failed to load translations:', e);
+  }
+}
+
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('ag_lang', lang);
+  loadTranslations().then(() => {
+    applyTranslations();
+    updateLangButtons();
+    // Re-render current page content
+    if (currentPage === 'film') loadFilm();
+    else if (currentPage === 'ipad') loadiPad();
+    else if (currentPage === 'watch') loadWatch();
+    // Re-render info cards
+    renderIpadInfoCards();
+    renderWatchInfoCards();
+  });
+}
+
+function updateLangButtons() {
+  document.querySelectorAll('[data-lang]').forEach(btn => {
+    btn.classList.toggle('on', btn.dataset.lang === currentLang);
+  });
+}
+
+function updateAdminLangButtons() {
+  document.querySelectorAll('[data-admin-lang]').forEach(btn => {
+    btn.classList.toggle('on', btn.dataset.adminLang === adminLang);
+  });
+}
+
+function setAdminLang(lang) {
+  adminLang = lang;
+  updateAdminLangButtons();
+  // Reload iPad admin table with new language
+  loadAdminiPad();
+}
+
+function switchLangTab(lang, btn) {
+  // Update tab buttons
+  btn.parentElement.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  // Show/hide language groups
+  btn.closest('.modal').querySelectorAll('.lang-group').forEach(g => {
+    g.classList.toggle('active', g.dataset.lang === lang);
+  });
+}
+
+function applyTranslations() {
+  // Apply translations using data-i18n attributes
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    el.textContent = t(key);
+  });
+
+  // Apply placeholder translations
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    el.placeholder = t(key);
+  });
+
+  // Nav tabs
+  const filmTab = document.querySelector('[data-page="film"] span');
+  const ipadTab = document.querySelector('[data-page="ipad"] span');
+  const watchTab = document.querySelector('[data-page="watch"] span');
+  if (filmTab) filmTab.textContent = t('nav_film');
+  if (ipadTab) ipadTab.textContent = t('nav_ipad');
+  if (watchTab) watchTab.textContent = t('nav_watch');
+
+  // Admin button
+  const adminBtn = document.getElementById('admin-btn');
+  if (adminBtn) adminBtn.textContent = token ? t('admin_settings_mgmt') : t('login_admin');
+
+  // Filter labels
+  const brandLabel = document.querySelector('#brand-filters .filter-label');
+  if (brandLabel) brandLabel.textContent = t('brand_filter') + ':';
+
+  // Login page
+  const loginTitle = document.querySelector('.login-logo h1');
+  const loginAdmin = document.querySelector('.login-logo p');
+  const loginUsername = document.getElementById('login-username');
+  const loginPassword = document.getElementById('login-password');
+  const loginBtn = document.querySelector('#login-form .btn-primary');
+  if (loginTitle) loginTitle.textContent = t('login_title');
+  if (loginAdmin) loginAdmin.textContent = t('login_admin');
+  if (loginUsername) loginUsername.placeholder = t('login_username');
+  if (loginPassword) loginPassword.placeholder = t('login_password');
+  if (loginBtn) loginBtn.textContent = t('login_btn');
+
+  // Admin sidebar - use spans with data-i18n
+  const sidebarItems = document.querySelectorAll('.admin-sidebar-item[data-panel]');
+  sidebarItems.forEach(item => {
+    const panel = item.dataset.panel;
+    const span = item.querySelector('span');
+    if (panel === 'dashboard' && span) span.textContent = t('admin_dashboard');
+    if (panel === 'ipad-mgmt' && span) span.textContent = t('admin_ipad_mgmt');
+    if (panel === 'watch-mgmt' && span) span.textContent = t('admin_watch_mgmt');
+    if (panel === 'film-mgmt' && span) span.textContent = t('admin_film_mgmt');
+    if (panel === 'users-mgmt' && span) span.textContent = t('admin_users_mgmt');
+    if (panel === 'settings-mgmt' && span) span.textContent = t('admin_settings_mgmt');
+    if (panel === 'trans-mgmt' && span) span.textContent = t('tab_translations');
+  });
+
+  // Stats labels
+  const statEls = document.querySelectorAll('.stat-label');
+  if (statEls[0]) statEls[0].textContent = t('stat_ipad');
+  if (statEls[1]) statEls[1].textContent = t('stat_watch');
+  if (statEls[2]) statEls[2].textContent = t('stat_film');
+  if (statEls[3]) statEls[3].textContent = t('stat_2d');
+  if (statEls[4]) statEls[4].textContent = t('stat_privacy');
+  if (statEls[5]) statEls[5].textContent = t('stat_users');
+}
+
+// ============ INIT ============
+async function init() {
+  await loadSettings();
+  await loadTranslations();
+  if (window.location.hash === '#admin') {
+    if (token) { showAdmin(); }
+    else { showLogin(); }
+  } else {
+    showFront();
+    loadFilm();
+  }
+  updateLangButtons();
+  applyTranslations();
+  renderIpadInfoCards();
+  renderWatchInfoCards();
+}
+
+async function loadSettings() {
+  try {
+    const r = await fetch('/api/settings');
+    const s = await r.json();
+    document.title = (s.siteName || 'TEMCO ACCESORIOS') + ' — TEMCO ACCESORIOS';
+    const vEl = document.getElementById('nav-version');
+    if (vEl) vEl.textContent = s.version || 'v1.0';
+  } catch {}
+}
+
+// ============ ROUTING ============
+function showFront() {
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('main-nav').style.display = 'block';
+  document.getElementById('admin-page').classList.remove('active');
+  switchPage(currentPage || 'ipad', false);
+  window.location.hash = '';
+  updateAuthUI();
+}
+
+function showLogin() {
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('main-nav').style.display = 'none';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+}
+
+async function showAdmin() {
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('main-nav').style.display = 'block';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('admin-page').classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  window.location.hash = '#admin';
+  await loadTranslations(); // Ensure translations are loaded before rendering admin
+  applyTranslations();
+  loadAdminDashboard();
+  updateAuthUI();
+}
+
+function goAdmin() {
+  if (token) { showAdmin(); }
+  else { showLogin(); }
+}
+
+function switchPage(page, load=true) {
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page+'-page').classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.page === page);
+  });
+  if (load) {
+    if (page==='ipad') loadiPad();
+    else if (page==='watch') loadWatch();
+    else if (page==='film') loadFilm();
+  }
+}
+
+function updateAuthUI() {
+  const loggedIn = !!token;
+  document.getElementById('logout-btn').style.display = loggedIn ? 'inline-flex' : 'none';
+  document.getElementById('admin-btn').style.display = loggedIn ? 'inline-flex' : 'none';
+  document.getElementById('admin-btn').textContent = loggedIn ? '后台管理' : '管理员登录';
+}
+
+// ============ AUTH ============
+async function doLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  try {
+    const r = await fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,password}) });
+    const data = await r.json();
+    if (!r.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+    token = data.token;
+    localStorage.setItem('ag_token', token);
+    showAdmin();
+  } catch { errEl.textContent = '网络错误，请重试'; errEl.style.display = 'block'; }
+}
+
+function doLogout() {
+  token = '';
+  localStorage.removeItem('ag_token');
+  showFront();
+  toast('已退出登录', 'info');
+}
+
+document.getElementById('login-password').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// ============ API HELPERS ============
+async function api(url, opts={}) {
+  const headers = { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer '+token } : {}) };
+  const r = await fetch(url, { ...opts, headers: { ...headers, ...(opts.headers||{}) } });
+  if (r.status === 401) { token=''; localStorage.removeItem('ag_token'); showLogin(); throw new Error('Unauthorized'); }
+  return r.json();
+}
+
+// ============ FRONT — iPAD ============
+let lastFetchedLang = ''; // Track language to force refresh on language change
+
+function setiPadShape(shape, btn) {
+  ipadShapeFilter = shape;
+  // Update pill styles
+  document.querySelectorAll('#ipad-shape-filter .pill').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  // Reset and reload
+  ipadData = [];
+  loadiPad();
+}
+
+async function loadiPad() {
+  const q = document.getElementById('ipad-search').value.trim();
+  const el = document.getElementById('ipad-results');
+
+  // Fetch fresh data if first load, search changed, or language changed
+  if (ipadData.length === 0 || q !== ipadSearchQ || currentLang !== lastFetchedLang) {
+    ipadData = await fetch('/api/ipad?q='+encodeURIComponent(q)+'&lang='+currentLang).then(r=>r.json());
+    ipadSearchQ = q;
+    lastFetchedLang = currentLang;
+    ipadLoadedCount = 20;
+    ipadAllLoaded = false;
+  }
+
+  // Apply shape filter
+  let filteredData = ipadData;
+  if (ipadShapeFilter === 'fullscreen') {
+    filteredData = ipadData.filter(i => {
+      const noteText = typeof i.note === 'object' ? (i.note.zh || '') : (i.note || '');
+      const note = noteText.toLowerCase();
+      // Full screen = has "无home" or "全面屏" but NOT "有home"
+      return (note.includes('无home') || note.includes('nohome') || note.includes('全面屏')) && !note.includes('有home');
+    });
+  } else if (ipadShapeFilter === 'homebutton') {
+    filteredData = ipadData.filter(i => {
+      const noteText = typeof i.note === 'object' ? (i.note.zh || '') : (i.note || '');
+      const note = noteText.toLowerCase();
+      // Has home button = explicitly says "有home"
+      return note.includes('有home') && !note.includes('无home');
+    });
+  }
+
+  if (!filteredData.length) { 
+    el.innerHTML = emptyState(t('empty_ipad')); 
+    el.innerHTML += '<div id="ipad-load-trigger"></div>';
+    return; 
+  }
+
+  const groups = {};
+  filteredData.forEach(i => { if(!groups[i.group]) groups[i.group]=[]; groups[i.group].push(i); });
+  const groupEntries = Object.entries(groups);
+
+  el.innerHTML = `<div class="section-group">
+    <div class="section-header">
+      <span class="section-title">${t('title_ipad')}</span>
+      <span class="section-count" id="ipad-total-count">${ipadData.length} ${t('ipad_count')} (${t('loaded_count')} ${Math.min(ipadLoadedCount, ipadData.length)})</span>
+    </div>
+    <div class="section-body" id="ipad-list-container"></div>
+  </div>
+  <div id="ipad-load-trigger" style="height:20px"></div>
+  <div id="ipad-loading" style="text-align:center;padding:20px;color:var(--text3);display:none">${t('loaded_count')}...</div>`;
+
+  renderiPadPage();
+}
+
+function renderiPadPage() {
+  const container = document.getElementById('ipad-list-container');
+  const q = ipadSearchQ;
+  
+  // Apply shape filter (same logic as in loadiPad)
+  let filteredData = ipadData;
+  if (ipadShapeFilter === 'fullscreen') {
+    filteredData = ipadData.filter(i => {
+      const noteText = typeof i.note === 'object' ? (i.note.zh || '') : (i.note || '');
+      const note = noteText.toLowerCase();
+      // Full screen = has "无home" or "全面屏" but NOT "有home"
+      return (note.includes('无home') || note.includes('nohome') || note.includes('全面屏')) && !note.includes('有home');
+    });
+  } else if (ipadShapeFilter === 'homebutton') {
+    filteredData = ipadData.filter(i => {
+      const noteText = typeof i.note === 'object' ? (i.note.zh || '') : (i.note || '');
+      const note = noteText.toLowerCase();
+      // Has home button = explicitly says "有home"
+      return note.includes('有home') && !note.includes('无home');
+    });
+  }
+  
+  const toLoad = Math.min(ipadLoadedCount, filteredData.length);
+
+  const groups = {};
+  filteredData.slice(0, toLoad).forEach(i => { if(!groups[i.group]) groups[i.group]=[]; groups[i.group].push(i); });
+
+  container.innerHTML = Object.entries(groups).map(([grp, list]) => `
+    <div class="section-group">
+      <div class="section-header">
+        <span class="section-title">${grp}</span>
+        <span class="section-count">${list.length} ${t('ipad_count')}</span>
+      </div>
+      <div class="section-body">
+        ${list.map(i => `
+          <div class="device-card">
+            <div class="device-card-header">
+              <div>
+                <span class="device-name">${hl(i.name,q)}</span>
+                ${i.years ? `<span class="device-gen">${i.years}</span>` : ''}
+                ${i.note ? `<div class="device-note${i.specialWarning?' warn':''}">${t('special_warning')} ${hl(i.note,q)}</div>` : ''}
+              </div>
+            </div>
+            <div class="device-grid">
+              <div class="device-info-box case">
+                <div class="label">${t('device_case')}</div>
+                <div class="value">${hl(i.caseComp||'—',q)}</div>
+              </div>
+              <div class="device-info-box film">
+                <div class="label">${t('device_film')}</div>
+                <div class="value">${hl(i.filmComp||'—',q)}</div>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  ipadAllLoaded = ipadLoadedCount >= filteredData.length;
+  const totalEl = document.getElementById('ipad-total-count');
+  if (totalEl) totalEl.textContent = `${filteredData.length} ${t('ipad_count')} (${t('loaded_count')} ${toLoad})`;
+  const loadingEl = document.getElementById('ipad-loading');
+  if (loadingEl) loadingEl.style.display = ipadAllLoaded ? 'none' : 'block';
+}
+
+// ============ FRONT — WATCH ============
+let lastWatchFetchedLang = ''; // Track language to force refresh on language change
+
+function setWatchBand(band, btn) {
+  watchBandFilter = band;
+  document.querySelectorAll('#watch-band-filter .pill').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  watchData = [];
+  loadWatch();
+}
+
+function setWatchScreen(screen, btn) {
+  watchScreenFilter = screen;
+  document.querySelectorAll('#watch-screen-filter .pill').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  watchData = [];
+  loadWatch();
+}
+
+async function loadWatch() {
+  const q = document.getElementById('watch-search').value.trim();
+  const el = document.getElementById('watch-results');
+
+  // Fetch fresh data if first load, search changed, or language changed
+  if (watchData.length === 0 || q !== watchSearchQ || currentLang !== lastWatchFetchedLang) {
+    watchData = await fetch('/api/watch?q='+encodeURIComponent(q)+'&lang='+currentLang).then(r=>r.json());
+    watchSearchQ = q;
+    lastWatchFetchedLang = currentLang;
+    watchLoadedCount = 20;
+    watchAllLoaded = false;
+  }
+
+  // Apply filters
+  let filteredData = watchData;
+  if (watchBandFilter === 'small') {
+    filteredData = filteredData.filter(i => (i.bandGroup || '').includes('小'));
+  } else if (watchBandFilter === 'large') {
+    filteredData = filteredData.filter(i => (i.bandGroup || '').includes('大'));
+  }
+  
+  if (watchScreenFilter === 'flat') {
+    filteredData = filteredData.filter(i => (i.screenFeature || '').includes('纯平'));
+  } else if (watchScreenFilter === 'curved') {
+    filteredData = filteredData.filter(i => (i.screenFeature || '').includes('弧面'));
+  } else if (watchScreenFilter === 'classic') {
+    filteredData = filteredData.filter(i => (i.screenFeature || '').includes('非全面屏'));
+  }
+
+  if (!filteredData.length) { 
+    el.innerHTML = emptyState(t('empty_watch')); 
+    el.innerHTML += '<div id="watch-load-trigger"></div>';
+    return; 
+  }
+
+  const groups = {};
+  filteredData.forEach(i => { if(!groups[i.group]) groups[i.group]=[]; groups[i.group].push(i); });
+
+  el.innerHTML = `<div class="section-group">
+    <div class="section-header">
+      <span class="section-title">${t('title_watch')}</span>
+      <span class="section-count" id="watch-total-count">${filteredData.length} ${t('ipad_count')} (${t('loaded_count')} ${Math.min(watchLoadedCount, filteredData.length)})</span>
+    </div>
+    <div class="section-body" id="watch-list-container"></div>
+  </div>
+  <div id="watch-load-trigger" style="height:20px"></div>
+  <div id="watch-loading" style="text-align:center;padding:20px;color:var(--text3);display:none">${t('loaded_count')}...</div>`;
+
+  renderWatchPage(filteredData);
+}
+
+function renderWatchPage(filteredData) {
+  const container = document.getElementById('watch-list-container');
+  const q = watchSearchQ;
+  const toLoad = Math.min(watchLoadedCount, filteredData.length);
+
+  const groups = {};
+  filteredData.slice(0, toLoad).forEach(i => { if(!groups[i.group]) groups[i.group]=[]; groups[i.group].push(i); });
+
+  container.innerHTML = Object.entries(groups).map(([grp, list]) => `
+    <div class="section-group">
+      <div class="section-header">
+        <span class="section-title">${grp}</span>
+        <span class="section-count">${list.length} ${t('ipad_count')}</span>
+      </div>
+      <div class="section-body">
+        ${list.map(i => `
+          <div class="device-card">
+            <div class="device-card-header">
+              <div>
+                <span class="device-name">${hl(i.name,q)}</span>
+                ${i.years ? `<span class="device-gen">${i.years}</span>` : ''}
+                ${i.bandGroup ? `<span class="device-gen" style="background:#dbeafe;color:#1e40af">${i.bandGroup}</span>` : ''}
+                ${i.note ? `<div class="device-note${i.specialWarning?' warn':''}">${t('special_warning')} ${hl(i.note,q)}</div>` : ''}
+              </div>
+            </div>
+            <div class="device-grid">
+              <div class="device-info-box case">
+                <div class="label">⌚ 表带</div>
+                <div class="value">${hl(i.caseComp||'—',q)}</div>
+              </div>
+              <div class="device-info-box film">
+                <div class="label">🛡️ 膜/壳</div>
+                <div class="value">${hl(i.filmComp||'—',q)}</div>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  watchAllLoaded = watchLoadedCount >= filteredData.length;
+  const totalEl = document.getElementById('watch-total-count');
+  if (totalEl) totalEl.textContent = `${filteredData.length} ${t('ipad_count')} (${t('loaded_count')} ${toLoad})`;
+  const loadingEl = document.getElementById('watch-loading');
+  if (loadingEl) loadingEl.style.display = watchAllLoaded ? 'none' : 'block';
+}
+
+// ============ FRONT — FILM ============
+function setFilmType(type, btn) {
+  filmType = type;
+  filmBrand = '';
+  document.querySelectorAll('[data-ftype]').forEach(b => b.classList.toggle('on', b===btn));
+  loadFilm();
+}
+
+async function loadFilm() {
+  const q = document.getElementById('film-search').value.trim();
+  const brand = filmBrand || '';
+  const el = document.getElementById('film-results');
+
+  // Fetch fresh data if first load or search/brand changed
+  if (filmData.length === 0 || q !== filmSearchQ || brand !== filmSearchBrand) {
+    filmData = await fetch(`/api/film?q=${encodeURIComponent(q)}&brand=${encodeURIComponent(brand)}`).then(r=>r.json());
+    filmSearchQ = q;
+    filmSearchBrand = brand;
+    filmLoadedCount = 20;
+    allLoaded = false;
+  }
+
+  // Extract unique brands for filter
+  const allBrands = new Set();
+  Object.values(filmData).forEach(brands => {
+    brands.forEach(b => allBrands.add(b.brand));
+  });
+  renderBrandFilters([...allBrands].sort());
+
+  const entries = Object.entries(filmData);
+  if (!entries.length) { 
+    el.innerHTML = emptyState(t('empty_film')); 
+    el.innerHTML += '<div id="load-trigger"></div>';
+    return; 
+  }
+
+  // Show header with total count
+  el.innerHTML = `<div class="section-group"><div class="section-header"><span class="section-title">${t('subtitle_film')}</span><span class="section-count" id="total-count">${entries.length} ${t('film_count')}</span></div>
+    <div class="section-body" id="film-list-container">
+    </div></div>
+    <div id="load-trigger" style="height:20px"></div>
+    <div id="loading-indicator" style="text-align:center;padding:20px;color:var(--text3);display:none">
+      <span style="font-size:13px">${t('loaded_count')}...</span>
+    </div>`;
+
+  renderFilmPage();
+}
+
+function renderFilmPage() {
+  const container = document.getElementById('film-list-container');
+  const q = filmSearchQ;
+  const entries = Object.entries(filmData);
+  const toLoad = Math.min(filmLoadedCount, entries.length);
+
+  // Rebuild html from 0 to toLoad
+  let html = '';
+  for (let i = 0; i < toLoad; i++) {
+    const [filmName, brands] = entries[i];
+    html += `
+      <div class="film-group-card">
+        <div class="film-group-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <span class="film-name-badge">${hl(filmName,q)}</span>
+          <span class="film-brand-count">${brands.length} ${t('brand_all')}</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text3)">收起 ▴</span>
+        </div>
+        <div class="film-group-body open">
+          ${brands.map(b => `
+            <div class="film-brand-row">
+              <span class="brand-pill brand-${b.brand}">${b.brand}</span>
+              <div class="film-models-text">${hl(b.models,q)}</div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  container.innerHTML = html;
+
+  // Update loaded count
+  filmLoadedCount = toLoad;
+  allLoaded = filmLoadedCount >= entries.length;
+
+  const totalEl = document.getElementById('total-count');
+  if (totalEl) totalEl.textContent = `${entries.length} ${t('film_count')} (${t('loaded_count')} ${filmLoadedCount})`;
+
+  // Show loading indicator
+  const loadingEl = document.getElementById('loading-indicator');
+  if (loadingEl) {
+    loadingEl.style.display = allLoaded ? 'none' : 'block';
+  }
+}
+
+// Scroll handler for lazy loading
+function handleScroll() {
+  // Film page
+  if (currentPage === 'film' && !filmIsLoading && !filmAllLoaded) {
+    const trigger = document.getElementById('load-trigger');
+    if (trigger && trigger.getBoundingClientRect().top < window.innerHeight + 200) {
+      filmIsLoading = true;
+      filmLoadedCount += FILM_LOAD_COUNT;
+      renderFilmPage();
+      setTimeout(() => { filmIsLoading = false; }, 300);
+    }
+  }
+
+  // iPad page
+  if (currentPage === 'ipad' && !ipadIsLoading && !ipadAllLoaded) {
+    const trigger = document.getElementById('ipad-load-trigger');
+    if (trigger && trigger.getBoundingClientRect().top < window.innerHeight + 200) {
+      ipadIsLoading = true;
+      ipadLoadedCount += IPAD_LOAD_COUNT;
+      renderiPadPage();
+      setTimeout(() => { ipadIsLoading = false; }, 300);
+    }
+  }
+
+  // Watch page
+  if (currentPage === 'watch' && !watchIsLoading && !watchAllLoaded) {
+    const trigger = document.getElementById('watch-load-trigger');
+    if (trigger && trigger.getBoundingClientRect().top < window.innerHeight + 200) {
+      watchIsLoading = true;
+      watchLoadedCount += WATCH_LOAD_COUNT;
+      renderWatchPage();
+      setTimeout(() => { watchIsLoading = false; }, 300);
+    }
+  }
+}
+
+window.addEventListener('scroll', handleScroll);
+
+function renderBrandFilters(brands) {
+  const el = document.getElementById('brand-filters');
+  if (!brands.length) { el.innerHTML=''; return; }
+  el.innerHTML = `<span class="filter-label">品牌:</span>
+    <button class="pill${!filmBrand?' on':''}" onclick="setBrand('')">全部</button>
+    ${brands.map(b=>`<button class="pill${filmBrand===b?' on':''}" onclick="setBrand('${b}')">${b}</button>`).join('')}`;
+}
+
+function setBrand(b) { 
+  filmBrand=b; 
+  filmData = [];  // Reset data when brand changes
+  loadFilm(); 
+}
+
+// ============ ADMIN ============
+async function loadAdminDashboard() {
+  try {
+    const s = await api('/api/admin/stats');
+    document.getElementById('stat-ipad').textContent = s.ipadCount;
+    document.getElementById('stat-watch').textContent = s.watchCount;
+    document.getElementById('stat-fg').textContent = s.fgCount;
+    document.getElementById('stat-2d').textContent = s.tdCount;
+    document.getElementById('stat-priv').textContent = s.privacyCount;
+    document.getElementById('stat-users').textContent = s.userCount;
+  } catch {}
+}
+
+async function loadAdminiPad() {
+  const items = await api('/api/admin/ipad');
+  const tbody = document.getElementById('ipad-admin-tbody');
+  tbody.innerHTML = items.map(i => `<tr>
+    <td><strong>${getLocalized(i.name, adminLang)}</strong></td>
+    <td style="color:var(--text2)">${getLocalized(i.group, adminLang)}</td>
+    <td style="font-family:'JetBrains Mono',monospace;font-size:12px">${getLocalized(i.years, adminLang)||'—'}</td>
+    <td style="font-size:12px;max-width:180px">${getLocalized(i.caseComp, adminLang)||'—'}</td>
+    <td style="font-size:12px;max-width:180px">${getLocalized(i.filmComp, adminLang)||'—'}</td>
+    <td>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-secondary btn-sm" onclick='editItem("ipad",${JSON.stringify(i)})'>${t('btn_edit')}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteItem('ipad","${i.id}")">${t('btn_delete')}</button>
+      </div>
+    </td>
+  </tr>`).join('');
+}
+
+async function loadAdminWatch() {
+  const items = await api('/api/admin/watch');
+  const tbody = document.getElementById('watch-admin-tbody');
+  tbody.innerHTML = items.length ? items.map(i => `<tr>
+    <td><strong>${getLocalized(i.name, adminLang)}</strong></td>
+    <td style="color:var(--text2)">${getLocalized(i.group, adminLang)}</td>
+    <td style="font-family:'JetBrains Mono',monospace;font-size:12px">${getLocalized(i.years, adminLang)||'—'}</td>
+    <td style="font-size:12px">${getLocalized(i.caseComp, adminLang)||'—'}</td>
+    <td>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-secondary btn-sm" onclick='editItem("watch",${JSON.stringify(i)})'>${t('btn_edit')}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteItem('watch","${i.id}")">${t('btn_delete')}</button>
+      </div>
+    </td>
+  </tr>`).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:32px">暂无数据，点击新增开始添加</td></tr>';
+}
+
+async function loadAdminFilm() {
+  const data = await api('/api/film?type=fg');
+  const tbody = document.getElementById('film-admin-tbody');
+  const entries = Object.entries(data);
+  tbody.innerHTML = entries.map(([name, brands]) => {
+    const totalModels = brands.reduce((a,b) => a + b.models.split('/').length, 0);
+    return `<tr>
+      <td><span class="film-name-badge" style="font-size:12px">${name}</span></td>
+      <td>${brands.length} ${t('th_brands')}</td>
+      <td style="font-family:'JetBrains Mono',monospace">~${totalModels} ${t('th_models')}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteFilmGroup('${encodeURIComponent(name)}')">${t('btn_delete')}</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function loadAdminUsers() {
+  const users = await api('/api/admin/users');
+  const tbody = document.getElementById('users-admin-tbody');
+  tbody.innerHTML = users.map(u => `<tr>
+    <td><strong>${u.username}</strong></td>
+    <td><span style="background:${u.role==='admin'?'#FEE2E2':'#DBEAFE'};color:${u.role==='admin'?'#991B1B':'#1E40AF'};padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600">${u.role}</span></td>
+    <td style="color:var(--text3);font-size:12px">${new Date(u.createdAt).toLocaleDateString('zh-CN')}</td>
+    <td>${u.username!=='admin'?`<button class="btn btn-danger btn-sm" onclick="deleteItem('users','${u.id}')">${t('btn_delete')}</button>`:'<span style="color:var(--text3);font-size:12px">'+t('system_account')+'</span>'}</td>
+  </tr>`).join('');
+}
+
+async function loadSettings() {
+  try {
+    const s = await fetch('/api/settings').then(r=>r.json());
+    const sn = document.getElementById('set-sitename');
+    const sv = document.getElementById('set-version');
+    const sno = document.getElementById('set-note');
+    if(sn) sn.value = s.siteName||'';
+    if(sv) sv.value = s.version||'';
+    if(sno) sno.value = s.note||'';
+    document.title = (s.siteName||'配件指南') + ' — AccessoryGuide';
+    const vEl = document.getElementById('nav-version');
+    if(vEl) vEl.textContent = s.version||'v1.0';
+  } catch {}
+}
+
+async function saveSettings() {
+  const logoInput = document.getElementById('set-logo');
+  if (logoInput.files && logoInput.files[0]) {
+    const formData = new FormData();
+    formData.append('logo', logoInput.files[0]);
+    const uploadRes = await fetch('/api/admin/logo', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token }, body: formData });
+    if (!uploadRes.ok) { toast('Logo 上传失败', 'error'); return; }
+  }
+  const body = { siteName: document.getElementById('set-sitename').value, version: document.getElementById('set-version').value, note: document.getElementById('set-note').value };
+  await api('/api/admin/settings', { method:'PUT', body: JSON.stringify(body) });
+  toast('设置已保存', 'success');
+  loadSettings();
+}
+
+function switchPanel(panel, el) {
+  document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.admin-sidebar-item[data-panel]').forEach(s => s.classList.remove('active'));
+  document.getElementById('panel-'+panel).classList.add('active');
+  if(el) el.classList.add('active');
+  applyTranslations(); // Apply i18n to the newly shown panel
+  if(panel==='dashboard') loadAdminDashboard();
+  else if(panel==='ipad-mgmt') loadAdminiPad();
+  else if(panel==='watch-mgmt') loadAdminWatch();
+  else if(panel==='film-mgmt') loadAdminFilm();
+  else if(panel==='users-mgmt') loadAdminUsers();
+  else if(panel==='settings-mgmt') loadSettings();
+  else if(panel==='trans-mgmt') loadAdminTranslations();
+}
+
+async function loadAdminTranslations() {
+  const data = await api('/api/admin/translations');
+  renderTransPanel('zh', data.zh);
+  renderTransPanel('en', data.en);
+  renderTransPanel('es', data.es);
+}
+
+function renderTransPanel(lang, texts) {
+  const el = document.getElementById('trans-' + lang);
+  const keys = Object.keys(texts).sort();
+  el.innerHTML = keys.map(key => `
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label" style="font-size:11px;color:var(--text3)">${key}</label>
+      <input type="text" class="form-input" style="font-size:13px" id="trans-${lang}-${key}" value="${texts[key] || ''}">
+    </div>
+  `).join('');
+}
+
+async function saveTranslations() {
+  const keys = Object.keys(translations.zh || {});
+  const zh = {}, en = {}, es = {};
+  keys.forEach(key => {
+    zh[key] = document.getElementById(`trans-zh-${key}`)?.value || '';
+    en[key] = document.getElementById(`trans-en-${key}`)?.value || '';
+    es[key] = document.getElementById(`trans-es-${key}`)?.value || '';
+  });
+  await api('/api/admin/translations', { method:'PUT', body: JSON.stringify({ zh, en, es }) });
+  await loadTranslations();
+  toast('翻译已保存', 'success');
+}
+
+// ============ MODALS ============
+function openModal(type, data=null) {
+  modalMode = type;
+  modalData = data;
+  document.getElementById('modal-overlay').classList.remove('hidden');
+  const title = { ipad:t('modal_add_ipad'), watch:t('modal_add_watch'), film:t('modal_add_film'), user:t('modal_add_user') };
+  document.getElementById('modal-title').textContent = data ? t('modal_edit') : (title[type]||t('modal_add'));
+  document.getElementById('modal-body').innerHTML = getModalForm(type, data);
+}
+
+function editItem(type, data) { openModal(type, data); }
+
+function getModalForm(type, d={}) {
+  if (type === 'ipad' || type === 'watch') {
+    return `
+      <style>
+        .lang-tabs { display:flex;gap:4px;margin-bottom:16px;padding:4px;background:var(--surface2);border-radius:8px }
+        .lang-tab { padding:6px 12px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text2) }
+        .lang-tab.active { background:var(--accent);color:#fff }
+        .lang-group { display:none }
+        .lang-group.active { display:block }
+      </style>
+      <div class="lang-tabs">
+        <button type="button" class="lang-tab active" onclick="switchLangTab('es',this)">Español</button>
+        <button type="button" class="lang-tab" onclick="switchLangTab('en',this)">English</button>
+        <button type="button" class="lang-tab" onclick="switchLangTab('zh',this)">中文</button>
+      </div>
+      
+      <div class="lang-group active" data-lang="es">
+        <div class="form-group"><label class="form-label">型号名称 (中文) *</label><input id="f-name-zh" class="form-input" value="${getLocalized(d.name,'zh')}" placeholder="如: Pro 11 (2021)"></div>
+        <div class="form-group"><label class="form-label">所属系列 (中文) *</label><input id="f-group-zh" class="form-input" value="${getLocalized(d.group,'zh')}" placeholder="如: 11 英寸 iPad Pro"></div>
+        <div class="form-group"><label class="form-label">保护壳兼容性 (中文)</label><input id="f-case-zh" class="form-input" value="${getLocalized(d.caseComp,'zh')}" placeholder="如: 通用"></div>
+        <div class="form-group"><label class="form-label">钢化膜兼容性 (中文)</label><input id="f-film-zh" class="form-input" value="${getLocalized(d.filmComp,'zh')}" placeholder="如: 通用 (全面屏)"></div>
+        <div class="form-group"><label class="form-label">备注 (中文)</label><textarea id="f-note-zh" class="form-input form-textarea" placeholder="备注说明">${getLocalized(d.note,'zh')}</textarea></div>
+      </div>
+      
+      <div class="lang-group" data-lang="en">
+        <div class="form-group"><label class="form-label">Model Name (English) *</label><input id="f-name-en" class="form-input" value="${getLocalized(d.name,'en')}" placeholder="e.g. Pro 11 (2021)"></div>
+        <div class="form-group"><label class="form-label">Series (English) *</label><input id="f-group-en" class="form-input" value="${getLocalized(d.group,'en')}" placeholder="e.g. 11-inch iPad Pro"></div>
+        <div class="form-group"><label class="form-label">Case Compatibility (English)</label><input id="f-case-en" class="form-input" value="${getLocalized(d.caseComp,'en')}" placeholder="e.g. Universal"></div>
+        <div class="form-group"><label class="form-label">Film Compatibility (English)</label><input id="f-film-en" class="form-input" value="${getLocalized(d.filmComp,'en')}" placeholder="e.g. Universal (full-screen)"></div>
+        <div class="form-group"><label class="form-label">Notes (English)</label><textarea id="f-note-en" class="form-input form-textarea" placeholder="Notes">${getLocalized(d.note,'en')}</textarea></div>
+      </div>
+      
+      <div class="lang-group" data-lang="es">
+        <div class="form-group"><label class="form-label">Nombre del Modelo (Español) *</label><input id="f-name-es" class="form-input" value="${getLocalized(d.name,'es')}" placeholder="ej. Pro 11 (2021)"></div>
+        <div class="form-group"><label class="form-label">Serie (Español) *</label><input id="f-group-es" class="form-input" value="${getLocalized(d.group,'es')}" placeholder="ej. iPad Pro de 11 pulgadas"></div>
+        <div class="form-group"><label class="form-label">Compatibilidad Funda (Español)</label><input id="f-case-es" class="form-input" value="${getLocalized(d.caseComp,'es')}" placeholder="ej. Universal"></div>
+        <div class="form-group"><label class="form-label">Compatibilidad Cristal (Español)</label><input id="f-film-es" class="form-input" value="${getLocalized(d.filmComp,'es')}" placeholder="ej. Universal (pantalla completa)"></div>
+        <div class="form-group"><label class="form-label">Notas (Español)</label><textarea id="f-note-es" class="form-input form-textarea" placeholder="Notas">${getLocalized(d.note,'es')}</textarea></div>
+      </div>
+      
+      <div class="form-row" style="margin-top:16px">
+        <div class="form-group">
+          <label class="form-label">代次 (所有语言共用)</label>
+          <input id="f-years" class="form-input" value="${getLocalized(d.years,'zh')}" placeholder="如: 3/4/5/6代">
+        </div>
+        <div class="form-group">
+          <label class="form-label">排序</label>
+          <input id="f-order" class="form-input" type="number" value="${d.order||99}" placeholder="99">
+        </div>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" id="f-warn" ${d.specialWarning?'checked':''}>
+        <label for="f-warn" style="font-size:13px">${t('form_show_warning')}</label>
+      </div>`;
+  }
+  if (type === 'film') {
+    return `
+      <div class="form-group">
+        <label class="form-label">${t('form_film_name')} *</label>
+        <input id="f-filmname" class="form-input" placeholder="${t('placeholder_film_name')}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">${t('form_brand')}</label>
+        <select id="f-brand" class="form-input form-select">
+          ${['SAM','OPPO','VIVO','XIAOMI','REALME','HUAWEI','HONOR','MOTO','REDMI','APPLE','HW'].map(b=>`<option>${b}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">${t('form_models_list')}</label>
+        <textarea id="f-models" class="form-input form-textarea" style="min-height:120px" placeholder="${t('placeholder_models_list')}"></textarea>
+      </div>`;
+  }
+  if (type === 'user') {
+    return `
+      <div class="form-group">
+        <label class="form-label">${t('form_username')} *</label>
+        <input id="f-uname" class="form-input" placeholder="${t('placeholder_username')}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">${t('form_password')} *</label>
+        <input id="f-upass" class="form-input" type="password" placeholder="${t('placeholder_password')}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">${t('form_role')}</label>
+        <select id="f-urole" class="form-input form-select">
+          <option value="editor">${t('role_editor')} (editor)</option>
+          <option value="admin">${t('role_admin')} (admin)</option>
+        </select>
+      </div>`;
+  }
+  return '';
+}
+
+async function saveModal() {
+  try {
+    if (modalMode === 'ipad' || modalMode === 'watch') {
+      // Build multi-language body
+      const body = {
+        name: {
+          zh: document.getElementById('f-name-zh')?.value.trim() || '',
+          en: document.getElementById('f-name-en')?.value.trim() || '',
+          es: document.getElementById('f-name-es')?.value.trim() || ''
+        },
+        group: {
+          zh: document.getElementById('f-group-zh')?.value.trim() || '',
+          en: document.getElementById('f-group-en')?.value.trim() || '',
+          es: document.getElementById('f-group-es')?.value.trim() || ''
+        },
+        years: document.getElementById('f-years')?.value.trim() || '',
+        order: parseInt(document.getElementById('f-order')?.value) || 99,
+        caseComp: {
+          zh: document.getElementById('f-case-zh')?.value.trim() || '',
+          en: document.getElementById('f-case-en')?.value.trim() || '',
+          es: document.getElementById('f-case-es')?.value.trim() || ''
+        },
+        filmComp: {
+          zh: document.getElementById('f-film-zh')?.value.trim() || '',
+          en: document.getElementById('f-film-en')?.value.trim() || '',
+          es: document.getElementById('f-film-es')?.value.trim() || ''
+        },
+        note: {
+          zh: document.getElementById('f-note-zh')?.value.trim() || '',
+          en: document.getElementById('f-note-en')?.value.trim() || '',
+          es: document.getElementById('f-note-es')?.value.trim() || ''
+        },
+        specialWarning: document.getElementById('f-warn')?.checked || false
+      };
+      // Use Chinese name as fallback for required validation
+      if (!body.name.zh || !body.group.zh) { toast('请填写中文必填字段', 'error'); return; }
+      if (modalData) await api(`/api/admin/${modalMode}/${modalData.id}`, { method:'PUT', body:JSON.stringify(body) });
+      else await api(`/api/admin/${modalMode}`, { method:'POST', body:JSON.stringify(body) });
+      toast('保存成功', 'success');
+      closeModal();
+      if(modalMode==='ipad') loadAdminiPad(); else loadAdminWatch();
+    }
+    else if (modalMode === 'film') {
+      const body = { filmName: document.getElementById('f-filmname').value.trim(), brand: document.getElementById('f-brand').value, models: document.getElementById('f-models').value.trim() };
+      if (!body.filmName || !body.models) { toast('请填写必填字段', 'error'); return; }
+      await api('/api/admin/film/fg', { method:'POST', body:JSON.stringify(body) });
+      toast('膜组已添加', 'success');
+      closeModal();
+      loadAdminFilm();
+    }
+    else if (modalMode === 'user') {
+      const body = { username: document.getElementById('f-uname').value.trim(), password: document.getElementById('f-upass').value, role: document.getElementById('f-urole').value };
+      if (!body.username || body.password.length < 6) { toast('请填写用户名且密码至少6位', 'error'); return; }
+      await api('/api/admin/users', { method:'POST', body:JSON.stringify(body) });
+      toast('用户已创建', 'success');
+      closeModal();
+      loadAdminUsers();
+    }
+  } catch(e) { toast('操作失败: '+e.message, 'error'); }
+}
+
+async function deleteItem(type, id) {
+  if (!confirm(t('confirm_delete'))) return;
+  await api(`/api/admin/${type}/${id}`, { method:'DELETE' });
+  toast('已删除', 'info');
+  if(type==='ipad') loadAdminiPad();
+  else if(type==='watch') loadAdminWatch();
+  else if(type==='users') loadAdminUsers();
+}
+
+async function deleteFilmGroup(name) {
+  if (!confirm(t('confirm_delete_film'))) return;
+  await api('/api/admin/film/fg/'+name, { method:'DELETE' });
+  toast('膜组已删除', 'info');
+  loadAdminFilm();
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal-overlay')) return;
+  document.getElementById('modal-overlay').classList.add('hidden');
+}
+
+// ============ UTILS ============
+function hl(text, q) {
+  if (!q || !text) return text||'';
+  const re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+  return String(text).replace(re,'<span class="highlight">$1</span>');
+}
+
+function emptyState(msg) {
+  return `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><p>${msg}</p></div>`;
+}
+
+function toast(msg, type='info') {
+  const el = document.getElementById('toast');
+  const item = document.createElement('div');
+  item.className = `toast-item ${type}`;
+  item.textContent = msg;
+  el.appendChild(item);
+  setTimeout(() => item.remove(), 3000);
+}
+
+// ============ START ============
+init();
+</script>
+</body>
+</html>
