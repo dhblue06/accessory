@@ -862,8 +862,27 @@ const CATEGORY_MAP = {
 
 function translateCategory(raw) {
   if (!raw) return raw;
-  const map = CATEGORY_MAP[currentLang] || CATEGORY_MAP.es;
-  return map[raw] || raw;
+  const isEs = currentLang === 'es';
+  const isEn = currentLang === 'en';
+  // WISHED type
+  if (raw.includes('\u6700\u60F3\u62E5\u6709') || raw.includes('WISHED')) {
+    if (isEs) return raw.replace('\u6700\u60F3\u62E5\u6709', '\u2764\uFE0F Deseados \u00B7').replace('WISHED', 'WISHED');
+    if (isEn) return raw.replace('\u6700\u60F3\u62E5\u6709', '\u2764\uFE0F Wished \u00B7').replace('WISHED', 'WISHED');
+    return raw;
+  }
+  // Regular categories
+  const prefix = isEs ? '\uD83D\uDCF1 ' : isEn ? '\uD83D\uDCF1 ' : '\uD83D\uDCF1 ';
+  if (raw.includes('\u624B\u673A') || raw.includes('\u624B\u673A')) return prefix + (isEs ? 'M\u00F3viles' : isEn ? 'Phones' : '\u624B\u673A');
+  if (raw.includes('\u58F3')) return '\uD83D\uDCF1 ' + (isEs ? 'Fundas M\u00F3vil' : isEn ? 'Phone Cases' : '\u624B\u673A\u58F3');
+  if (raw.includes('\u6570\u636E\u7EBF') || raw.includes('\u6570\u636E')) return '\uD83D\uDD0C ' + (isEs ? 'Cables' : isEn ? 'Cables' : '\u6570\u636E\u7EBF');
+  if (raw.includes('\u5145\u7535')) return '\u26A1 ' + (isEs ? 'Cargadores' : isEn ? 'Chargers' : '\u5145\u7535\u8BBE\u5907');
+  if (raw.includes('\u8033\u673A') || raw.includes('\u8033')) return '\uD83C\uDFA7 ' + (isEs ? 'Auriculares' : isEn ? 'Headphones' : '\u8033\u673A');
+  if (raw.includes('\u667A\u80FD\u624B\u8868') || raw.includes('\u624B\u8868')) return '\u231A ' + (isEs ? 'Smartwatches' : isEn ? 'Smartwatches' : '\u667A\u80FD\u624B\u8868');
+  if (raw.includes('\u5E73\u677F') || raw.includes('\u5E73\u677F')) return '\uD83D\uDDFA ' + (isEs ? 'Tablets' : isEn ? 'Tablets' : '\u5E73\u677F\u7535\u8111');
+  if (raw.includes('\u7B14\u8BB0') || raw.includes('\u7B14\u8BB0')) return '\uD83D\uDCBB ' + (isEs ? 'Port\u00E1tiles' : isEn ? 'Laptops' : '\u7B14\u8BB0\u672C\u7535\u8111');
+  if (raw.includes('\u6444\u5F71') || raw.includes('\u6444\u5F71')) return '\uD83D\uDCF7 ' + (isEs ? 'Fotograf\u00EDa' : isEn ? 'Photography' : '\u6444\u5F71\u4E0E\u6446\u50CF\u8BBE\u5907');
+  if (raw.includes('\u6C7D\u8F66') || raw.includes('\u6C7D\u8F66')) return '\uD83D\uDE97 ' + (isEs ? 'Accesorios Coche' : isEn ? 'Car Accessories' : '\u6C7D\u8F66\u5468\u8FB9');
+  return raw;
 }
 
 // ============ INFO CARDS TRANSLATIONS ============
@@ -1935,6 +1954,29 @@ function setAmazonCat(cat, btn) {
   amazonCatFilter = cat;
   document.querySelectorAll('#amazon-cat-filter .pill').forEach(b => b.classList.toggle('on', b===btn));
   renderAmazonData();
+}
+
+async function fetchAmazonData() {
+  const el = document.getElementById('amazon-results');
+  el.innerHTML = '<div class="amazon-loading"><div class="amazon-loading-spinner"></div><div>Loading...</div></div>';
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${AMAZON_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(AMAZON_SHEET_NAME)}`;
+    const res = await fetch(url);
+    const text = await res.text();
+    const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)?.[1];
+    if (!jsonStr) throw new Error('Data format error');
+    const json = JSON.parse(jsonStr);
+    const rows = json.table?.rows || [];
+    amazonAllData = rows.map(row => {
+      const c = row.c || [];
+      const rawCat = c[0]?.v || '';
+      return { category: translateCategory(rawCat), categoryRaw: rawCat, type: c[1]?.v||'', rank: parseInt(c[2]?.v)||0, title: c[3]?.v||'', price: c[4]?.v||'', rating: c[5]?.v||'', reviews: c[6]?.v||'', imageUrl: c[7]?.v||'', productUrl: c[8]?.v||'' };
+    }).filter(r => r.title && r.title !== 'Title');
+    renderAmazonCategoryFilters();
+    renderAmazonData();
+  } catch(e) {
+    el.innerHTML = '<div class="amazon-empty"><div style="font-size:40px">⚠️</div><div>Failed to load</div></div>';
+  }
 }
 
 function setAmazonType(type, btn) {
