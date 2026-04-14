@@ -145,14 +145,14 @@ input,textarea,select{font-family:inherit}
 .empty p{font-size:15px;font-weight:500}
 
 /* ===== ADMIN PAGE ===== */
-.admin_layout{display:grid;grid-template-columns:240px 1fr;gap:28px;align-items:start}
+.admin-layout{display:grid;grid-template-columns:240px 1fr;gap:28px;align-items:start}
 .admin-sidebar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:sticky;top:88px;box-shadow:var(--shadow-sm)}
 .admin-sidebar-item{display:flex;align-items:center;gap:12px;padding:14px 20px;font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.15s;border-bottom:1px solid var(--border)}
 .admin-sidebar-item:last-child{border-bottom:none}
 .admin-sidebar-item:hover{background:var(--surface2);color:var(--text)}
 .admin-sidebar-item.active{background:var(--accent);color:#fff}
 .admin-sidebar-item svg{width:18px;height:18px;flex-shrink:0}
-.admin-main{}
+.admin-main{padding:0}
 .admin-panel{display:none}
 .admin-panel.active{display:block}
 .admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
@@ -222,7 +222,7 @@ input,textarea,select{font-family:inherit}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:768px){
-  .admin_layout{grid-template-columns:1fr}
+  .admin-layout{grid-template-columns:1fr}
   .admin-sidebar{position:static}
   .device-grid{grid-template-columns:1fr}
   .stat-grid{grid-template-columns:1fr 1fr}
