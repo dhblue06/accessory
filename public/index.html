@@ -1085,6 +1085,7 @@ function applyTranslations() {
 async function init() {
   await loadSettings();
   await loadTranslations();
+  await loadAmazonCatTranslations();
   if (window.location.hash === '#admin') {
     if (token) { showAdmin(); }
     else { showLogin(); }
@@ -1703,6 +1704,7 @@ function switchPanel(panel, el) {
   else if(panel==='users-mgmt') loadAdminUsers();
   else if(panel==='settings-mgmt') loadSettings();
   else if(panel==='trans-mgmt') loadAdminTranslations();
+  else if(panel==='amazon-cat') loadAmazonCatTranslationsAdmin();
 }
 
 async function loadAdminTranslations() {
@@ -1710,6 +1712,25 @@ async function loadAdminTranslations() {
   renderTransPanel('zh', data.zh);
   renderTransPanel('en', data.en);
   renderTransPanel('es', data.es);
+}
+
+async function loadAmazonCatTranslationsAdmin() {
+  // First load from API
+  await loadAmazonCatTranslations();
+  // Then render the admin panel with all categories from current Amazon data
+  const cats = [...new Set(amazonAllData.map(r => r.categoryRaw))].filter(Boolean);
+  const trans = amazonCategoryTrans;
+  ['zh', 'en', 'es'].forEach(lang => {
+    const el = document.getElementById('amazon-cat-' + lang);
+    el.innerHTML = cats.map(cat => `
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="form-label" style="font-size:11px;color:var(--text3)">${cat}</label>
+        <input type="text" class="form-input" style="font-size:13px" 
+          id="amz-cat-${lang}-${btoa(encodeURIComponent(cat))}" 
+          value="${trans[lang]?.[cat] || cat}">
+      </div>
+    `).join('');
+  });
 }
 
 function renderTransPanel(lang, texts) {
@@ -1944,6 +1965,56 @@ function toast(msg, type='info') {
 }
 
 // ============ AMAZON ============
+// Amazon category translations (loaded from API)
+let amazonCategoryTrans = { zh: {}, en: {}, es: {} };
+
+function translateCategory(raw) {
+  if (!raw) return raw;
+  // Try API translations first
+  const apiTrans = amazonCategoryTrans[currentLang]?.[raw];
+  if (apiTrans) return apiTrans;
+  // Fallback: try DEFAULT_CATEGORY_MAP
+  const DEFAULT_CATEGORY_MAP = {
+    'WISHED': { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' },
+    'HOT': { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' }
+  };
+  if (DEFAULT_CATEGORY_MAP[raw]) return DEFAULT_CATEGORY_MAP[raw][currentLang] || raw;
+  return raw;
+}
+
+function getTypeLabel(type) {
+  const LABELS = {
+    WISHED: { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' },
+    HOT: { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' }
+  };
+  return LABELS[type]?.[currentLang] || type;
+}
+
+async function loadAmazonCatTranslations() {
+  try {
+    const res = await fetch('/api/amazon-categories');
+    if (res.ok) {
+      const data = await res.json();
+      amazonCategoryTrans = data;
+    }
+  } catch(e) { console.log('Using default Amazon translations'); }
+}
+
+async function saveAmazonCatTranslations() {
+  const cats = [...new Set(amazonAllData.map(r => r.categoryRaw))].filter(Boolean);
+  const row = {};
+  cats.forEach(cat => {
+    row[cat] = {
+      zh: document.getElementById('amz-cat-zh-' + btoa(encodeURIComponent(cat)))?.value || cat,
+      en: document.getElementById('amz-cat-en-' + btoa(encodeURIComponent(cat)))?.value || cat,
+      es: document.getElementById('amz-cat-es-' + btoa(encodeURIComponent(cat)))?.value || cat
+    };
+  });
+  await api('/api/amazon-categories', { method: 'PUT', body: JSON.stringify(row) });
+  await loadAmazonCatTranslations();
+  toast('保存成功', 'success');
+}
+
 async function fetchAmazonData() {
   const el = document.getElementById('amazon-results');
   el.innerHTML = '<div class="amazon-loading"><div class="amazon-loading-spinner"></div><div>正在加载...</div></div>';
@@ -1968,9 +2039,9 @@ async function fetchAmazonData() {
 }
 
 function renderAmazonCategoryFilters() {
-  const cats = [...new Set(amazonAllData.map(r => r.category))].filter(Boolean);
+  const cats = [...new Set(amazonAllData.map(r => r.categoryRaw))].filter(Boolean);
   const el = document.getElementById('amazon-cat-filter');
-  el.innerHTML = '<button class="pill on" onclick="setAmazonCat(\'\',this)">全部</button>' + cats.map(c => '<button class="pill" onclick="setAmazonCat(\''+c.replace(/'/g,"\\'")+'\',this)">'+c+'</button>').join('');
+  el.innerHTML = '<button class="pill on" onclick="setAmazonCat(\'\',this)">全部</button>' + cats.map(c => '<button class="pill" onclick="setAmazonCat(\''+c.replace(/'/g,"\\'")+'\',this)">'+translateCategory(c)+'</button>').join('');
 }
 
 function setAmazonCat(cat, btn) {
@@ -1979,28 +2050,7 @@ function setAmazonCat(cat, btn) {
   renderAmazonData();
 }
 
-async function fetchAmazonData() {
-  const el = document.getElementById('amazon-results');
-  el.innerHTML = '<div class="amazon-loading"><div class="amazon-loading-spinner"></div><div>Loading...</div></div>';
-  try {
-    const url = `https://docs.google.com/spreadsheets/d/${AMAZON_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(AMAZON_SHEET_NAME)}`;
-    const res = await fetch(url);
-    const text = await res.text();
-    const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)?.[1];
-    if (!jsonStr) throw new Error('Data format error');
-    const json = JSON.parse(jsonStr);
-    const rows = json.table?.rows || [];
-    amazonAllData = rows.map(row => {
-      const c = row.c || [];
-      const rawCat = c[0]?.v || '';
-      return { category: translateCategory(rawCat), categoryRaw: rawCat, type: c[1]?.v||'', rank: parseInt(c[2]?.v)||0, title: c[3]?.v||'', price: c[4]?.v||'', rating: c[5]?.v||'', reviews: c[6]?.v||'', imageUrl: c[7]?.v||'', productUrl: c[8]?.v||'' };
-    }).filter(r => r.title && r.title !== 'Title');
-    renderAmazonCategoryFilters();
-    renderAmazonData();
-  } catch(e) {
-    el.innerHTML = '<div class="amazon-empty"><div style="font-size:40px">⚠️</div><div>Failed to load</div></div>';
-  }
-}
+
 
 function setAmazonType(type, btn) {
   amazonTypeFilter = type;
@@ -2027,13 +2077,13 @@ function renderAmazonData() {
   const shown = filtered.slice(0, amazonDisplayLimit);
   const grouped = {};
   shown.forEach(item => {
-    const key = item.category + '__' + item.type;
-    if (!grouped[key]) grouped[key] = { category: item.category, type: item.type, items: [] };
+    const key = item.categoryRaw + '__' + item.type;
+    if (!grouped[key]) grouped[key] = { category: item.category, categoryRaw: item.categoryRaw, type: item.type, items: [] };
     grouped[key].items.push(item);
   });
   let html = '';
   for (const { category, type, items } of Object.values(grouped)) {
-    const typeLabel = type === 'WISHED' ? '❤️ 心愿' : '🔥 热销';
+    const typeLabel = getTypeLabel(type);
     const typeColor = type === 'WISHED' ? '#FF3366' : '#FF9900';
     html += '<div class="amazon-section"><div class="amazon-section-header"><span class="amazon-section-title">'+category+'</span><span style="color:'+typeColor+'">'+typeLabel+'</span></div><div class="amazon-grid">';
     items.forEach(item => {
@@ -2041,7 +2091,7 @@ function renderAmazonData() {
       const rankStr = item.rank <= 3 ? ['🥇','🥈','🥉'][item.rank-1] : item.rank;
       const imgHtml = item.imageUrl ? '<img src="'+item.imageUrl+'" alt="'+item.title+'">' : '<div style="font-size:32px;opacity:0.3">📦</div>';
       const titleHtml = item.productUrl ? '<a href="'+item.productUrl+'" target="_blank">'+item.title+'</a>' : item.title;
-      html += '<div class="amazon-card"><div class="amazon-card-rank"><span class="rank-badge '+rankClass+'">'+rankStr+'</span></div><div class="amazon-card-img">'+imgHtml+'</div><div class="amazon-card-body"><div class="amazon-card-type">'+type+'</div><div class="amazon-card-title">'+titleHtml+'</div><div class="amazon-card-price">'+(item.price||'—')+'</div></div></div>';
+      html += '<div class="amazon-card"><div class="amazon-card-rank"><span class="rank-badge '+rankClass+'">'+rankStr+'</span></div><div class="amazon-card-img">'+imgHtml+'</div><div class="amazon-card-body"><div class="amazon-card-type">'+getTypeLabel(type)+'</div><div class="amazon-card-title">'+titleHtml+'</div><div class="amazon-card-price">'+(item.price||'—')+'</div></div></div>';
     });
     html += '</div></div>';
   }

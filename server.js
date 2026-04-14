@@ -1090,6 +1090,19 @@ app.put('/api/admin/translations', authMiddleware, (req, res) => {
   res.json({ ok: true });
 });
 
+// Amazon category translations
+app.get('/api/amazon-categories', (req, res) => {
+  const db = readDB();
+  res.json(db.amazonCategories || {});
+});
+
+app.put('/api/admin/amazon-categories', authMiddleware, (req, res) => {
+  const db = readDB();
+  db.amazonCategories = req.body;
+  writeDB(db);
+  res.json({ ok: true });
+});
+
 // Users
 app.get('/api/admin/users', authMiddleware, (req, res) => {
   const users = readUsers().map(u => ({ id: u.id, username: u.username, role: u.role, createdAt: u.createdAt }));
