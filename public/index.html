@@ -760,32 +760,32 @@ input,textarea,select{font-family:inherit}
 
       <!-- SETTINGS -->
       <div id="panel-settings-mgmt" class="admin-panel">
-        <div class="admin-header"><h2 class="admin-title">系统设置</h2></div>
+        <div class="admin-header"><h2 class="admin-title" data-i18n="admin_settings_mgmt">系统设置</h2></div>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:480px">
           <div class="form-group">
-            <label class="form-label">当前 Logo</label>
+            <label class="form-label" data-i18n="settings_current_logo">当前 Logo</label>
             <div style="margin-bottom:8px">
               <img id="current-logo" src="/Logo.png" style="height:48px;border-radius:8px;border:1px solid var(--border)" />
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">上传新 Logo</label>
+            <label class="form-label" data-i18n="settings_upload_logo">上传新 Logo</label>
             <input id="set-logo" type="file" accept="image/*" style="font-size:13px">
-            <p style="font-size:11px;color:var(--text3);margin-top:4px">支持 PNG、JPG，建议尺寸 200x200</p>
+            <p style="font-size:11px;color:var(--text3);margin-top:4px" data-i18n="settings_logo_hint">支持 PNG、JPG，建议尺寸 200x200</p>
           </div>
           <div class="form-group">
-            <label class="form-label">站点名称</label>
+            <label class="form-label" data-i18n="settings_site_name">站点名称</label>
             <input id="set-sitename" class="form-input" type="text" placeholder="TEMCO ACCESORIOS">
           </div>
           <div class="form-group">
-            <label class="form-label">版本号</label>
+            <label class="form-label" data-i18n="settings_version">版本号</label>
             <input id="set-version" class="form-input" type="text" placeholder="v1.0">
           </div>
           <div class="form-group">
-            <label class="form-label">备注说明</label>
+            <label class="form-label" data-i18n="settings_note">备注说明</label>
             <textarea id="set-note" class="form-input form-textarea" placeholder="系统说明..."></textarea>
           </div>
-          <button class="btn btn-primary" onclick="saveSettings()">保存设置</button>
+          <button class="btn btn-primary" onclick="saveSettings()" data-i18n="settings_save">保存设置</button>
         </div>
       </div>
     </main>
