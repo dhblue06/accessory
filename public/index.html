@@ -494,8 +494,8 @@ input,textarea,select{font-family:inherit}
   <div class="filter-bar" id="amazon-cat-filter" style="margin-bottom:16px"></div>
   <div class="filter-bar" style="margin-bottom:20px">
     <button class="pill" data-atype="" onclick="setAmazonType('',this)">全部</button>
-    <button class="pill" data-atype="HOT" onclick="setAmazonType('HOT',this)">🔥 热销榜</button>
-    <button class="pill" data-atype="WISHED" onclick="setAmazonType('WISHED',this)">❤️ 心愿榜</button>
+    <button class="pill" data-atype="HOT" onclick="setAmazonType('HOT',this)"><span id="amazon-hot-label">🔥 热销榜</span></button>
+    <button class="pill" data-atype="WISHED" onclick="setAmazonType('WISHED',this)"><span id="amazon-wished-label">❤️ 心愿榜</span></button>
   </div>
   <div id="amazon-results"><div class="amazon-loading"><div class="amazon-loading-spinner"></div><div>正在加载...</div></div></div>
   <div id="amazon-footer" style="text-align:center;padding:20px">
@@ -978,6 +978,8 @@ function setLanguage(lang) {
     // Re-render info cards
     renderIpadInfoCards();
     renderWatchInfoCards();
+    // Update Amazon filter labels
+    updateAmazonFilterLabels();
     // Re-translate Amazon categories
     if (amazonAllData.length > 0) {
       // Reset filter when language changes to avoid mismatch
@@ -988,6 +990,13 @@ function setLanguage(lang) {
       renderAmazonData();
     }
   });
+}
+
+function updateAmazonFilterLabels() {
+  const hotLabel = document.getElementById('amazon-hot-label');
+  const wishedLabel = document.getElementById('amazon-wished-label');
+  if (hotLabel) hotLabel.textContent = getTypeLabel('HOT');
+  if (wishedLabel) wishedLabel.textContent = getTypeLabel('WISHED');
 }
 
 function updateLangButtons() {
@@ -1101,6 +1110,7 @@ async function init() {
   applyTranslations();
   renderIpadInfoCards();
   renderWatchInfoCards();
+  updateAmazonFilterLabels();
 }
 
 async function loadSettings() {
@@ -2045,11 +2055,24 @@ function translateCategory(raw) {
 }
 
 function getTypeLabel(type) {
+  // Handle both English and Chinese type values from Google Sheets
   const LABELS = {
     WISHED: { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' },
-    HOT: { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' }
+    '❤️ 心愿': { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' },
+    HOT: { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' },
+    '🔥 热销': { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' }
   };
-  return LABELS[type]?.[currentLang] || type;
+  return LABELS[type]?.[currentLang] || LABELS[type]?.[currentLang === 'en' ? 'HOT' : type] || type;
+}
+
+// Check if a type value matches HOT (supports both English "HOT" and Chinese "🔥 热销")
+function isHotType(type) {
+  return type === 'HOT' || type === '🔥 热销';
+}
+
+// Check if a type value matches WISHED (supports both English "WISHED" and Chinese "❤️ 心愿")
+function isWishedType(type) {
+  return type === 'WISHED' || type === '❤️ 心愿';
 }
 
 async function loadAmazonCatTranslations() {
@@ -2134,7 +2157,21 @@ function loadMoreAmazon() {
 
 function renderAmazonData() {
   const el = document.getElementById('amazon-results');
-  let filtered = amazonAllData.filter(r => (!amazonCatFilter || r.category === amazonCatFilter) && (!amazonTypeFilter || r.type === amazonTypeFilter));
+  let filtered = amazonAllData.filter(r => {
+    const catMatch = !amazonCatFilter || r.category === amazonCatFilter;
+    let typeMatch = true;
+    if (amazonTypeFilter) {
+      // Handle both English and Chinese type values
+      if (amazonTypeFilter === 'HOT') {
+        typeMatch = isHotType(r.type);
+      } else if (amazonTypeFilter === 'WISHED') {
+        typeMatch = isWishedType(r.type);
+      } else {
+        typeMatch = r.type === amazonTypeFilter;
+      }
+    }
+    return catMatch && typeMatch;
+  });
   if (filtered.length === 0) { el.innerHTML = '<div class="amazon-empty"><div>未找到</div></div>'; return; }
   const shown = filtered.slice(0, amazonDisplayLimit);
   const grouped = {};
@@ -2146,7 +2183,7 @@ function renderAmazonData() {
   let html = '';
   for (const { category, type, items } of Object.values(grouped)) {
     const typeLabel = getTypeLabel(type);
-    const typeColor = type === 'WISHED' ? '#FF3366' : '#FF9900';
+    const typeColor = isWishedType(type) ? '#FF3366' : '#FF9900';
     html += '<div class="amazon-section"><div class="amazon-section-header"><span class="amazon-section-title">'+category+'</span><span style="color:'+typeColor+'">'+typeLabel+'</span></div><div class="amazon-grid">';
     items.forEach(item => {
       const rankClass = item.rank <= 3 ? ['gold','silver','bronze'][item.rank-1] : 'normal';
