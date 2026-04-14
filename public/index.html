@@ -2056,23 +2056,30 @@ function translateCategory(raw) {
 
 function getTypeLabel(type) {
   // Handle both English and Chinese type values from Google Sheets
-  const LABELS = {
-    WISHED: { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' },
-    '❤️ 心愿': { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' },
-    HOT: { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' },
-    '🔥 热销': { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' }
-  };
-  return LABELS[type]?.[currentLang] || LABELS[type]?.[currentLang === 'en' ? 'HOT' : type] || type;
+  if (!type) return '';
+  // Check for WISHED variants
+  if (type.includes('❤️') || type.includes('心愿') || type === 'WISHED') {
+    const WISHED_LABELS = { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' };
+    return WISHED_LABELS[currentLang] || '❤️ 心愿';
+  }
+  // Check for HOT variants
+  if (type.includes('🔥') || type.includes('热销') || type === 'HOT') {
+    const HOT_LABELS = { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' };
+    return HOT_LABELS[currentLang] || '🔥 热销';
+  }
+  return type;
 }
 
 // Check if a type value matches HOT (supports both English "HOT" and Chinese "🔥 热销")
 function isHotType(type) {
-  return type === 'HOT' || type === '🔥 热销';
+  if (!type) return false;
+  return type === 'HOT' || type.includes('🔥') || type.includes('热销');
 }
 
 // Check if a type value matches WISHED (supports both English "WISHED" and Chinese "❤️ 心愿")
 function isWishedType(type) {
-  return type === 'WISHED' || type === '❤️ 心愿';
+  if (!type) return false;
+  return type === 'WISHED' || type.includes('❤️') || type.includes('心愿');
 }
 
 async function loadAmazonCatTranslations() {
