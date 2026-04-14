@@ -980,6 +980,9 @@ function setLanguage(lang) {
     renderWatchInfoCards();
     // Re-translate Amazon categories
     if (amazonAllData.length > 0) {
+      // Reset filter when language changes to avoid mismatch
+      amazonCatFilter = '';
+      amazonTypeFilter = '';
       amazonAllData = amazonAllData.map(item => ({ ...item, category: translateCategory(item.categoryRaw) }));
       renderAmazonCategoryFilters();
       renderAmazonData();
