@@ -23,7 +23,7 @@ const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 const JWT_SECRET = process.env.JWT_SECRET || 'accessory-guide-secret-2024';
 const DB_FILE = path.join(__dirname, 'data', 'db.json');
 const USERS_FILE = path.join(__dirname, 'data', 'users.json');
-const XLSX_FILE = path.join(__dirname, '..', 'data.xlsx');
+const XLSX_FILE = path.join(__dirname, 'data.xlsx');
 
 // Ensure data dir exists
 if (!fs.existsSync(path.join(__dirname, 'data'))) {
