@@ -1728,10 +1728,23 @@ async function loadAmazonCatTranslationsAdmin() {
         <label class="form-label" style="font-size:11px;color:var(--text3)">${cat}</label>
         <input type="text" class="form-input" style="font-size:13px" 
           id="amz-cat-${lang}-${btoa(encodeURIComponent(cat))}" 
-          value="${trans[lang]?.[cat] || cat}">
+          value="${trans[lang]?.[cat] || translateCategoryForAdmin(cat, lang)}">
       </div>
     `).join('');
   });
+}
+
+function translateCategoryForAdmin(cat, lang) {
+  // Use API translations if available
+  const apiTrans = amazonCategoryTrans[lang]?.[cat];
+  if (apiTrans) return apiTrans;
+  // Fallback to DEFAULT_CATEGORY_MAP
+  const DEFAULT_CATEGORY_MAP = {
+    'WISHED': { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' },
+    'HOT': { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' }
+  };
+  if (DEFAULT_CATEGORY_MAP[cat]) return DEFAULT_CATEGORY_MAP[cat][lang] || cat;
+  return cat;
 }
 
 function renderTransPanel(lang, texts) {
@@ -2011,7 +2024,7 @@ async function saveAmazonCatTranslations() {
       es: document.getElementById('amz-cat-es-' + btoa(encodeURIComponent(cat)))?.value || cat
     };
   });
-  await api('/api/amazon-categories', { method: 'PUT', body: JSON.stringify(row) });
+  await api('/api/admin/amazon-categories', { method: 'PUT', body: JSON.stringify(row) });
   await loadAmazonCatTranslations();
   toast('保存成功', 'success');
 }
