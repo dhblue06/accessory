@@ -1716,11 +1716,14 @@ async function loadAdminTranslations() {
 }
 
 async function loadAmazonCatTranslationsAdmin() {
-  // First load from API
+  // First load Amazon data if not loaded
+  if (amazonAllData.length === 0) {
+    await fetchAmazonData();
+  }
+  // Load category translations from API
   await loadAmazonCatTranslations();
   // Then render the admin panel with all categories from current Amazon data
   const cats = [...new Set(amazonAllData.map(r => r.categoryRaw))].filter(Boolean);
-  const trans = amazonCategoryTrans;
   ['zh', 'en', 'es'].forEach(lang => {
     const el = document.getElementById('amazon-cat-' + lang);
     el.innerHTML = cats.map(cat => `
@@ -1728,7 +1731,7 @@ async function loadAmazonCatTranslationsAdmin() {
         <label class="form-label" style="font-size:11px;color:var(--text3)">${cat}</label>
         <input type="text" class="form-input" style="font-size:13px" 
           id="amz-cat-${lang}-${btoa(encodeURIComponent(cat))}" 
-          value="${trans[lang]?.[cat] || translateCategoryForAdmin(cat, lang)}">
+          value="${amazonCategoryTrans[lang]?.[cat] || translateCategoryForAdmin(cat, lang)}">
       </div>
     `).join('');
   });
