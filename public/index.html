@@ -741,21 +741,21 @@ input,textarea,select{font-family:inherit}
 
       <!-- AMAZON CATEGORIES TRANSLATION -->
       <div id="panel-amazon-cat" class="admin-panel">
-        <div class="admin-header"><h2 class="admin-title">Amazon 品类翻译</h2></div>
-        <p style="color:var(--text2);margin-bottom:16px">管理 Amazon 榜单品类的多语言显示名称</p>
+        <div class="admin-header"><h2 class="admin-title" data-i18n="admin_amazon_cat_title">Amazon 品类翻译</h2></div>
+        <p style="color:var(--text2);margin-bottom:16px" data-i18n="admin_amazon_cat_desc">管理 Amazon 榜单品类的多语言显示名称</p>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px">
-          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">中文 (简体)</h3>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="trans_zh">中文 (简体)</h3>
           <div id="amazon-cat-zh" style="max-height:400px;overflow-y:auto"></div>
         </div>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px">
-          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">English</h3>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="trans_en">English</h3>
           <div id="amazon-cat-en" style="max-height:400px;overflow-y:auto"></div>
         </div>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px">
-          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">Español</h3>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="trans_es">Español</h3>
           <div id="amazon-cat-es" style="max-height:400px;overflow-y:auto"></div>
         </div>
-        <button class="btn btn-primary" onclick="saveAmazonCatTranslations()">保存品类翻译</button>
+        <button class="btn btn-primary" onclick="saveAmazonCatTranslations()" data-i18n="btn_save_cat_trans">保存品类翻译</button>
       </div>
 
       <!-- SETTINGS -->
