@@ -2202,40 +2202,31 @@ function translateCategory(raw) {
   if (apiTrans) return apiTrans;
   // Fallback: try DEFAULT_CATEGORY_MAP
   const DEFAULT_CATEGORY_MAP = {
-    '❤️ 最想拥有-手机': { es: '❤️ Más Deseados - Teléfono', en: '❤️ Most Wanted - Phone', zh: '❤️ 最想拥有-手机' },
-    '❤️ 最想拥有-手机壳': { es: '❤️ Más Deseados - Funda', en: '❤️ Most Wanted - Phone Case', zh: '❤️ 最想拥有-手机壳' },
-    '❤️ 最想拥有-数据线': { es: '❤️ Más Deseados - Cable', en: '❤️ Most Wanted - Data Cable', zh: '❤️ 最想拥有-数据线' },
-    '❤️ 最想拥有-充电设备': { es: '❤️ Más Deseados - Cargador', en: '❤️ Most Wanted - Charger', zh: '❤️ 最想拥有-充电设备' },
-    '❤️ 最想拥有-耳机': { es: '❤️ Más Deseados - Auriculares', en: '❤️ Most Wanted - Earphones', zh: '❤️ 最想拥有-耳机' },
-    '❤️ 最想拥有-智能手表': { es: '❤️ Más Deseados - Smartwatch', en: '❤️ Most Wanted - Smartwatch', zh: '❤️ 最想拥有-智能手表' },
-    '❤️ 最想拥有-平板电脑': { es: '❤️ Más Deseados - Tableta', en: '❤️ Most Wanted - Tablet', zh: '❤️ 最想拥有-平板电脑' },
-    '❤️ 最想拥有-笔记本电脑': { es: '❤️ Más Deseados - Portátil', en: '❤️ Most Wanted - Laptop', zh: '❤️ 最想拥有-笔记本电脑' },
-    '❤️ 最想拥有-摄影与摄像设备': { es: '❤️ Más Deseados - Cámaras', en: '❤️ Most Wanted - Cameras', zh: '❤️ 最想拥有-摄影与摄像设备' },
-    '❤️ 汽车周边': { es: '❤️ Accesorios de Auto', en: '❤️ Car Accessories', zh: '❤️ 汽车周边' },
+    // Most Wanted categories (❤️ emoji)
+    '❤️ 手机': { es: '❤️ Teléfono', en: '❤️ Phone', zh: '❤️ 手机' },
+    '❤️ 手机壳': { es: '❤️ Funda', en: '❤️ Case', zh: '❤️ 手机壳' },
+    '❤️ 数据线': { es: '❤️ Cable', en: '❤️ Cable', zh: '❤️ 数据线' },
+    '❤️ 充电设备': { es: '❤️ Cargador', en: '❤️ Charger', zh: '❤️ 充电设备' },
+    '❤️ 耳机': { es: '❤️ Auriculares', en: '❤️ Earphones', zh: '❤️ 耳机' },
+    '❤️ 智能手表': { es: '❤️ Smartwatch', en: '❤️ Smartwatch', zh: '❤️ 智能手表' },
+    '❤️ 平板电脑': { es: '❤️ Tableta', en: '❤️ Tablet', zh: '❤️ 平板电脑' },
+    '❤️ 笔记本电脑': { es: '❤️ Portátil', en: '❤️ Laptop', zh: '❤️ 笔记本电脑' },
+    '❤️ 摄影与摄像设备': { es: '❤️ Cámaras', en: '❤️ Cameras', zh: '❤️ 摄影与摄像设备' },
+    '❤️ 汽车周边': { es: '❤️ Auto Accesorios', en: '❤️ Car Accessories', zh: '❤️ 汽车周边' },
+    // Bestseller categories (various emojis)
     '📱 手机': { es: '📱 Teléfono', en: '📱 Phone', zh: '📱 手机' },
-    '📲🛡️ 手机壳': { es: '📲🛡️ Funda de Teléfono', en: '📲🛡️ Phone Case', zh: '📲🛡️ 手机壳' },
-    '🔗 数据线': { es: '🔗 Cable de Datos', en: '🔗 Data Cable', zh: '🔗 数据线' },
-    '🔌 充电设备': { es: '🔌 Cargador', en: '🔌 Charging Device', zh: '🔌 充电设备' },
+    '🛡️ 手机壳': { es: '🛡️ Funda', en: '🛡️ Case', zh: '🛡️ 手机壳' },
+    '🔗 数据线': { es: '🔗 Cable', en: '🔗 Cable', zh: '🔗 数据线' },
+    '🔌 充电设备': { es: '🔌 Cargador', en: '🔌 Charger', zh: '🔌 充电设备' },
     '🎧 耳机': { es: '🎧 Auriculares', en: '🎧 Earphones', zh: '🎧 耳机' },
     '⌚ 智能手表': { es: '⌚ Smartwatch', en: '⌚ Smartwatch', zh: '⌚ 智能手表' },
     '📲 平板电脑': { es: '📲 Tableta', en: '📲 Tablet', zh: '📲 平板电脑' },
     '💻 笔记本电脑': { es: '💻 Portátil', en: '💻 Laptop', zh: '💻 笔记本电脑' },
     '📷 摄影与摄像设备': { es: '📷 Cámaras', en: '📷 Cameras', zh: '📷 摄影与摄像设备' },
-    '🚗 汽车周边': { es: '🚗 Accesorios de Auto', en: '🚗 Car Accessories', zh: '🚗 汽车周边' },
+    '🚗 汽车周边': { es: '🚗 Auto Accesorios', en: '🚗 Car Accessories', zh: '🚗 汽车周边' },
     '🔥 热销': { es: '🔥 Más Vendidos', en: '🔥 Bestsellers', zh: '🔥 热销' },
     'WISHED': { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' },
-    'HOT': { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' },
-    // Normalized categories (without emoji/prefix)
-    '手机': { es: 'Teléfono', en: 'Phone', zh: '手机' },
-    '手机壳': { es: 'Funda de Teléfono', en: 'Phone Case', zh: '手机壳' },
-    '数据线': { es: 'Cable de Datos', en: 'Data Cable', zh: '数据线' },
-    '充电设备': { es: 'Cargador', en: 'Charger', zh: '充电设备' },
-    '耳机': { es: 'Auriculares', en: 'Earphones', zh: '耳机' },
-    '智能手表': { es: 'Smartwatch', en: 'Smartwatch', zh: '智能手表' },
-    '平板电脑': { es: 'Tableta', en: 'Tablet', zh: '平板电脑' },
-    '笔记本电脑': { es: 'Portátil', en: 'Laptop', zh: '笔记本电脑' },
-    '摄影与摄像设备': { es: 'Cámaras', en: 'Cameras', zh: '摄影与摄像设备' },
-    '汽车周边': { es: 'Accesorios de Auto', en: 'Car Accessories', zh: '汽车周边' }
+    'HOT': { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' }
   };
   if (DEFAULT_CATEGORY_MAP[raw]) return DEFAULT_CATEGORY_MAP[raw][currentLang] || raw;
   return raw;
