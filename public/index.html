@@ -2325,14 +2325,17 @@ async function fetchAmazonData() {
   }
 }
 
-// Normalize category name: remove ALL prefixes like "Most Wanted-", "Bestseller-", etc. and emojis
+// Normalize category name: remove ALL prefixes and emojis
 function normalizeCategory(cat) {
   if (!cat) return '';
-  // Remove emojis and prefixes
-  return cat
-    .replace(/^[❤️🔥📱📲🔗🔌🎧⌚💻📷🚗]+/g, '') // Remove leading emojis
-    .replace(/^(Most Wanted|Bestseller|HOT|WISHED)\s*[-–]?\s*/i, '') // Remove prefixes
-    .trim();
+  let result = cat;
+  // Remove all emoji characters at the start
+  result = result.replace(/^[❤️🔥📱📲🔗🔌🎧⌚💻📷🚗\s]+/g, '');
+  // Remove ALL prefix patterns (case insensitive, with various separators)
+  result = result.replace(/^(most\s?wanted|bestseller|hot|wished)[\s\-–:]+/gi, '');
+  // Also remove Chinese prefixes
+  result = result.replace(/^(最想拥有|热销|心愿)[\s\-–:]+/g, '');
+  return result.trim();
 }
 
 function renderAmazonCategoryFilters() {
@@ -2407,7 +2410,7 @@ function renderAmazonData() {
   const grouped = {};
   shown.forEach(item => {
     const key = normalizeCategory(item.categoryRaw);
-    if (!grouped[key]) grouped[key] = { category: translateCategory(key), items: [] };
+    if (!grouped[key]) grouped[key] = { category: key, items: [] };
     grouped[key].items.push(item);
   });
   let html = '';
