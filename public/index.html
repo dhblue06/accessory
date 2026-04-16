@@ -490,10 +490,14 @@ input,textarea,select{font-family:inherit}
 /* ===== INFO CARDS (财富密码/避坑指南) ===== */
 .info-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
 .info-cards-single{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}
-.info-card{padding:16px;border-radius:var(--radius-md);border:1px solid;position:relative;overflow:hidden}
+.info-card{padding:14px 16px;border-radius:var(--radius-md);border:1px solid;position:relative}
 .info-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.info-card-title{display:flex;align-items:center;gap:6px;font-weight:700;font-size:13px;margin-bottom:10px}
-.info-card-content{font-size:12px;line-height:1.7}
+.info-card-title{display:flex;align-items:center;gap:6px;font-weight:600;font-size:13px;cursor:pointer;user-select:none}
+.info-card-title::after{content:'▸';margin-left:auto;font-size:12px;transition:transform 0.2s}
+.info-card-title.expanded::after{transform:rotate(90deg)}
+.info-card-content{font-size:12px;line-height:1.7;display:none}
+.info-card-content.collapsed{display:none}
+.info-card-content.expanded{display:block}
 .info-card.amber{background:linear-gradient(135deg,#fef3c7,#fde68a);border-color:#f59e0b}
 .info-card.amber::before{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
 .info-card.amber .info-card-title{color:#92400e}
@@ -647,12 +651,12 @@ input,textarea,select{font-family:inherit}
   <!-- 财富密码 & 避坑指南 -->
   <div class="info-cards-grid">
     <div class="info-card amber">
-      <div class="info-card-title" id="ipad-film-title"></div>
-      <div class="info-card-content" id="ipad-film-content"></div>
+      <div class="info-card-title" id="ipad-film-title" onclick="toggleInfoCard(this)"></div>
+      <div class="info-card-content collapsed" id="ipad-film-content"></div>
     </div>
     <div class="info-card red">
-      <div class="info-card-title" id="ipad-case-title"></div>
-      <div class="info-card-content" id="ipad-case-content"></div>
+      <div class="info-card-title" id="ipad-case-title" onclick="toggleInfoCard(this)"></div>
+      <div class="info-card-content collapsed" id="ipad-case-content"></div>
     </div>
   </div>
   
@@ -681,20 +685,20 @@ input,textarea,select{font-family:inherit}
   <!-- Apple Watch 知识卡 -->
   <div class="info-cards-grid">
     <div class="info-card blue">
-      <div class="info-card-title" id="watch-band-title"></div>
-      <div class="info-card-content" id="watch-band-content"></div>
+      <div class="info-card-title" id="watch-band-title" onclick="toggleInfoCard(this)"></div>
+      <div class="info-card-content collapsed" id="watch-band-content"></div>
     </div>
     <div class="info-card red">
-      <div class="info-card-title" id="watch-case-title"></div>
-      <div class="info-card-content" id="watch-case-content"></div>
+      <div class="info-card-title" id="watch-case-title" onclick="toggleInfoCard(this)"></div>
+      <div class="info-card-content collapsed" id="watch-case-content"></div>
     </div>
   </div>
   
   <!-- 新款变动提示 -->
   <div class="info-cards-single">
     <div class="info-card green">
-      <div class="info-card-title" id="watch-new-title"></div>
-      <div class="info-card-content" id="watch-new-content"></div>
+      <div class="info-card-title" id="watch-new-title" onclick="toggleInfoCard(this)"></div>
+      <div class="info-card-content collapsed" id="watch-new-content"></div>
     </div>
   </div>
   
@@ -1066,6 +1070,14 @@ function translateCategory(raw) {
 }
 
 // ============ INFO CARDS TRANSLATIONS ============
+function toggleInfoCard(titleEl) {
+  const card = titleEl.parentElement;
+  const content = card.querySelector('.info-card-content');
+  titleEl.classList.toggle('expanded');
+  content.classList.toggle('collapsed');
+  content.classList.toggle('expanded');
+}
+
 function renderIpadInfoCards() {
   // iPad film card
   const filmTitleEl = document.getElementById('ipad-film-title');
