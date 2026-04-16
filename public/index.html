@@ -519,7 +519,7 @@ input,textarea,select{font-family:inherit}
 .amazon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:24px}
 .amazon-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all 0.2s}
 .amazon-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
-.amazon-card-rank{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border)}
+.amazon-card-rank{position:relative;display:flex;align-items:center;gap:8px;padding:8px 10px}
 .rank-badge{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;font-size:11px;font-weight:700}
 .rank-badge.gold{background:#FFD700;color:#000}
 .rank-badge.silver{background:#C0C0C0;color:#000}
@@ -528,8 +528,7 @@ input,textarea,select{font-family:inherit}
 .amazon-card-img{aspect-ratio:1;padding:12px;display:flex;align-items:center;justify-content:center;background:#fff}
 .amazon-card-img img{max-width:100%;max-height:100%;object-fit:contain}
 .amazon-card-body{padding:10px}
-.amazon-card-type{font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
-.amazon-card-title{font-size:12px;font-weight:600;line-height:1.4;color:var(--text);margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.amazon-card-title{font-size:12px;font-weight:600;line-height:1.4;color:var(--text);margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .amazon-card-title a{color:inherit}
 .amazon-card-price{font-size:14px;font-weight:700;color:var(--accent)}
 .amazon-card-meta{font-size:11px;color:var(--text2);margin-top:4px}
@@ -540,6 +539,12 @@ input,textarea,select{font-family:inherit}
 .amazon-section-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .amazon-section-title{font-size:14px;font-weight:600;color:var(--text)}
 .amazon-section-count{font-size:12px;color:var(--text3);margin-left:auto}
+
+/* ===== AMAZON MODE SWITCH ===== */
+.amazon-mode-btn{padding:8px 16px;border:none;background:transparent;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:var(--radius);transition:all 0.15s}
+.amazon-mode-btn:hover{color:var(--text)}
+.amazon-mode-btn.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow-sm)}
+.amazon-mode-btn.active[data-mode="MOST_WANTED"]{color:var(--accent-red)}
 </style>
 </head>
 <body>
@@ -623,12 +628,17 @@ input,textarea,select{font-family:inherit}
     <p data-i18n="subtitle_amazon">查看Amazon热门产品排行榜</p>
   </div>
 
-  <!-- 筛选器: 类型 + 品类在一行 -->
-  <div id="amazon-type-filter" class="filter-bar" style="margin-bottom:12px">
-    <button class="pill" data-atype="" onclick="setAmazonType('',this)" data-i18n="filter_all">全部</button>
-    <button class="pill" data-atype="HOT" onclick="setAmazonType('HOT',this)"><span id="amazon-hot-label">🔥 Bestseller</span></button>
-    <button class="pill" data-atype="WISHED" onclick="setAmazonType('WISHED',this)"><span id="amazon-wished-label">❤️ Deseo</span></button>
+  <!-- 榜单模式切换: Bestseller | Most Wanted -->
+  <div id="amazon-mode-filter" style="display:flex;gap:0;margin-bottom:16px;background:var(--surface2);border-radius:var(--radius-md);padding:4px;width:fit-content">
+    <button class="amazon-mode-btn active" data-mode="BESTSELLER" onclick="setAmazonMode('BESTSELLER',this)" id="mode-bestseller">
+      🔥 Bestseller
+    </button>
+    <button class="amazon-mode-btn" data-mode="MOST_WANTED" onclick="setAmazonMode('MOST_WANTED',this)" id="mode-mostwanted">
+      ❤️ Most Wanted
+    </button>
   </div>
+
+  <!-- 品类筛选 -->
   <div id="amazon-cat-filter" class="filter-bar" style="margin-bottom:20px"></div>
 
   <!-- 结果区域 -->
@@ -1021,7 +1031,7 @@ let watchScreenFilter = ''; // '', 'flat', 'curved', 'classic'
 let amazonAllData = [];
 let amazonDisplayLimit = 20;
 let amazonCatFilter = '';
-let amazonTypeFilter = '';
+let amazonMode = 'BESTSELLER'; // BESTSELLER | MOST_WANTED
 const AMAZON_SHEET_ID = '1AbsHChexrwhUgMlFQWH1JxoP7tIkbVSDDo7SRoKWE6I';
 const AMAZON_SHEET_NAME = 'latest';
 
@@ -1153,25 +1163,16 @@ function setLanguage(lang) {
     // Re-render info cards
     renderIpadInfoCards();
     renderWatchInfoCards();
-    // Update Amazon filter labels
-    updateAmazonFilterLabels();
     // Re-translate Amazon categories
     if (amazonAllData.length > 0) {
       // Reset filter when language changes to avoid mismatch
       amazonCatFilter = '';
-      amazonTypeFilter = '';
+      amazonMode = 'BESTSELLER';
       amazonAllData = amazonAllData.map(item => ({ ...item, category: translateCategory(item.categoryRaw) }));
       renderAmazonCategoryFilters();
       renderAmazonData();
     }
   });
-}
-
-function updateAmazonFilterLabels() {
-  const hotLabel = document.getElementById('amazon-hot-label');
-  const wishedLabel = document.getElementById('amazon-wished-label');
-  if (hotLabel) hotLabel.textContent = getTypeLabel('HOT');
-  if (wishedLabel) wishedLabel.textContent = getTypeLabel('WISHED');
 }
 
 function updateLangButtons() {
@@ -1286,7 +1287,6 @@ async function init() {
   applyTranslations();
   renderIpadInfoCards();
   renderWatchInfoCards();
-  updateAmazonFilterLabels();
 }
 
 async function loadSettings() {
@@ -2260,6 +2260,20 @@ function isWishedType(type) {
   return type === 'WISHED' || type.includes('❤️') || type.includes('心愿');
 }
 
+// Check if type matches the current mode (BESTSELLER or MOST_WANTED)
+function isModeMatch(type, mode) {
+  if (!type) return false;
+  const upper = type.toUpperCase();
+  if (mode === 'BESTSELLER') {
+    // BESTSELLER mode: match BESTSELLER, HOT, or 🔥 types
+    return upper === 'BESTSELLER' || type === 'HOT' || type.includes('🔥') || type.includes('热销');
+  } else if (mode === 'MOST_WANTED') {
+    // MOST_WANTED mode: match WISHED or MOST_WANTED types
+    return upper === 'MOST_WANTED' || type === 'WISHED' || type.includes('❤️') || type.includes('心愿');
+  }
+  return true;
+}
+
 async function loadAmazonCatTranslations() {
   try {
     const res = await fetch('/api/amazon-categories');
@@ -2325,11 +2339,11 @@ function setAmazonCat(cat, btn) {
 
 
 
-function setAmazonType(type, btn) {
-  amazonTypeFilter = type;
+function setAmazonMode(mode, btn) {
+  amazonMode = mode;
   amazonCatFilter = '';
   amazonDisplayLimit = 20;
-  document.querySelectorAll('#amazon-type-filter .pill').forEach(b => b.classList.toggle('on', b===btn));
+  document.querySelectorAll('.amazon-mode-btn').forEach(b => b.classList.toggle('active', b===btn));
   // Reset category pills
   document.querySelectorAll('#amazon-cat-filter .pill').forEach(b => b.classList.remove('on'));
   renderAmazonData();
@@ -2349,45 +2363,33 @@ function loadMoreAmazon() {
 function renderAmazonData() {
   const el = document.getElementById('amazon-results');
   let filtered = amazonAllData.filter(r => {
+    // Mode filter: BESTSELLER or MOST_WANTED
+    const modeMatch = isModeMatch(r.type, amazonMode);
+    // Category filter
     const catMatch = !amazonCatFilter || r.categoryRaw === amazonCatFilter;
-    let typeMatch = true;
-    if (amazonTypeFilter) {
-      // Handle both English and Chinese type values
-      if (amazonTypeFilter === 'HOT') {
-        typeMatch = isHotType(r.type);
-      } else if (amazonTypeFilter === 'WISHED') {
-        typeMatch = isWishedType(r.type);
-      } else {
-        typeMatch = r.type === amazonTypeFilter;
-      }
-    }
-    return catMatch && typeMatch;
+    return modeMatch && catMatch;
   });
-  if (filtered.length === 0) { 
-    // Debug: show what types exist in the data
-    const allTypes = [...new Set(amazonAllData.map(r => r.type))];
-    console.log('Amazon types in data:', allTypes);
-    console.log('Current filter:', amazonTypeFilter);
-    el.innerHTML = '<div class="amazon-empty"><div>未找到 (filter: '+amazonTypeFilter+')</div></div>'; return; 
+  if (filtered.length === 0) {
+    el.innerHTML = '<div class="amazon-empty"><div>未找到</div></div>'; return;
   }
   const shown = filtered.slice(0, amazonDisplayLimit);
   const grouped = {};
   shown.forEach(item => {
-    const key = item.categoryRaw + '__' + item.type;
+    const key = item.categoryRaw;
     if (!grouped[key]) grouped[key] = { category: item.category, categoryRaw: item.categoryRaw, type: item.type, items: [] };
     grouped[key].items.push(item);
   });
   let html = '';
-  for (const { category, type, items } of Object.values(grouped)) {
-    const typeLabel = getTypeLabel(type);
-    const typeColor = isWishedType(type) ? '#FF3366' : '#FF9900';
-    html += '<div class="amazon-section"><div class="amazon-section-header"><span class="amazon-section-title">'+category+'</span><span style="color:'+typeColor+'">'+typeLabel+'</span></div><div class="amazon-grid">';
+  for (const { category, items } of Object.values(grouped)) {
+    html += '<div class="amazon-section"><div class="amazon-section-header"><span class="amazon-section-title">'+category+'</span><span class="amazon-section-count">'+items.length+' '+t('items')+'</span></div><div class="amazon-grid">';
     items.forEach(item => {
       const rankClass = item.rank <= 3 ? ['gold','silver','bronze'][item.rank-1] : 'normal';
       const rankStr = item.rank <= 3 ? ['🥇','🥈','🥉'][item.rank-1] : item.rank;
       const imgHtml = item.imageUrl ? '<img src="'+item.imageUrl+'" alt="'+item.title+'">' : '<div style="font-size:32px;opacity:0.3">📦</div>';
       const titleHtml = item.productUrl ? '<a href="'+item.productUrl+'" target="_blank">'+item.title+'</a>' : item.title;
-      html += '<div class="amazon-card"><div class="amazon-card-rank"><span class="rank-badge '+rankClass+'">'+rankStr+'</span></div><div class="amazon-card-img">'+imgHtml+'</div><div class="amazon-card-body"><div class="amazon-card-type">'+getTypeLabel(type)+'</div><div class="amazon-card-title">'+titleHtml+'</div><div class="amazon-card-price">'+(item.price||'—')+'</div></div></div>';
+      const wishedDot = isWishedType(item.type) ? '<span style="width:6px;height:6px;background:var(--accent-red);border-radius:50%;position:absolute;top:8px;right:8px"></span>' : '';
+      const priceDisplay = item.price && item.price !== 'N/A' ? item.price : '<span style="color:var(--text4);font-size:12px">'+item.price+'</span>';
+      html += '<div class="amazon-card" style="position:relative"><div class="amazon-card-rank"><span class="rank-badge '+rankClass+'">'+rankStr+'</span>'+wishedDot+'</div><div class="amazon-card-img">'+imgHtml+'</div><div class="amazon-card-body"><div class="amazon-card-title">'+titleHtml+'</div><div class="amazon-card-price">'+priceDisplay+'</div></div></div>';
     });
     html += '</div></div>';
   }
