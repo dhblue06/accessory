@@ -623,16 +623,14 @@ input,textarea,select{font-family:inherit}
     <p data-i18n="subtitle_amazon">查看Amazon热门产品排行榜</p>
   </div>
 
-  <!-- 榜单类型筛选: 全部/Bestseller/Deseo -->
-  <div class="filter-bar" style="margin-bottom:12px">
-    <span class="filter-label" data-i18n="amazon_filter_type">榜单:</span>
+  <!-- 筛选器: 类型 + 品类在一行 -->
+  <div class="amazon-filters" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;align-items:center">
     <button class="pill" data-atype="" onclick="setAmazonType('',this)" data-i18n="filter_all">全部</button>
     <button class="pill" data-atype="HOT" onclick="setAmazonType('HOT',this)"><span id="amazon-hot-label">🔥 Bestseller</span></button>
     <button class="pill" data-atype="WISHED" onclick="setAmazonType('WISHED',this)"><span id="amazon-wished-label">❤️ Deseo</span></button>
+    <span style="width:1px;height:20px;background:var(--border);margin:0 4px"></span>
+    <div id="amazon-cat-filter" style="display:flex;flex-wrap:wrap;gap:6px"></div>
   </div>
-
-  <!-- 子分类筛选 -->
-  <div class="filter-bar" id="amazon-cat-filter" style="margin-bottom:20px;flex-direction:column;align-items:flex-start"></div>
 
   <!-- 结果区域 -->
   <div id="amazon-results"><div class="amazon-loading"><div class="amazon-loading-spinner"></div><div id="amazon-loading-text">正在加载...</div></div></div>
@@ -2317,7 +2315,7 @@ async function fetchAmazonData() {
 function renderAmazonCategoryFilters() {
   const cats = [...new Set(amazonAllData.map(r => r.categoryRaw))].filter(Boolean);
   const el = document.getElementById('amazon-cat-filter');
-  el.innerHTML = '<span class="filter-label" data-i18n="amazon_filter_cat">品类:</span>' + cats.map(c => '<button class="pill" onclick="setAmazonCat(\''+c.replace(/'/g,"\\'")+'\',this)">'+translateCategory(c)+'</button>').join('');
+  el.innerHTML = cats.map(c => '<button class="pill" onclick="setAmazonCat(\''+c.replace(/'/g,"\\'")+'\',this)">'+translateCategory(c)+'</button>').join('');
 }
 
 function setAmazonCat(cat, btn) {
@@ -2330,8 +2328,11 @@ function setAmazonCat(cat, btn) {
 
 function setAmazonType(type, btn) {
   amazonTypeFilter = type;
+  amazonCatFilter = ''; // Reset category when changing type
   amazonDisplayLimit = 20;
   document.querySelectorAll('[data-atype]').forEach(b => b.classList.toggle('on', b===btn));
+  // Reset category pills selection
+  document.querySelectorAll('#amazon-cat-filter .pill').forEach(b => b.classList.remove('on'));
   renderAmazonData();
 }
 
