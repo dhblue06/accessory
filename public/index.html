@@ -2325,15 +2325,18 @@ async function fetchAmazonData() {
   }
 }
 
-// Normalize category name: remove prefixes like "Most Wanted-", "Bestseller-", etc.
+// Normalize category name: remove ALL prefixes like "Most Wanted-", "Bestseller-", etc. and emojis
 function normalizeCategory(cat) {
   if (!cat) return '';
-  return cat.replace(/^(Most Wanted|Bestseller|HOT|WISHED)-/i, '').trim();
+  // Remove emojis and prefixes
+  return cat
+    .replace(/^[❤️🔥📱📲🔗🔌🎧⌚💻📷🚗]+/g, '') // Remove leading emojis
+    .replace(/^(Most Wanted|Bestseller|HOT|WISHED)\s*[-–]?\s*/i, '') // Remove prefixes
+    .trim();
 }
 
 function renderAmazonCategoryFilters() {
   const el = document.getElementById('amazon-cat-filter');
-  const catContainer = document.getElementById('amazon-cat-filter').parentElement;
 
   // Get categories that exist in current mode
   const catsInMode = amazonAllData.filter(r => isModeMatch(r.type, amazonMode));
@@ -2341,11 +2344,11 @@ function renderAmazonCategoryFilters() {
   catsInMode.forEach(r => {
     const normalized = normalizeCategory(r.categoryRaw);
     if (normalized && !catsMap.has(normalized)) {
-      catsMap.set(normalized, r.categoryRaw);
+      catsMap.set(normalized, normalized); // Use normalized name as both key and value
     }
   });
 
-  const cats = [...catsMap.entries()];
+  const cats = [...catsMap.keys()];
 
   if (cats.length <= 1) {
     // Only one or zero categories, hide the filter row
@@ -2355,8 +2358,8 @@ function renderAmazonCategoryFilters() {
 
   el.style.display = 'flex';
   const emoji = amazonMode === 'MOST_WANTED' ? '❤️ ' : '🔥 ';
-  el.innerHTML = cats.map(([normalized, original]) =>
-    '<button class="pill" data-cat="'+original+'" onclick="setAmazonCat(\''+original.replace(/'/g,"\\'")+'\',this)">'+emoji+translateCategory(normalized)+'</button>'
+  el.innerHTML = cats.map(cat =>
+    '<button class="pill" onclick="setAmazonCat(\''+cat.replace(/'/g,"\\'")+'\',this)">'+emoji+cat+'</button>'
   ).join('');
 }
 
