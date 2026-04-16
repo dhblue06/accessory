@@ -2329,12 +2329,14 @@ async function fetchAmazonData() {
 function normalizeCategory(cat) {
   if (!cat) return '';
   let result = cat;
-  // Remove all emoji characters at the start
-  result = result.replace(/^[❤️🔥📱📲🔗🔌🎧⌚💻📷🚗\s]+/g, '');
+  // Remove all emoji characters
+  result = result.replace(/[❤️🔥📱📲🔗🔌🎧⌚💻📷🚗]/g, '');
   // Remove ALL prefix patterns (case insensitive, with various separators)
-  result = result.replace(/^(most\s?wanted|bestseller|hot|wished)[\s\-–:]+/gi, '');
+  result = result.replace(/^(most\s?wanted|bestseller|hot|wished)[\s\-–:—]+/gi, '');
   // Also remove Chinese prefixes
-  result = result.replace(/^(最想拥有|热销|心愿)[\s\-–:]+/g, '');
+  result = result.replace(/^(最想拥有|热销|心愿)[\s\-–:—]+/g, '');
+  // Remove any remaining leading hyphens, dashes, or colons
+  result = result.replace(/^[\-–:—\s]+/, '');
   return result.trim();
 }
 
@@ -2347,14 +2349,13 @@ function renderAmazonCategoryFilters() {
   catsInMode.forEach(r => {
     const normalized = normalizeCategory(r.categoryRaw);
     if (normalized && !catsMap.has(normalized)) {
-      catsMap.set(normalized, normalized); // Use normalized name as both key and value
+      catsMap.set(normalized, normalized);
     }
   });
 
   const cats = [...catsMap.keys()];
 
   if (cats.length <= 1) {
-    // Only one or zero categories, hide the filter row
     el.style.display = 'none';
     return;
   }
@@ -2362,7 +2363,7 @@ function renderAmazonCategoryFilters() {
   el.style.display = 'flex';
   const emoji = amazonMode === 'MOST_WANTED' ? '❤️ ' : '🔥 ';
   el.innerHTML = cats.map(cat =>
-    '<button class="pill" onclick="setAmazonCat(\''+cat.replace(/'/g,"\\'")+'\',this)">'+emoji+cat+'</button>'
+    '<button class="pill" onclick="setAmazonCat(\''+cat.replace(/'/g,"\\'")+'\',this)">'+emoji+translateCategory(cat)+'</button>'
   ).join('');
 }
 
@@ -2410,7 +2411,7 @@ function renderAmazonData() {
   const grouped = {};
   shown.forEach(item => {
     const key = normalizeCategory(item.categoryRaw);
-    if (!grouped[key]) grouped[key] = { category: key, items: [] };
+    if (!grouped[key]) grouped[key] = { category: translateCategory(key), items: [] };
     grouped[key].items.push(item);
   });
   let html = '';
