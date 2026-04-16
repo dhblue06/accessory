@@ -2349,7 +2349,13 @@ function renderAmazonData() {
     }
     return catMatch && typeMatch;
   });
-  if (filtered.length === 0) { el.innerHTML = '<div class="amazon-empty"><div>未找到</div></div>'; return; }
+  if (filtered.length === 0) { 
+    // Debug: show what types exist in the data
+    const allTypes = [...new Set(amazonAllData.map(r => r.type))];
+    console.log('Amazon types in data:', allTypes);
+    console.log('Current filter:', amazonTypeFilter);
+    el.innerHTML = '<div class="amazon-empty"><div>未找到 (filter: '+amazonTypeFilter+')</div></div>'; return; 
+  }
   const shown = filtered.slice(0, amazonDisplayLimit);
   const grouped = {};
   shown.forEach(item => {
