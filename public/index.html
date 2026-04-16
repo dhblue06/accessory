@@ -624,7 +624,7 @@ input,textarea,select{font-family:inherit}
   </div>
   <div class="filter-bar" id="amazon-cat-filter" style="margin-bottom:16px"></div>
   <div class="filter-bar" style="margin-bottom:20px">
-    <button class="pill" data-atype="" onclick="setAmazonType('',this)">全部</button>
+    <button class="pill" data-atype="" onclick="setAmazonType('',this)" data-i18n="filter_all">全部</button>
     <button class="pill" data-atype="HOT" onclick="setAmazonType('HOT',this)"><span id="amazon-hot-label">🔥 热销榜</span></button>
     <button class="pill" data-atype="WISHED" onclick="setAmazonType('WISHED',this)"><span id="amazon-wished-label">❤️ 心愿榜</span></button>
   </div>
@@ -1692,7 +1692,7 @@ function renderFilmPage() {
         <div class="film-group-header" onclick="this.nextElementSibling.classList.toggle('open')">
           <span class="film-name-badge">${hl(filmName,q)}</span>
           <span class="film-brand-count">${brands.length} ${t('brand_all')}</span>
-          <span style="margin-left:auto;font-size:11px;color:var(--text3)">收起 ▴</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text3)">${t('collapse')} ▴</span>
         </div>
         <div class="film-group-body open">
           ${brands.map(b => `
@@ -1761,8 +1761,8 @@ window.addEventListener('scroll', handleScroll);
 function renderBrandFilters(brands) {
   const el = document.getElementById('brand-filters');
   if (!brands.length) { el.innerHTML=''; return; }
-  el.innerHTML = `<span class="filter-label">品牌:</span>
-    <button class="pill${!filmBrand?' on':''}" onclick="setBrand('')">全部</button>
+  el.innerHTML = `<span class="filter-label">${t('filter_brand')||'品牌'}:</span>
+    <button class="pill${!filmBrand?' on':''}" onclick="setBrand('')">${t('filter_all')}</button>
     ${brands.map(b=>`<button class="pill${filmBrand===b?' on':''}" onclick="setBrand('${b}')">${b}</button>`).join('')}`;
 }
 
