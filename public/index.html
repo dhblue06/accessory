@@ -1160,18 +1160,17 @@ function setLanguage(lang) {
     if (currentPage === 'film') loadFilm();
     else if (currentPage === 'ipad') loadiPad();
     else if (currentPage === 'watch') loadWatch();
-    // Re-render info cards
-    renderIpadInfoCards();
-    renderWatchInfoCards();
-    // Re-translate Amazon categories
-    if (amazonAllData.length > 0) {
-      // Reset filter when language changes to avoid mismatch
+    else if (currentPage === 'amazon') {
+      // Reset Amazon data with new translations
       amazonCatFilter = '';
       amazonMode = 'BESTSELLER';
       amazonAllData = amazonAllData.map(item => ({ ...item, category: translateCategory(item.categoryRaw) }));
       renderAmazonCategoryFilters();
       renderAmazonData();
     }
+    // Re-render info cards
+    renderIpadInfoCards();
+    renderWatchInfoCards();
   });
 }
 
@@ -1202,6 +1201,8 @@ function switchLangTab(lang, btn) {
   btn.closest('.modal').querySelectorAll('.lang-group').forEach(g => {
     g.classList.toggle('active', g.dataset.lang === lang);
   });
+  // Also call setLanguage to actually change the language
+  setLanguage(lang);
 }
 
 function applyTranslations() {
@@ -1915,48 +1916,44 @@ async function loadAmazonCatTranslationsAdmin() {
   const cats = [...new Set(amazonAllData.map(r => r.categoryRaw))].filter(Boolean);
   ['zh', 'en', 'es'].forEach(lang => {
     const el = document.getElementById('amazon-cat-' + lang);
-    el.innerHTML = cats.map(cat => `
+    el.innerHTML = cats.map(cat => {
+      const normalized = cat.replace(/[^\u4e00-\u9fa5]/g, '');
+      return `
       <div class="form-group" style="margin-bottom:12px">
         <label class="form-label" style="font-size:11px;color:var(--text3)">${cat}</label>
-        <input type="text" class="form-input" style="font-size:13px" 
-          id="amz-cat-${lang}-${btoa(encodeURIComponent(cat))}" 
-          value="${amazonCategoryTrans[lang]?.[cat] || translateCategoryForAdmin(cat, lang)}">
+        <input type="text" class="form-input" style="font-size:13px"
+          id="amz-cat-${lang}-${btoa(encodeURIComponent(cat))}"
+          value="${amazonCategoryTrans[normalized]?.[lang] || translateCategoryForAdmin(cat, lang)}">
       </div>
-    `).join('');
+    `}).join('');
   });
 }
 
 function translateCategoryForAdmin(cat, lang) {
-  // Use API translations if available
-  const apiTrans = amazonCategoryTrans[lang]?.[cat];
+  // Normalize the category to extract Chinese name
+  const normalized = cat.replace(/[^\u4e00-\u9fa5]/g, '');
+
+  // Use API translations if available (with normalized key)
+  // API stores as { "手机": { es: "...", en: "...", zh: "..." } }
+  const apiTrans = amazonCategoryTrans[normalized]?.[lang];
   if (apiTrans) return apiTrans;
-  // Fallback to DEFAULT_CATEGORY_MAP
-  const DEFAULT_CATEGORY_MAP = {
-    '❤️ 最想拥有-手机': { es: '❤️ Más Deseados - Teléfono', en: '❤️ Most Wanted - Phone', zh: '❤️ 最想拥有-手机' },
-    '❤️ 最想拥有-手机壳': { es: '❤️ Más Deseados - Funda', en: '❤️ Most Wanted - Phone Case', zh: '❤️ 最想拥有-手机壳' },
-    '❤️ 最想拥有-数据线': { es: '❤️ Más Deseados - Cable', en: '❤️ Most Wanted - Data Cable', zh: '❤️ 最想拥有-数据线' },
-    '❤️ 最想拥有-充电设备': { es: '❤️ Más Deseados - Cargador', en: '❤️ Most Wanted - Charger', zh: '❤️ 最想拥有-充电设备' },
-    '❤️ 最想拥有-耳机': { es: '❤️ Más Deseados - Auriculares', en: '❤️ Most Wanted - Earphones', zh: '❤️ 最想拥有-耳机' },
-    '❤️ 最想拥有-智能手表': { es: '❤️ Más Deseados - Smartwatch', en: '❤️ Most Wanted - Smartwatch', zh: '❤️ 最想拥有-智能手表' },
-    '❤️ 最想拥有-平板电脑': { es: '❤️ Más Deseados - Tableta', en: '❤️ Most Wanted - Tablet', zh: '❤️ 最想拥有-平板电脑' },
-    '❤️ 最想拥有-笔记本电脑': { es: '❤️ Más Deseados - Portátil', en: '❤️ Most Wanted - Laptop', zh: '❤️ 最想拥有-笔记本电脑' },
-    '❤️ 最想拥有-摄影与摄像设备': { es: '❤️ Más Deseados - Cámaras', en: '❤️ Most Wanted - Cameras', zh: '❤️ 最想拥有-摄影与摄像设备' },
-    '❤️ 汽车周边': { es: '❤️ Accesorios de Auto', en: '❤️ Car Accessories', zh: '❤️ 汽车周边' },
-    '📱 手机': { es: '📱 Teléfono', en: '📱 Phone', zh: '📱 手机' },
-    '📲🛡️ 手机壳': { es: '📲🛡️ Funda de Teléfono', en: '📲🛡️ Phone Case', zh: '📲🛡️ 手机壳' },
-    '🔗 数据线': { es: '🔗 Cable de Datos', en: '🔗 Data Cable', zh: '🔗 数据线' },
-    '🔌 充电设备': { es: '🔌 Cargador', en: '🔌 Charging Device', zh: '🔌 充电设备' },
-    '🎧 耳机': { es: '🎧 Auriculares', en: '🎧 Earphones', zh: '🎧 耳机' },
-    '⌚ 智能手表': { es: '⌚ Smartwatch', en: '⌚ Smartwatch', zh: '⌚ 智能手表' },
-    '📲 平板电脑': { es: '📲 Tableta', en: '📲 Tablet', zh: '📲 平板电脑' },
-    '💻 笔记本电脑': { es: '💻 Portátil', en: '💻 Laptop', zh: '💻 笔记本电脑' },
-    '📷 摄影与摄像设备': { es: '📷 Cámaras', en: '📷 Cameras', zh: '📷 摄影与摄像设备' },
-    '🚗 汽车周边': { es: '🚗 Accesorios de Auto', en: '🚗 Car Accessories', zh: '🚗 汽车周边' },
-    '🔥 热销': { es: '🔥 Más Vendidos', en: '🔥 Bestsellers', zh: '🔥 热销' },
-    'WISHED': { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' },
-    'HOT': { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' }
+
+  // Translation map for normalized categories (without emoji - user display adds emoji based on mode)
+  const CAT_MAP = {
+    '手机': { es: 'Teléfono', en: 'Phone', zh: '手机' },
+    '手机壳': { es: 'Funda', en: 'Case', zh: '手机壳' },
+    '数据线': { es: 'Cable', en: 'Cable', zh: '数据线' },
+    '充电设备': { es: 'Cargador', en: 'Charger', zh: '充电设备' },
+    '耳机': { es: 'Auriculares', en: 'Earphones', zh: '耳机' },
+    '智能手表': { es: 'Smartwatch', en: 'Smartwatch', zh: '智能手表' },
+    '平板电脑': { es: 'Tableta', en: 'Tablet', zh: '平板电脑' },
+    '笔记本电脑': { es: 'Portátil', en: 'Laptop', zh: '笔记本电脑' },
+    '摄影与摄像设备': { es: 'Cámaras', en: 'Cameras', zh: '摄影与摄像设备' },
+    '汽车周边': { es: 'Auto Accesorios', en: 'Car Accessories', zh: '汽车周边' }
   };
-  if (DEFAULT_CATEGORY_MAP[cat]) return DEFAULT_CATEGORY_MAP[cat][lang] || cat;
+
+  if (CAT_MAP[normalized]) return CAT_MAP[normalized][lang] || cat;
+  if (CAT_MAP[cat]) return CAT_MAP[cat][lang] || cat;
   return cat;
 }
 
@@ -2197,38 +2194,31 @@ let amazonCategoryTrans = { zh: {}, en: {}, es: {} };
 
 function translateCategory(raw) {
   if (!raw) return raw;
+  const normalized = raw.replace(/[^\u4e00-\u9fa5]/g, '');
+
   // Try API translations first
-  const apiTrans = amazonCategoryTrans[currentLang]?.[raw];
+  const apiTrans = amazonCategoryTrans[normalized]?.[currentLang];
   if (apiTrans) return apiTrans;
-  // Fallback: try DEFAULT_CATEGORY_MAP
-  const DEFAULT_CATEGORY_MAP = {
-    // Most Wanted categories (❤️ emoji)
-    '❤️ 手机': { es: '❤️ Teléfono', en: '❤️ Phone', zh: '❤️ 手机' },
-    '❤️ 手机壳': { es: '❤️ Funda', en: '❤️ Case', zh: '❤️ 手机壳' },
-    '❤️ 数据线': { es: '❤️ Cable', en: '❤️ Cable', zh: '❤️ 数据线' },
-    '❤️ 充电设备': { es: '❤️ Cargador', en: '❤️ Charger', zh: '❤️ 充电设备' },
-    '❤️ 耳机': { es: '❤️ Auriculares', en: '❤️ Earphones', zh: '❤️ 耳机' },
-    '❤️ 智能手表': { es: '❤️ Smartwatch', en: '❤️ Smartwatch', zh: '❤️ 智能手表' },
-    '❤️ 平板电脑': { es: '❤️ Tableta', en: '❤️ Tablet', zh: '❤️ 平板电脑' },
-    '❤️ 笔记本电脑': { es: '❤️ Portátil', en: '❤️ Laptop', zh: '❤️ 笔记本电脑' },
-    '❤️ 摄影与摄像设备': { es: '❤️ Cámaras', en: '❤️ Cameras', zh: '❤️ 摄影与摄像设备' },
-    '❤️ 汽车周边': { es: '❤️ Auto Accesorios', en: '❤️ Car Accessories', zh: '❤️ 汽车周边' },
-    // Bestseller categories (various emojis)
-    '📱 手机': { es: '📱 Teléfono', en: '📱 Phone', zh: '📱 手机' },
-    '🛡️ 手机壳': { es: '🛡️ Funda', en: '🛡️ Case', zh: '🛡️ 手机壳' },
-    '🔗 数据线': { es: '🔗 Cable', en: '🔗 Cable', zh: '🔗 数据线' },
-    '🔌 充电设备': { es: '🔌 Cargador', en: '🔌 Charger', zh: '🔌 充电设备' },
-    '🎧 耳机': { es: '🎧 Auriculares', en: '🎧 Earphones', zh: '🎧 耳机' },
-    '⌚ 智能手表': { es: '⌚ Smartwatch', en: '⌚ Smartwatch', zh: '⌚ 智能手表' },
-    '📲 平板电脑': { es: '📲 Tableta', en: '📲 Tablet', zh: '📲 平板电脑' },
-    '💻 笔记本电脑': { es: '💻 Portátil', en: '💻 Laptop', zh: '💻 笔记本电脑' },
-    '📷 摄影与摄像设备': { es: '📷 Cámaras', en: '📷 Cameras', zh: '📷 摄影与摄像设备' },
-    '🚗 汽车周边': { es: '🚗 Auto Accesorios', en: '🚗 Car Accessories', zh: '🚗 汽车周边' },
-    '🔥 热销': { es: '🔥 Más Vendidos', en: '🔥 Bestsellers', zh: '🔥 热销' },
-    'WISHED': { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' },
-    'HOT': { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' }
+
+  // Hardcoded translations (will work without saved API data)
+  const CAT_MAP = {
+    '手机': { es: 'Teléfono', en: 'Phone', zh: '手机' },
+    '手机壳': { es: 'Funda', en: 'Case', zh: '手机壳' },
+    '数据线': { es: 'Cable', en: 'Cable', zh: '数据线' },
+    '充电设备': { es: 'Cargador', en: 'Charger', zh: '充电设备' },
+    '耳机': { es: 'Auriculares', en: 'Earphones', zh: '耳机' },
+    '智能手表': { es: 'Smartwatch', en: 'Smartwatch', zh: '智能手表' },
+    '平板电脑': { es: 'Tableta', en: 'Tablet', zh: '平板电脑' },
+    '笔记本电脑': { es: 'Portátil', en: 'Laptop', zh: '笔记本电脑' },
+    '摄影与摄像设备': { es: 'Cámaras', en: 'Cameras', zh: '摄影与摄像设备' },
+    '汽车周边': { es: 'Auto Accesorios', en: 'Car Accessories', zh: '汽车周边' },
+    '热销': { es: 'Más Vendidos', en: 'Bestsellers', zh: '热销' },
+    '心愿': { es: 'Deseados', en: 'Wished', zh: '心愿' }
   };
-  if (DEFAULT_CATEGORY_MAP[raw]) return DEFAULT_CATEGORY_MAP[raw][currentLang] || raw;
+
+  if (CAT_MAP[normalized]) {
+    return CAT_MAP[normalized][currentLang] || raw;
+  }
   return raw;
 }
 
@@ -2290,11 +2280,14 @@ async function saveAmazonCatTranslations() {
   const cats = [...new Set(amazonAllData.map(r => r.categoryRaw))].filter(Boolean);
   const row = {};
   cats.forEach(cat => {
-    row[cat] = {
-      zh: document.getElementById('amz-cat-zh-' + btoa(encodeURIComponent(cat)))?.value || cat,
-      en: document.getElementById('amz-cat-en-' + btoa(encodeURIComponent(cat)))?.value || cat,
-      es: document.getElementById('amz-cat-es-' + btoa(encodeURIComponent(cat)))?.value || cat
-    };
+    // Use normalized category as key for consistent lookups
+    const normalized = cat.replace(/[^\u4e00-\u9fa5]/g, '');
+    const zhVal = document.getElementById('amz-cat-zh-' + btoa(encodeURIComponent(cat)))?.value || '';
+    const enVal = document.getElementById('amz-cat-en-' + btoa(encodeURIComponent(cat)))?.value || '';
+    const esVal = document.getElementById('amz-cat-es-' + btoa(encodeURIComponent(cat)))?.value || '';
+    if (normalized) {
+      row[normalized] = { zh: zhVal, en: enVal, es: esVal };
+    }
   });
   await api('/api/admin/amazon-categories', { method: 'PUT', body: JSON.stringify(row) });
   await loadAmazonCatTranslations();
