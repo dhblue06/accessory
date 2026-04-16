@@ -2354,8 +2354,9 @@ function renderAmazonCategoryFilters() {
   }
 
   el.style.display = 'flex';
+  const emoji = amazonMode === 'MOST_WANTED' ? '❤️ ' : '🔥 ';
   el.innerHTML = cats.map(([normalized, original]) =>
-    '<button class="pill" data-cat="'+original+'" onclick="setAmazonCat(\''+original.replace(/'/g,"\\'")+'\',this)">'+translateCategory(normalized)+'</button>'
+    '<button class="pill" data-cat="'+original+'" onclick="setAmazonCat(\''+original.replace(/'/g,"\\'")+'\',this)">'+emoji+translateCategory(normalized)+'</button>'
   ).join('');
 }
 
