@@ -2224,7 +2224,18 @@ function translateCategory(raw) {
     '🚗 汽车周边': { es: '🚗 Accesorios de Auto', en: '🚗 Car Accessories', zh: '🚗 汽车周边' },
     '🔥 热销': { es: '🔥 Más Vendidos', en: '🔥 Bestsellers', zh: '🔥 热销' },
     'WISHED': { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' },
-    'HOT': { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' }
+    'HOT': { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' },
+    // Normalized categories (without emoji/prefix)
+    '手机': { es: 'Teléfono', en: 'Phone', zh: '手机' },
+    '手机壳': { es: 'Funda de Teléfono', en: 'Phone Case', zh: '手机壳' },
+    '数据线': { es: 'Cable de Datos', en: 'Data Cable', zh: '数据线' },
+    '充电设备': { es: 'Cargador', en: 'Charger', zh: '充电设备' },
+    '耳机': { es: 'Auriculares', en: 'Earphones', zh: '耳机' },
+    '智能手表': { es: 'Smartwatch', en: 'Smartwatch', zh: '智能手表' },
+    '平板电脑': { es: 'Tableta', en: 'Tablet', zh: '平板电脑' },
+    '笔记本电脑': { es: 'Portátil', en: 'Laptop', zh: '笔记本电脑' },
+    '摄影与摄像设备': { es: 'Cámaras', en: 'Cameras', zh: '摄影与摄像设备' },
+    '汽车周边': { es: 'Accesorios de Auto', en: 'Car Accessories', zh: '汽车周边' }
   };
   if (DEFAULT_CATEGORY_MAP[raw]) return DEFAULT_CATEGORY_MAP[raw][currentLang] || raw;
   return raw;
