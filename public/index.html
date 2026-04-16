@@ -2232,18 +2232,20 @@ function getTypeLabel(type) {
     const WISHED_LABELS = { es: '❤️ Deseados', en: '❤️ Wished', zh: '❤️ 心愿' };
     return WISHED_LABELS[currentLang] || '❤️ 心愿';
   }
-  // Check for HOT variants
-  if (type.includes('🔥') || type.includes('热销') || type === 'HOT') {
-    const HOT_LABELS = { es: '🔥 Bestseller', en: '🔥 Hot', zh: '🔥 热销' };
+  // Check for HOT/BESTSELLER variants
+  const upper = type.toUpperCase();
+  if (type.includes('🔥') || type.includes('热销') || type === 'HOT' || upper === 'BESTSELLER') {
+    const HOT_LABELS = { es: '🔥 Bestseller', en: '🔥 Bestseller', zh: '🔥 热销' };
     return HOT_LABELS[currentLang] || '🔥 热销';
   }
   return type;
 }
 
-// Check if a type value matches HOT (supports both English "HOT" and Chinese "🔥 热销")
+// Check if a type value matches HOT (supports both English "HOT"/"BESTSELLER" and Chinese "🔥 热销")
 function isHotType(type) {
   if (!type) return false;
-  return type === 'HOT' || type.includes('🔥') || type.includes('热销');
+  const upper = type.toUpperCase();
+  return type === 'HOT' || upper === 'BESTSELLER' || type.includes('🔥') || type.includes('热销');
 }
 
 // Check if a type value matches WISHED (supports both English "WISHED" and Chinese "❤️ 心愿")
