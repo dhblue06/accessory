@@ -619,8 +619,8 @@ input,textarea,select{font-family:inherit}
 <!-- AMAZON PAGE -->
 <div id="amazon-page" class="page">
   <div class="search-hero">
-    <h1>Amazon榜单</h1>
-    <p>查看Amazon热门产品排行榜</p>
+    <h1 data-i18n="title_amazon">Amazon榜单</h1>
+    <p data-i18n="subtitle_amazon">查看Amazon热门产品排行榜</p>
   </div>
   <div class="filter-bar" id="amazon-cat-filter" style="margin-bottom:16px"></div>
   <div class="filter-bar" style="margin-bottom:20px">
@@ -630,10 +630,10 @@ input,textarea,select{font-family:inherit}
   </div>
   <div id="amazon-results"><div class="amazon-loading"><div class="amazon-loading-spinner"></div><div id="amazon-loading-text">正在加载...</div></div></div>
   <div id="amazon-footer" style="text-align:center;padding:20px">
-    <div id="amazon-login-tip" style="display:none;margin-bottom:12px;color:var(--accent-red)">登录后可查看完整100条</div>
-    <button class="pill" onclick="switchAmazonTab(20,this)">20条</button>
-    <button class="pill" onclick="switchAmazonTab(100,this)">100条</button>
-    <button class="btn btn-secondary" onclick="loadMoreAmazon()">加载更多</button>
+    <div id="amazon-login-tip" data-i18n="amazon_login_tip" style="display:none;margin-bottom:12px;color:var(--accent-red)">登录后可查看完整100条</div>
+    <button class="pill" onclick="switchAmazonTab(20,this)"><span data-i18n="amazon_show_20">20条</span></button>
+    <button class="pill" onclick="switchAmazonTab(100,this)"><span data-i18n="amazon_show_100">100条</span></button>
+    <button class="btn btn-secondary" onclick="loadMoreAmazon()" data-i18n="btn_load_more">加载更多</button>
   </div>
 </div>
 
