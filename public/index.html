@@ -2337,7 +2337,7 @@ function loadMoreAmazon() {
 function renderAmazonData() {
   const el = document.getElementById('amazon-results');
   let filtered = amazonAllData.filter(r => {
-    const catMatch = !amazonCatFilter || r.category === amazonCatFilter;
+    const catMatch = !amazonCatFilter || r.categoryRaw === amazonCatFilter;
     let typeMatch = true;
     if (amazonTypeFilter) {
       // Handle both English and Chinese type values
