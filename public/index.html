@@ -638,8 +638,8 @@ input,textarea,select{font-family:inherit}
     </button>
   </div>
 
-  <!-- 品类筛选 -->
-  <div id="amazon-cat-filter" class="filter-bar" style="margin-bottom:20px"></div>
+  <!-- 品类筛选 - 根据模式动态显示 -->
+  <div id="amazon-cat-filter" class="filter-bar" style="margin-bottom:20px;display:none"></div>
 
   <!-- 结果区域 -->
   <div id="amazon-results"><div class="amazon-loading"><div class="amazon-loading-spinner"></div><div id="amazon-loading-text">正在加载...</div></div></div>
@@ -2332,16 +2332,28 @@ function normalizeCategory(cat) {
 }
 
 function renderAmazonCategoryFilters() {
-  // Get unique categories and normalize them to remove duplicates
+  const el = document.getElementById('amazon-cat-filter');
+  const catContainer = document.getElementById('amazon-cat-filter').parentElement;
+
+  // Get categories that exist in current mode
+  const catsInMode = amazonAllData.filter(r => isModeMatch(r.type, amazonMode));
   const catsMap = new Map();
-  amazonAllData.forEach(r => {
+  catsInMode.forEach(r => {
     const normalized = normalizeCategory(r.categoryRaw);
     if (normalized && !catsMap.has(normalized)) {
-      catsMap.set(normalized, r.categoryRaw); // Keep original for filtering
+      catsMap.set(normalized, r.categoryRaw);
     }
   });
-  const cats = [...catsMap.entries()]; // [normalized, original]
-  const el = document.getElementById('amazon-cat-filter');
+
+  const cats = [...catsMap.entries()];
+
+  if (cats.length <= 1) {
+    // Only one or zero categories, hide the filter row
+    el.style.display = 'none';
+    return;
+  }
+
+  el.style.display = 'flex';
   el.innerHTML = cats.map(([normalized, original]) =>
     '<button class="pill" data-cat="'+original+'" onclick="setAmazonCat(\''+original.replace(/'/g,"\\'")+'\',this)">'+translateCategory(normalized)+'</button>'
   ).join('');
@@ -2360,8 +2372,7 @@ function setAmazonMode(mode, btn) {
   amazonCatFilter = '';
   amazonDisplayLimit = 20;
   document.querySelectorAll('.amazon-mode-btn').forEach(b => b.classList.toggle('active', b===btn));
-  // Reset category pills
-  document.querySelectorAll('#amazon-cat-filter .pill').forEach(b => b.classList.remove('on'));
+  renderAmazonCategoryFilters(); // Refresh category pills based on mode
   renderAmazonData();
 }
 
