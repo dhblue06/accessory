@@ -146,6 +146,7 @@ const DEFAULT_TRANSLATIONS = {
     // Filter labels
     filter_shape: '外形',
     filter_all: '全部',
+    loading_data: '正在加载...',
     filter_fullscreen: '全面屏 (无Home键)',
     filter_homebutton: '有Home键',
     filter_band_group: '表带组',
@@ -305,6 +306,7 @@ const DEFAULT_TRANSLATIONS = {
     // Filter labels
     filter_shape: 'Shape',
     filter_all: 'All',
+    loading_data: 'Loading...',
     filter_fullscreen: 'Full Screen (No Home)',
     filter_homebutton: 'Has Home Button',
     filter_band_group: 'Band Group',
@@ -464,6 +466,7 @@ const DEFAULT_TRANSLATIONS = {
     // Filter labels
     filter_shape: 'Forma',
     filter_all: 'Todos',
+    loading_data: 'Cargando...',
     filter_fullscreen: 'Pantalla Completa (Sin Home)',
     filter_homebutton: 'Con Botón Home',
     filter_band_group: 'Grupo de Banda',

@@ -628,7 +628,7 @@ input,textarea,select{font-family:inherit}
     <button class="pill" data-atype="HOT" onclick="setAmazonType('HOT',this)"><span id="amazon-hot-label">🔥 热销榜</span></button>
     <button class="pill" data-atype="WISHED" onclick="setAmazonType('WISHED',this)"><span id="amazon-wished-label">❤️ 心愿榜</span></button>
   </div>
-  <div id="amazon-results"><div class="amazon-loading"><div class="amazon-loading-spinner"></div><div>正在加载...</div></div></div>
+  <div id="amazon-results"><div class="amazon-loading"><div class="amazon-loading-spinner"></div><div id="amazon-loading-text">正在加载...</div></div></div>
   <div id="amazon-footer" style="text-align:center;padding:20px">
     <div id="amazon-login-tip" style="display:none;margin-bottom:12px;color:var(--accent-red)">登录后可查看完整100条</div>
     <button class="pill" onclick="switchAmazonTab(20,this)">20条</button>
@@ -2281,7 +2281,10 @@ async function saveAmazonCatTranslations() {
 
 async function fetchAmazonData() {
   const el = document.getElementById('amazon-results');
-  el.innerHTML = '<div class="amazon-loading"><div class="amazon-loading-spinner"></div><div>正在加载...</div></div>';
+  el.innerHTML = '<div class="amazon-loading"><div class="amazon-loading-spinner"></div><div id="amazon-loading-text">正在加载...</div></div>';
+  // Update loading text with translation
+  const loadingTextEl = document.getElementById('amazon-loading-text');
+  if (loadingTextEl) loadingTextEl.textContent = t('loading_data') || '正在加载...';
   try {
     const url = `https://docs.google.com/spreadsheets/d/${AMAZON_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(AMAZON_SHEET_NAME)}`;
     const res = await fetch(url);
@@ -2305,7 +2308,7 @@ async function fetchAmazonData() {
 function renderAmazonCategoryFilters() {
   const cats = [...new Set(amazonAllData.map(r => r.categoryRaw))].filter(Boolean);
   const el = document.getElementById('amazon-cat-filter');
-  el.innerHTML = '<button class="pill on" onclick="setAmazonCat(\'\',this)">全部</button>' + cats.map(c => '<button class="pill" onclick="setAmazonCat(\''+c.replace(/'/g,"\\'")+'\',this)">'+translateCategory(c)+'</button>').join('');
+  el.innerHTML = '<button class="pill on" onclick="setAmazonCat(\'\',this)">'+t('filter_all')+'</button>' + cats.map(c => '<button class="pill" onclick="setAmazonCat(\''+c.replace(/'/g,"\\'")+'\',this)">'+translateCategory(c)+'</button>').join('');
 }
 
 function setAmazonCat(cat, btn) {
