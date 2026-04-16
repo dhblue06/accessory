@@ -2325,10 +2325,26 @@ async function fetchAmazonData() {
   }
 }
 
+// Normalize category name: remove prefixes like "Most Wanted-", "Bestseller-", etc.
+function normalizeCategory(cat) {
+  if (!cat) return '';
+  return cat.replace(/^(Most Wanted|Bestseller|HOT|WISHED)-/i, '').trim();
+}
+
 function renderAmazonCategoryFilters() {
-  const cats = [...new Set(amazonAllData.map(r => r.categoryRaw))].filter(Boolean);
+  // Get unique categories and normalize them to remove duplicates
+  const catsMap = new Map();
+  amazonAllData.forEach(r => {
+    const normalized = normalizeCategory(r.categoryRaw);
+    if (normalized && !catsMap.has(normalized)) {
+      catsMap.set(normalized, r.categoryRaw); // Keep original for filtering
+    }
+  });
+  const cats = [...catsMap.entries()]; // [normalized, original]
   const el = document.getElementById('amazon-cat-filter');
-  el.innerHTML = cats.map(c => '<button class="pill" onclick="setAmazonCat(\''+c.replace(/'/g,"\\'")+'\',this)">'+translateCategory(c)+'</button>').join('');
+  el.innerHTML = cats.map(([normalized, original]) =>
+    '<button class="pill" data-cat="'+original+'" onclick="setAmazonCat(\''+original.replace(/'/g,"\\'")+'\',this)">'+translateCategory(normalized)+'</button>'
+  ).join('');
 }
 
 function setAmazonCat(cat, btn) {
@@ -2366,7 +2382,7 @@ function renderAmazonData() {
     // Mode filter: BESTSELLER or MOST_WANTED
     const modeMatch = isModeMatch(r.type, amazonMode);
     // Category filter
-    const catMatch = !amazonCatFilter || r.categoryRaw === amazonCatFilter;
+    const catMatch = !amazonCatFilter || normalizeCategory(r.categoryRaw) === normalizeCategory(amazonCatFilter);
     return modeMatch && catMatch;
   });
   if (filtered.length === 0) {
@@ -2375,8 +2391,8 @@ function renderAmazonData() {
   const shown = filtered.slice(0, amazonDisplayLimit);
   const grouped = {};
   shown.forEach(item => {
-    const key = item.categoryRaw;
-    if (!grouped[key]) grouped[key] = { category: item.category, categoryRaw: item.categoryRaw, type: item.type, items: [] };
+    const key = normalizeCategory(item.categoryRaw);
+    if (!grouped[key]) grouped[key] = { category: translateCategory(key), items: [] };
     grouped[key].items.push(item);
   });
   let html = '';
