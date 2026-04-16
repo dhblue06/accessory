@@ -8,68 +8,98 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --surface2: #f1f5f9;
-  --surface3: #e2e8f0;
-  --border: #e2e8f0;
-  --border2: #cbd5e1;
-  --text: #0f172a;
-  --text2: #475569;
-  --text3: #94a3b8;
-  --accent: #6366f1;
-  --accent-light: #818cf8;
-  --accent-blue: #3b82f6;
-  --accent-purple: #8b5cf6;
-  --accent-amber: #f59e0b;
+  /* ===== LINEAR DESIGN SYSTEM ===== */
+  /* Background & Surfaces */
+  --bg: #08090a;
+  --surface: #0f1011;
+  --surface2: #191a1b;
+  --surface3: #28282c;
+  --surface-hover: #23252a;
+  
+  /* Text */
+  --text: #f7f8f8;
+  --text2: #d0d6e0;
+  --text3: #8a8f98;
+  --text4: #62666d;
+  
+  /* Brand & Accent */
+  --accent: #5e6ad2;
+  --accent-hover: #828fff;
+  --accent-2: #7170ff;
+  --accent-green: #27a644;
+  --accent-emerald: #10b981;
   --accent-red: #ef4444;
-  --accent-green: #22c55e;
-  --radius: 16px;
-  --radius-sm: 10px;
-  --radius-xs: 6px;
-  --shadow: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-  --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
-  --shadow-lg: 0 16px 48px rgba(0,0,0,0.12);
+  --accent-amber: #f59e0b;
+  
+  /* Borders */
+  --border: #23252a;
+  --border2: #34343a;
+  --border3: #3e3e44;
+  
+  /* Spacing (Linear: 4/8/12/16/20/24/32/35) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-9: 35px;
+  
+  /* Border Radius (Linear: 2/4/6/8/12/9999) */
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+  
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow: 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
+  
+  /* Focus Ring */
+  --focus-ring: 0 0 0 2px var(--accent);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter','Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
+body{font-family:'Inter','Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-2);text-decoration:none}
 button{font-family:inherit;cursor:pointer}
 input,textarea,select{font-family:inherit}
 
 /* ===== NAV ===== */
-.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px}
-.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:0;height:64px}
-.nav-logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:17px;margin-right:48px;letter-spacing:-0.3px}
-.nav-tabs{display:flex;gap:4px;flex:1}
-.nav-tab{padding:0 20px;height:64px;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--text2);border-bottom:2px solid transparent;transition:all 0.2s;position:relative}
-.nav-tab:hover{color:var(--text);background:rgba(99,102,241,0.04)}
-.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.nav-tab svg{width:16px;height:16px;opacity:0.7}
-.nav-actions{display:flex;align-items:center;gap:12px;margin-left:auto}
-.nav-badge{font-size:11px;padding:4px 10px;border-radius:20px;background:var(--surface2);color:var(--text3);font-family:'JetBrains Mono',monospace;font-weight:500}
+.nav{position:sticky;top:0;z-index:100;background:rgba(8,9,10,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:0;height:56px}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;margin-right:32px;letter-spacing:-0.2px}
+.nav-tabs{display:flex;gap:2px;flex:1}
+.nav-tab{padding:0 16px;height:56px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;transition:all 0.15s;position:relative}
+.nav-tab:hover{color:var(--text);background:var(--surface-hover)}
+.nav-tab.active{color:var(--text);border-bottom-color:var(--accent-2)}
+.nav-tab svg{width:14px;height:14px;opacity:0.6}
+.nav-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nav-badge{font-size:11px;padding:3px 8px;border-radius:var(--radius-pill);background:var(--surface2);color:var(--text3);font-family:'JetBrains Mono',monospace;font-weight:500}
 
 /* ===== LAYOUT ===== */
-.page{display:none;max-width:1200px;margin:0 auto;padding:40px 24px}
+.page{display:none;max-width:1200px;margin:0 auto;padding:32px 24px}
 .page.active{display:block}
 
 /* ===== SEARCH ===== */
-.search-hero{margin-bottom:36px}
-.search-hero h1{font-size:28px;font-weight:700;margin-bottom:8px;letter-spacing:-0.5px}
-.search-hero p{color:var(--text2);font-size:14px}
-.search-box{position:relative;margin-top:20px}
-.search-box input{width:100%;padding:16px 52px 16px 20px;border:2px solid var(--border);border-radius:var(--radius);font-size:15px;background:var(--surface);color:var(--text);transition:all 0.2s;outline:none;box-shadow:var(--shadow-sm)}
-.search-box input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(99,102,241,0.1)}
-.search-box input::placeholder{color:var(--text3)}
-.search-icon{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+.search-hero{margin-bottom:28px}
+.search-hero h1{font-size:24px;font-weight:600;margin-bottom:6px;letter-spacing:-0.3px}
+.search-hero p{color:var(--text3);font-size:13px}
+.search-box{position:relative;margin-top:16px}
+.search-box input{width:100%;padding:12px 48px 12px 16px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;background:var(--surface2);color:var(--text);transition:all 0.15s;outline:none}
+.search-box input:focus{border-color:var(--accent);box-shadow:var(--focus-ring)}
+.search-box input::placeholder{color:var(--text4)}
+.search-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
 
 /* ===== FILTER PILLS ===== */
-.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;align-items:center}
-.filter-label{font-size:13px;color:var(--text3);margin-right:6px;font-weight:500}
-.pill{padding:8px 16px;border-radius:24px;border:1.5px solid var(--border2);background:var(--surface);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.15s}
-.pill:hover{border-color:var(--accent);color:var(--accent);background:rgba(99,102,241,0.04)}
-.pill.on{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(99,102,241,0.3)}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+.filter-label{font-size:12px;color:var(--text4);margin-right:4px;font-weight:500}
+.pill{padding:6px 12px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--surface2);font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;transition:all 0.15s}
+.pill:hover{border-color:var(--accent-2);color:var(--text);background:var(--surface-hover)}
+.pill.on{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(94,106,210,0.4)}
 
 /* ===== LANGUAGE SWITCHER ===== */
 .lang-switcher{display:flex;gap:4px;margin-right:8px}
@@ -389,6 +419,30 @@ input,textarea,select{font-family:inherit}
   }
 }
 
+/* ===== INFO CARDS (财富密码/避坑指南) ===== */
+.info-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.info-cards-single{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}
+.info-card{padding:16px;border-radius:var(--radius-md);border:1px solid;position:relative;overflow:hidden}
+.info-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.info-card-title{display:flex;align-items:center;gap:6px;font-weight:700;font-size:13px;margin-bottom:10px}
+.info-card-content{font-size:12px;line-height:1.7}
+.info-card.amber{background:linear-gradient(135deg,#fef3c7,#fde68a);border-color:#f59e0b}
+.info-card.amber::before{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.info-card.amber .info-card-title{color:#92400e}
+.info-card.amber .info-card-content{color:#78350f}
+.info-card.red{background:linear-gradient(135deg,#fee2e2,#fecaca);border-color:#ef4444}
+.info-card.red::before{background:linear-gradient(90deg,#ef4444,#f87171)}
+.info-card.red .info-card-title{color:#991b1b}
+.info-card.red .info-card-content{color:#7f1d1d}
+.info-card.blue{background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-color:#3b82f6}
+.info-card.blue::before{background:linear-gradient(90deg,#3b82f6,#60a5fa)}
+.info-card.blue .info-card-title{color:#1e40af}
+.info-card.blue .info-card-content{color:#1e3a8a}
+.info-card.green{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-color:#22c55e}
+.info-card.green::before{background:linear-gradient(90deg,#22c55e,#4ade80)}
+.info-card.green .info-card-title{color:#166534}
+.info-card.green .info-card-content{color:#166534}
+
 /* AMAZON */
 .amazon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:24px}
 .amazon-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all 0.2s}
@@ -518,14 +572,14 @@ input,textarea,select{font-family:inherit}
   </div>
   
   <!-- 财富密码 & 避坑指南 -->
-  <div class="info-cards-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-    <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;padding:16px;border:1px solid #f59e0b">
-      <div style="font-weight:700;font-size:13px;color:#92400e;margin-bottom:10px;display:flex;align-items:center;gap:6px" id="ipad-film-title"></div>
-      <div style="font-size:12px;color:#78350f;line-height:1.7" id="ipad-film-content"></div>
+  <div class="info-cards-grid">
+    <div class="info-card amber">
+      <div class="info-card-title" id="ipad-film-title"></div>
+      <div class="info-card-content" id="ipad-film-content"></div>
     </div>
-    <div style="background:linear-gradient(135deg,#fee2e2,#fecaca);border-radius:12px;padding:16px;border:1px solid #ef4444">
-      <div style="font-weight:700;font-size:13px;color:#991b1b;margin-bottom:10px;display:flex;align-items:center;gap:6px" id="ipad-case-title"></div>
-      <div style="font-size:12px;color:#7f1d1d;line-height:1.7" id="ipad-case-content"></div>
+    <div class="info-card red">
+      <div class="info-card-title" id="ipad-case-title"></div>
+      <div class="info-card-content" id="ipad-case-content"></div>
     </div>
   </div>
   
@@ -552,21 +606,23 @@ input,textarea,select{font-family:inherit}
   </div>
   
   <!-- Apple Watch 知识卡 -->
-  <div class="info-cards-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-    <div style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:12px;padding:16px;border:1px solid #3b82f6">
-      <div style="font-weight:700;font-size:13px;color:#1e40af;margin-bottom:10px;display:flex;align-items:center;gap:6px" id="watch-band-title"></div>
-      <div style="font-size:12px;color:#1e3a8a;line-height:1.7" id="watch-band-content"></div>
+  <div class="info-cards-grid">
+    <div class="info-card blue">
+      <div class="info-card-title" id="watch-band-title"></div>
+      <div class="info-card-content" id="watch-band-content"></div>
     </div>
-    <div style="background:linear-gradient(135deg,#fee2e2,#fecaca);border-radius:12px;padding:16px;border:1px solid #ef4444">
-      <div style="font-weight:700;font-size:13px;color:#991b1b;margin-bottom:10px;display:flex;align-items:center;gap:6px" id="watch-case-title"></div>
-      <div style="font-size:12px;color:#7f1d1d;line-height:1.7" id="watch-case-content"></div>
+    <div class="info-card red">
+      <div class="info-card-title" id="watch-case-title"></div>
+      <div class="info-card-content" id="watch-case-content"></div>
     </div>
   </div>
   
   <!-- 新款变动提示 -->
-  <div class="info-cards-single" style="background:linear-gradient(135deg,#f0fdf4,#bbf7d0);border-radius:12px;padding:14px 16px;border:1px solid #22c55e;margin-bottom:20px">
-    <div style="font-weight:700;font-size:13px;color:#166534;margin-bottom:8px;display:flex;align-items:center;gap:6px" id="watch-new-title"></div>
-    <div style="font-size:12px;color:#166534;line-height:1.7" id="watch-new-content"></div>
+  <div class="info-cards-single">
+    <div class="info-card green">
+      <div class="info-card-title" id="watch-new-title"></div>
+      <div class="info-card-content" id="watch-new-content"></div>
+    </div>
   </div>
   
   <!-- 表带组筛选器 -->
