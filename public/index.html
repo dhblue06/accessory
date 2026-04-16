@@ -1761,7 +1761,7 @@ window.addEventListener('scroll', handleScroll);
 function renderBrandFilters(brands) {
   const el = document.getElementById('brand-filters');
   if (!brands.length) { el.innerHTML=''; return; }
-  el.innerHTML = `<span class="filter-label">${t('filter_brand')||'品牌'}:</span>
+  el.innerHTML = `<span class="filter-label">${t('brand_filter')}:</span>
     <button class="pill${!filmBrand?' on':''}" onclick="setBrand('')">${t('filter_all')}</button>
     ${brands.map(b=>`<button class="pill${filmBrand===b?' on':''}" onclick="setBrand('${b}')">${b}</button>`).join('')}`;
 }
