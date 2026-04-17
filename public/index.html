@@ -2490,8 +2490,9 @@ function renderAmazonData() {
       // Rating and reviews display
       const ratingDisplay = item.rating && item.rating !== 'N/A' ? '<span style="color:#f59e0b;font-size:12px">⭐ ' + item.rating.replace(' de 5 estrellas', '') + '</span>' : '';
       const reviewsDisplay = item.reviews ? '<span style="color:var(--text3);font-size:11px">(' + item.reviews + ')</span>' : '';
-      const ratingReviews = (ratingDisplay || reviewsDisplay) ? '<div style="display:flex;align-items:center;gap:6px;margin-top:6px">'+ratingDisplay+reviewsDisplay+'</div>' : '';
-      html += '<div class="amazon-card" style="position:relative"><div class="amazon-card-rank"><span class="rank-badge '+rankClass+'">'+rankStr+'</span>'+wishedDot+'</div><div class="amazon-card-img">'+imgLink+'</div><div class="amazon-card-body"><div class="amazon-card-title">'+titleHtml+'</div><div class="amazon-card-price">'+priceDisplay+'</div>'+ratingReviews+'</div></div>';
+      // Price and rating on same line
+      const priceRatingRow = '<div style="display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap"><span style="font-size:14px;font-weight:700;color:var(--accent)">'+priceDisplay+'</span>'+(ratingDisplay+reviewsDisplay)+'</div>';
+      html += '<div class="amazon-card" style="position:relative"><div class="amazon-card-rank"><span class="rank-badge '+rankClass+'">'+rankStr+'</span>'+wishedDot+'</div><div class="amazon-card-img">'+imgLink+'</div><div class="amazon-card-body"><div class="amazon-card-title">'+titleHtml+'</div>'+priceRatingRow+'</div></div>';
     });
     html += '</div></div>';
   }
