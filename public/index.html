@@ -346,10 +346,10 @@ input,textarea,select{font-family:inherit}
     box-sizing:border-box!important
   }
   
-  /* Mobile: filter bars - horizontal scroll */
+  /* Mobile: filter bars - wrap */
   .filter-bar{
-    flex-wrap:wrap!important;
-    overflow-x:visible!important;
+    flex-wrap:nowrap!important;
+    overflow-x:auto!important;
     -webkit-overflow-scrolling:touch!important;
     padding-bottom:8px!important;
     gap:8px!important;
@@ -363,6 +363,17 @@ input,textarea,select{font-family:inherit}
     flex-shrink:0;
     padding:6px 12px;
     font-size:12px
+  }
+  /* Mobile: Amazon category pills - wrap text */
+  #amazon-cat-filter{
+    flex-wrap:wrap!important;
+    overflow-x:visible!important
+  }
+  #amazon-cat-filter .pill{
+    white-space:normal;
+    flex-shrink:1;
+    text-align:center;
+    min-width:60px
   }
   .filter-bar .filter-label{
     flex-shrink:0;
