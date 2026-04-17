@@ -992,6 +992,10 @@ let allFilmBrands = []; // Keep all brands for filter bar
 let modalMode = '';
 let modalData = null;
 let currentLang = localStorage.getItem('ag_lang') || 'es';
+// Always default to Spanish if no language preference saved
+if (!localStorage.getItem('ag_lang')) {
+  localStorage.setItem('ag_lang', 'es');
+}
 let translations = {};
 let adminLang = 'zh'; // Admin panel editing language for iPad/Watch
 
