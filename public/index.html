@@ -1000,12 +1000,12 @@ let translations = {};
 let adminLang = 'zh'; // Admin panel editing language for iPad/Watch
 
 // Theme
-let currentTheme = localStorage.getItem('ag_theme') || 'dark'; // 'dark' | 'light'
+let currentTheme = localStorage.getItem('ag_theme') || 'light'; // 'dark' | 'light'
 const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-// Auto-detect: if no manual preference, follow system
+// Default to light mode if no preference saved
 if (!localStorage.getItem('ag_theme')) {
-  currentTheme = systemPrefersDark ? 'dark' : 'light';
+  currentTheme = 'light';
 }
 
 function toggleTheme() {
