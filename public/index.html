@@ -987,6 +987,7 @@ let token = localStorage.getItem('ag_token') || '';
 let currentPage = 'film';
 let filmType = 'fg';
 let filmBrand = '';
+let filmSelectedBrand = ''; // Track which brand button is highlighted
 let modalMode = '';
 let modalData = null;
 let currentLang = localStorage.getItem('ag_lang') || 'es';
@@ -1791,14 +1792,22 @@ function renderBrandFilters(brands) {
   const el = document.getElementById('brand-filters');
   if (!brands.length) { el.innerHTML=''; return; }
   el.innerHTML = `<span class="filter-label">${t('brand_filter')}:</span>
-    <button class="pill${!filmBrand?' on':''}" onclick="setBrand('')">${t('filter_all')}</button>
-    ${brands.map(b=>`<button class="pill${filmBrand===b?' on':''}" onclick="setBrand('${b}')">${b}</button>`).join('')}`;
+    <button class="pill${!filmSelectedBrand?' on':''}" onclick="setBrand('')">${t('filter_all')}</button>
+    ${brands.map(b=>`<button class="pill${filmSelectedBrand===b?' on':''}" onclick="setBrand('${b}')">${b}</button>`).join('')}`;
 }
 
-function setBrand(b) { 
-  filmBrand=b; 
+function setBrand(b) {
+  // Fill search box with brand name
+  const searchInput = document.getElementById('film-search');
+  if (b) {
+    searchInput.value = b;
+  } else {
+    searchInput.value = '';
+  }
+  filmSelectedBrand = b; // Track which brand button is highlighted
+  filmBrand = ''; // Clear brand filter
   filmData = [];  // Reset data when brand changes
-  loadFilm(); 
+  loadFilm();
 }
 
 // ============ ADMIN ============
