@@ -649,6 +649,7 @@ input,textarea,select{font-family:inherit}
   <div class="search-hero">
     <h1 data-i18n="title_amazon">Amazon榜单</h1>
     <p data-i18n="subtitle_amazon">查看Amazon热门产品排行榜</p>
+    <p id="amazon-updated" style="font-size:12px;color:var(--text3);margin-top:4px"></p>
   </div>
 
   <!-- 榜单模式切换: Bestseller | Most Wanted -->
@@ -1196,6 +1197,11 @@ function setLanguage(lang) {
       amazonAllData = amazonAllData.map(item => ({ ...item, category: translateCategory(item.categoryRaw) }));
       renderAmazonCategoryFilters();
       renderAmazonData();
+      // Update the update date text with new language
+      const updatedEl = document.getElementById('amazon-updated');
+      if (updatedEl && updatedEl.dataset.date) {
+        updatedEl.textContent = t('amazon_updated') + ' ' + updatedEl.dataset.date;
+      }
     }
     // Re-render info cards
     renderIpadInfoCards();
@@ -2350,6 +2356,25 @@ async function fetchAmazonData() {
     if (!jsonStr) throw new Error('数据格式错误');
     const json = JSON.parse(jsonStr);
     const rows = json.table?.rows || [];
+
+    // Extract latest update date
+    let latestDate = '';
+    rows.forEach(row => {
+      const c = row.c || [];
+      const updatedAt = c[9]?.v || '';
+      if (updatedAt && updatedAt > latestDate) {
+        latestDate = updatedAt;
+      }
+    });
+
+    // Display update date
+    const updatedEl = document.getElementById('amazon-updated');
+    if (updatedEl && latestDate) {
+      const dateParts = latestDate.split(' ')[0]; // Get YYYY-MM-DD
+      updatedEl.dataset.date = dateParts; // Store for language switch
+      updatedEl.textContent = t('amazon_updated') + ' ' + dateParts;
+    }
+
     amazonAllData = rows.map(row => {
       const c = row.c || [];
       const rawCat = c[0]?.v || '';
