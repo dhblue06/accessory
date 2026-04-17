@@ -1903,7 +1903,7 @@ async function loadSettings() {
     if(sn) sn.value = s.siteName||'';
     if(sv) sv.value = s.version||'';
     if(sno) sno.value = s.note||'';
-    document.title = (s.siteName||'配件指南') + ' — AccessoryGuide';
+    document.title = (s.siteName||'TEMCO') + ' — AccessoryGuide';
     const vEl = document.getElementById('nav-version');
     if(vEl) vEl.textContent = s.version||'v1.0';
   } catch {}
