@@ -2454,9 +2454,11 @@ function renderAmazonData() {
       const rankStr = item.rank <= 3 ? ['🥇','🥈','🥉'][item.rank-1] : item.rank;
       const imgHtml = item.imageUrl ? '<img src="'+item.imageUrl+'" alt="'+item.title+'">' : '<div style="font-size:32px;opacity:0.3">📦</div>';
       const titleHtml = item.productUrl ? '<a href="'+item.productUrl+'" target="_blank">'+item.title+'</a>' : item.title;
+      const imgLink = item.productUrl ? '<a href="'+item.productUrl+'" target="_blank" style="display:block">'+imgHtml+'</a>' : imgHtml;
       const wishedDot = isWishedType(item.type) ? '<span style="width:6px;height:6px;background:var(--accent-red);border-radius:50%;position:absolute;top:8px;right:8px"></span>' : '';
       const priceDisplay = item.price && item.price !== 'N/A' ? item.price : '<span style="color:var(--text4);font-size:12px">'+item.price+'</span>';
-      html += '<div class="amazon-card" style="position:relative"><div class="amazon-card-rank"><span class="rank-badge '+rankClass+'">'+rankStr+'</span>'+wishedDot+'</div><div class="amazon-card-img">'+imgHtml+'</div><div class="amazon-card-body"><div class="amazon-card-title">'+titleHtml+'</div><div class="amazon-card-price">'+priceDisplay+'</div></div></div>';
+      const amazonBtn = item.productUrl ? '<a href="'+item.productUrl+'" target="_blank" style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:var(--accent);color:#fff;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;margin-top:6px">🇪🇸 Ver en Amazon</a>' : '';
+      html += '<div class="amazon-card" style="position:relative"><div class="amazon-card-rank"><span class="rank-badge '+rankClass+'">'+rankStr+'</span>'+wishedDot+'</div><div class="amazon-card-img">'+imgLink+'</div><div class="amazon-card-body"><div class="amazon-card-title">'+titleHtml+'</div><div class="amazon-card-price">'+priceDisplay+'</div>'+amazonBtn+'</div></div>';
     });
     html += '</div></div>';
   }
