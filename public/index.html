@@ -2359,12 +2359,13 @@ async function fetchAmazonData() {
     const json = JSON.parse(jsonStr);
     const rows = json.table?.rows || [];
 
-    // Extract latest update date
+    // Extract latest update date (skip header row which has "Updated At" as value)
     let latestDate = '';
     rows.forEach(row => {
       const c = row.c || [];
       const updatedAt = c[9]?.v || '';
-      if (updatedAt && updatedAt > latestDate) {
+      // Skip header row and invalid dates
+      if (updatedAt && updatedAt !== 'Updated At' && updatedAt.match(/^\d{4}-\d{2}-\d{2}/) && updatedAt > latestDate) {
         latestDate = updatedAt;
       }
     });
@@ -2374,7 +2375,8 @@ async function fetchAmazonData() {
     if (updatedEl && latestDate) {
       const dateParts = latestDate.split(' ')[0]; // Get YYYY-MM-DD
       updatedEl.dataset.date = dateParts; // Store for language switch
-      updatedEl.textContent = t('amazon_updated') + ' ' + dateParts;
+      const label = t('amazon_updated') || 'Datos actualizados:';
+      updatedEl.textContent = label + ' ' + dateParts;
     }
 
     amazonAllData = rows.map(row => {
