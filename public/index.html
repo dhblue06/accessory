@@ -988,6 +988,7 @@ let currentPage = 'film';
 let filmType = 'fg';
 let filmBrand = '';
 let filmSelectedBrand = ''; // Track which brand button is highlighted
+let allFilmBrands = []; // Keep all brands for filter bar
 let modalMode = '';
 let modalData = null;
 let currentLang = localStorage.getItem('ag_lang') || 'es';
@@ -1679,14 +1680,19 @@ async function loadFilm() {
     filmSearchBrand = brand;
     filmLoadedCount = 20;
     allLoaded = false;
+
+    // Only update allFilmBrands when there's no search query (to get complete brand list)
+    if (!q && !brand) {
+      const allBrands = new Set();
+      Object.values(filmData).forEach(brands => {
+        brands.forEach(b => allBrands.add(b.brand));
+      });
+      allFilmBrands = [...allBrands].sort();
+    }
   }
 
-  // Extract unique brands for filter
-  const allBrands = new Set();
-  Object.values(filmData).forEach(brands => {
-    brands.forEach(b => allBrands.add(b.brand));
-  });
-  renderBrandFilters([...allBrands].sort());
+  // Use preserved allFilmBrands for filter bar (not just filtered results)
+  renderBrandFilters(allFilmBrands);
 
   const entries = Object.entries(filmData);
   if (!entries.length) { 
