@@ -1702,6 +1702,15 @@ async function loadFilm() {
       });
       allFilmBrands = [...allBrands].sort();
     }
+
+    // Auto-highlight brand based on search query
+    if (q && !brand) {
+      const qLower = q.toLowerCase();
+      const matchedBrand = allFilmBrands.find(b => b.toLowerCase() === qLower || qLower.startsWith(b.toLowerCase() + ' '));
+      filmSelectedBrand = matchedBrand || '';
+    } else if (!q) {
+      filmSelectedBrand = '';
+    }
   }
 
   // Use preserved allFilmBrands for filter bar (not just filtered results)
