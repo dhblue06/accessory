@@ -993,17 +993,41 @@ app.get('/api/watch', (req, res) => {
 });
 
 app.get('/api/film', (req, res) => {
-  const q = (req.query.q || '').toLowerCase();
+  const q = (req.query.q || '').toLowerCase().trim();
   const brand = req.query.brand || '';
-  
+
   // Read from xlsx
   const filmData = readFilmFromXlsx();
-  
+
   let results = {};
   for (const [k, v] of Object.entries(filmData)) {
     const entries = v.filter(e => {
       const brandMatch = !brand || e.brand === brand;
-      const qMatch = !q || e.models.toLowerCase().includes(q) || k.toLowerCase().includes(q) || e.brand.toLowerCase().includes(q);
+      const modelLower = e.models.toLowerCase();
+      const brandLower = e.brand.toLowerCase();
+
+      // If query has multiple words, treat first word as brand, rest as model search
+      const qParts = q.split(/\s+/);
+      let qMatch = false;
+      if (!q) {
+        qMatch = true;
+      } else if (qParts.length >= 2) {
+        // Multi-word: first word might be brand, check if any part matches brand or model
+        const firstPart = qParts[0];
+        const restParts = qParts.slice(1).join(' ');
+        const isFirstPartBrand = brandLower.includes(firstPart);
+        if (isFirstPartBrand) {
+          // Brand + model search: rest should match models
+          qMatch = modelLower.includes(restParts) || k.toLowerCase().includes(restParts);
+        } else {
+          // Regular multi-word: all parts should match somewhere
+          qMatch = qParts.every(p => modelLower.includes(p) || brandLower.includes(p) || k.toLowerCase().includes(p));
+        }
+      } else {
+        // Single word: just search everywhere
+        qMatch = modelLower.includes(q) || brandLower.includes(q) || k.toLowerCase().includes(q);
+      }
+
       return brandMatch && qMatch;
     });
     if (entries.length) results[k] = entries;
