@@ -2231,7 +2231,10 @@ function closeModal(e) {
 // ============ UTILS ============
 function hl(text, q) {
   if (!q || !text) return text||'';
-  const re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+  // Highlight each word in the query
+  const words = q.split(/\s+/).filter(w => w.length > 1);
+  if (words.length === 0) return text||'';
+  const re = new RegExp('('+words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')','gi');
   return String(text).replace(re,'<span class="highlight">$1</span>');
 }
 
