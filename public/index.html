@@ -840,6 +840,13 @@ input,textarea,select{font-family:inherit}
             <button class="btn btn-secondary" onclick="switchPanel('users-mgmt',document.querySelector('[data-panel=users-mgmt]'))" data-i18n="admin_users_mgmt">管理用户</button>
           </div>
         </div>
+        <!-- Film Search Stats -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:20px">
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="film_search_stats">热门搜索型号</h3>
+          <div id="film-search-stats" style="max-height:300px;overflow-y:auto">
+            <div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">加载中...</div>
+          </div>
+        </div>
       </div>
 
       <!-- IPAD MGMT -->
@@ -1848,7 +1855,33 @@ async function loadAdminDashboard() {
     document.getElementById('stat-2d').textContent = s.tdCount;
     document.getElementById('stat-priv').textContent = s.privacyCount;
     document.getElementById('stat-users').textContent = s.userCount;
+    loadFilmSearchStats();
   } catch {}
+}
+
+async function loadFilmSearchStats() {
+  try {
+    const stats = await api('/api/admin/film-search-stats');
+    const container = document.getElementById('film-search-stats');
+    if (!stats || stats.length === 0) {
+      container.innerHTML = '<div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">暂无搜索数据</div>';
+      return;
+    }
+    const rows = stats.map(s => {
+      const date = new Date(s.lastSearched);
+      const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+        <span style="font-weight:500">${s.query}</span>
+        <span style="display:flex;gap:12px;align-items:center">
+          <span style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:10px;font-size:11px">${s.count}</span>
+          <span style="color:var(--text3);font-size:11px">${dateStr}</span>
+        </span>
+      </div>`;
+    }).join('');
+    container.innerHTML = rows;
+  } catch (e) {
+    document.getElementById('film-search-stats').innerHTML = '<div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">加载失败</div>';
+  }
 }
 
 async function loadAdminiPad() {

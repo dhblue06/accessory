@@ -32,7 +32,7 @@ if (!fs.existsSync(path.join(__dirname, 'data'))) {
 
 // --- DB helpers ---
 function readDB() {
-  if (!fs.existsSync(DB_FILE)) return { ipad: [], watch: [], film: { fullGlue: {}, twoPointFiveD: [], privacy: [] }, settings: { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' }, translations: {} };
+  if (!fs.existsSync(DB_FILE)) return { ipad: [], watch: [], film: { fullGlue: {}, twoPointFiveD: [], privacy: [] }, settings: { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' }, translations: {}, filmSearchStats: [] };
   return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
 }
 function writeDB(data) {
@@ -96,6 +96,10 @@ const DEFAULT_TRANSLATIONS = {
     stat_2d: '2.5D 膜条目',
     stat_privacy: '防窥膜',
     stat_users: '管理用户',
+    stat_film_search: '膜搜索统计',
+    film_search_stats: '热门搜索型号',
+    film_search_count: '搜索次数',
+    film_search_last: '最后搜索',
     quick_actions: '快速操作',
     btn_add_ipad: '+ 新增型号',
     btn_add_watch: '+ 新增型号',
@@ -270,6 +274,10 @@ const DEFAULT_TRANSLATIONS = {
     stat_2d: '2.5D Films',
     stat_privacy: 'Privacy Films',
     stat_users: 'Users',
+    stat_film_search: 'Film Search Stats',
+    film_search_stats: 'Popular Searches',
+    film_search_count: 'Searches',
+    film_search_last: 'Last Searched',
     quick_actions: 'Quick Actions',
     btn_add_ipad: '+ Add iPad',
     btn_add_watch: '+ Add Watch',
@@ -444,6 +452,10 @@ const DEFAULT_TRANSLATIONS = {
     stat_2d: 'Cristales 2.5D',
     stat_privacy: 'Cristales Privacidad',
     stat_users: 'Usuarios',
+    stat_film_search: 'Búsquedas de Cristales',
+    film_search_stats: 'Búsquedas Populares',
+    film_search_count: 'Búsquedas',
+    film_search_last: 'Última Búsqueda',
     quick_actions: 'Acciones Rápidas',
     btn_add_ipad: '+ Agregar iPad',
     btn_add_watch: '+ Agregar Watch',
@@ -996,6 +1008,21 @@ app.get('/api/film', (req, res) => {
   const q = (req.query.q || '').toLowerCase().trim();
   const brand = req.query.brand || '';
 
+  // Track search query (don't block the response)
+  if (q) {
+    const db = readDB();
+    const stats = db.filmSearchStats || [];
+    const existing = stats.find(s => s.query === q);
+    if (existing) {
+      existing.count++;
+      existing.lastSearched = new Date().toISOString();
+    } else {
+      stats.push({ query: q, count: 1, lastSearched: new Date().toISOString() });
+    }
+    db.filmSearchStats = stats.slice(-500); // Keep last 500 searches
+    writeDB(db);
+  }
+
   // Read from xlsx
   const filmData = readFilmFromXlsx();
 
@@ -1049,6 +1076,15 @@ app.get('/api/translations', (req, res) => {
     lang,
     texts: translations[lang] || DEFAULT_TRANSLATIONS[lang] || DEFAULT_TRANSLATIONS.zh
   });
+});
+
+// Film search stats API
+app.get('/api/admin/film-search-stats', authMiddleware, (req, res) => {
+  const db = readDB();
+  const stats = db.filmSearchStats || [];
+  // Sort by count descending, return top 50
+  const top = stats.sort((a, b) => b.count - a.count).slice(0, 50);
+  res.json(top);
 });
 
 // ============ ADMIN APIs ============
