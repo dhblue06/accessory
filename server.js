@@ -6,9 +6,14 @@ const bcrypt = require('./node_modules/bcryptjs');
 const jwt = require('./node_modules/jsonwebtoken');
 const XLSX = require('xlsx');
 const multer = require('multer');
+const { MongoClient } = require('mongodb');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://xjm0616_db_user:fOkVE5dAVKu8F5Ty@cluster0.afxj3we.mongodb.net/?appName=Cluster0';
+const DB_NAME = 'accessory_guide';
+let db;
+let mongoClient;
 
 // Multer config for logo upload
 const storage = multer.diskStorage({
@@ -21,7 +26,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 const JWT_SECRET = process.env.JWT_SECRET || 'accessory-guide-secret-2024';
-const DB_FILE = path.join(__dirname, 'data', 'db.json');
 const USERS_FILE = path.join(__dirname, 'data', 'users.json');
 const XLSX_FILE = path.join(__dirname, 'data.xlsx');
 
@@ -30,14 +34,68 @@ if (!fs.existsSync(path.join(__dirname, 'data'))) {
   fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
 }
 
-// --- DB helpers ---
-function readDB() {
+// --- MongoDB Connection ---
+async function connectDB() {
+  try {
+    mongoClient = new MongoClient(MONGO_URI);
+    await mongoClient.connect();
+    db = mongoClient.db(DB_NAME);
+    console.log('✅ Connected to MongoDB Atlas');
+    return db;
+  } catch (err) {
+    console.error('❌ MongoDB connection error:', err.message);
+    // Fallback to local file
+    console.log('⚠️ Falling back to local db.json');
+    return null;
+  }
+}
+
+// --- DB helpers (MongoDB with local fallback) ---
+const DB_FILE = path.join(__dirname, 'data', 'db.json');
+
+function readDBLocal() {
   if (!fs.existsSync(DB_FILE)) return { ipad: [], watch: [], film: { fullGlue: {}, twoPointFiveD: [], privacy: [] }, settings: { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' }, translations: {}, filmSearchStats: [] };
   return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
 }
-function writeDB(data) {
+
+function writeDBLocal(data) {
   fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf8');
 }
+
+// Unified readDB/writeDB that uses MongoDB if connected
+async function readDB() {
+  if (db) {
+    try {
+      const data = await db.collection('appData').findOne({ _id: 'main' });
+      if (data) {
+        delete data._id;
+        return data;
+      }
+    } catch (err) {
+      console.error('MongoDB read error, falling back:', err.message);
+    }
+  }
+  return readDBLocal();
+}
+
+async function writeDB(data) {
+  if (db) {
+    try {
+      await db.collection('appData').replaceOne(
+        { _id: 'main' },
+        { _id: 'main', ...data },
+        { upsert: true }
+      );
+      return;
+    } catch (err) {
+      console.error('MongoDB write error, falling back:', err.message);
+    }
+  }
+  writeDBLocal(data);
+}
+
+// Initialize DB connection on startup
+connectDB();
 
 // --- Default translations ---
 const DEFAULT_TRANSLATIONS = {
@@ -682,19 +740,19 @@ function writeUsers(users) {
 }
 
 // Initialize DB from film_data.json if empty
-function initDB() {
-  const db = readDB();
+async function initDB() {
+  const db = await readDB();
   const filmSrc = path.join(__dirname, '..', 'film_data.json');
   if ((!db.film || !db.film.fullGlue || Object.keys(db.film.fullGlue).length === 0) && fs.existsSync(filmSrc)) {
     const raw = JSON.parse(fs.readFileSync(filmSrc, 'utf8'));
     db.film = raw;
-    writeDB(db);
+    await writeDB(db);
     console.log('Initialized film data from film_data.json');
   }
   // Default iPad data - migrate to multi-language if needed
   if (!db.ipad || db.ipad.length === 0) {
     db.ipad = getDefaultiPadData();
-    writeDB(db);
+    await writeDB(db);
     console.log('Initialized iPad data with multi-language support');
   } else {
     // Migrate existing iPad data to multi-language format
@@ -707,7 +765,7 @@ function initDB() {
       return item;
     });
     if (needsMigration) {
-      writeDB(db);
+      await writeDB(db);
       console.log('Migrated iPad data to multi-language format');
     }
   }
@@ -936,8 +994,8 @@ function migrateToMultiLang(item) {
   return item;
 }
 
-app.get('/api/ipad', (req, res) => {
-  const db = readDB();
+app.get('/api/ipad', async (req, res) => {
+  const db = await readDB();
   const lang = req.query.lang || 'zh';
   const q = (req.query.q || '').toLowerCase();
   let items = db.ipad || [];
@@ -970,8 +1028,8 @@ app.get('/api/ipad', (req, res) => {
   res.json(localized);
 });
 
-app.get('/api/watch', (req, res) => {
-  const db = readDB();
+app.get('/api/watch', async (req, res) => {
+  const db = await readDB();
   const lang = req.query.lang || 'zh';
   const q = (req.query.q || '').toLowerCase();
   let items = db.watch || [];
@@ -1004,13 +1062,13 @@ app.get('/api/watch', (req, res) => {
   res.json(localized);
 });
 
-app.get('/api/film', (req, res) => {
+app.get('/api/film', async (req, res) => {
   const q = (req.query.q || '').toLowerCase().trim();
   const brand = req.query.brand || '';
 
   // Track search query (don't block the response)
   if (q) {
-    const db = readDB();
+    const db = await readDB();
     const stats = db.filmSearchStats || [];
     const existing = stats.find(s => s.query === q);
     if (existing) {
@@ -1020,7 +1078,7 @@ app.get('/api/film', (req, res) => {
       stats.push({ query: q, count: 1, lastSearched: new Date().toISOString() });
     }
     db.filmSearchStats = stats.slice(-500); // Keep last 500 searches
-    writeDB(db);
+    await writeDB(db);
   }
 
   // Read from xlsx
@@ -1062,14 +1120,14 @@ app.get('/api/film', (req, res) => {
   res.json(results);
 });
 
-app.get('/api/settings', (req, res) => {
-  const db = readDB();
+app.get('/api/settings', async (req, res) => {
+  const db = await readDB();
   res.json(db.settings || { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' });
 });
 
 // Translations API
-app.get('/api/translations', (req, res) => {
-  const db = readDB();
+app.get('/api/translations', async (req, res) => {
+  const db = await readDB();
   const lang = req.query.lang || 'zh';
   const translations = db.translations || {};
   res.json({
@@ -1079,8 +1137,8 @@ app.get('/api/translations', (req, res) => {
 });
 
 // Film search stats API
-app.get('/api/admin/film-search-stats', authMiddleware, (req, res) => {
-  const db = readDB();
+app.get('/api/admin/film-search-stats', authMiddleware, async (req, res) => {
+  const db = await readDB();
   const stats = db.filmSearchStats || [];
   // Sort by count descending, return top 50
   const top = stats.sort((a, b) => b.count - a.count).slice(0, 50);
@@ -1089,94 +1147,94 @@ app.get('/api/admin/film-search-stats', authMiddleware, (req, res) => {
 
 // ============ ADMIN APIs ============
 // iPad CRUD
-app.get('/api/admin/ipad', authMiddleware, (req, res) => {
-  const db = readDB();
+app.get('/api/admin/ipad', authMiddleware, async (req, res) => {
+  const db = await readDB();
   // Migrate legacy data to multi-language format
   const items = (db.ipad || []).map(migrateToMultiLang);
   res.json(items);
 });
 
-app.post('/api/admin/ipad', authMiddleware, (req, res) => {
-  const db = readDB();
+app.post('/api/admin/ipad', authMiddleware, async (req, res) => {
+  const db = await readDB();
   const item = { ...req.body, id: Date.now(), createdAt: new Date().toISOString() };
   db.ipad = db.ipad || [];
   db.ipad.push(item);
-  writeDB(db);
+  await writeDB(db);
   res.json(item);
 });
 
-app.put('/api/admin/ipad/:id', authMiddleware, (req, res) => {
-  const db = readDB();
+app.put('/api/admin/ipad/:id', authMiddleware, async (req, res) => {
+  const db = await readDB();
   const idx = db.ipad.findIndex(i => String(i.id) === req.params.id);
   if (idx < 0) return res.status(404).json({ error: 'Not found' });
   db.ipad[idx] = { ...db.ipad[idx], ...req.body };
-  writeDB(db);
+  await writeDB(db);
   res.json(db.ipad[idx]);
 });
 
-app.delete('/api/admin/ipad/:id', authMiddleware, (req, res) => {
-  const db = readDB();
+app.delete('/api/admin/ipad/:id', authMiddleware, async (req, res) => {
+  const db = await readDB();
   db.ipad = db.ipad.filter(i => String(i.id) !== req.params.id);
-  writeDB(db);
+  await writeDB(db);
   res.json({ ok: true });
 });
 
 // Watch CRUD
-app.get('/api/admin/watch', authMiddleware, (req, res) => {
-  const db = readDB();
+app.get('/api/admin/watch', authMiddleware, async (req, res) => {
+  const db = await readDB();
   // Migrate legacy data to multi-language format
   const items = (db.watch || []).map(migrateToMultiLang);
   res.json(items);
 });
 
-app.post('/api/admin/watch', authMiddleware, (req, res) => {
-  const db = readDB();
+app.post('/api/admin/watch', authMiddleware, async (req, res) => {
+  const db = await readDB();
   const item = { ...req.body, id: Date.now(), createdAt: new Date().toISOString() };
   db.watch = db.watch || [];
   db.watch.push(item);
-  writeDB(db);
+  await writeDB(db);
   res.json(item);
 });
 
-app.put('/api/admin/watch/:id', authMiddleware, (req, res) => {
-  const db = readDB();
+app.put('/api/admin/watch/:id', authMiddleware, async (req, res) => {
+  const db = await readDB();
   const idx = db.watch.findIndex(i => String(i.id) === req.params.id);
   if (idx < 0) return res.status(404).json({ error: 'Not found' });
   db.watch[idx] = { ...db.watch[idx], ...req.body };
-  writeDB(db);
+  await writeDB(db);
   res.json(db.watch[idx]);
 });
 
-app.delete('/api/admin/watch/:id', authMiddleware, (req, res) => {
-  const db = readDB();
+app.delete('/api/admin/watch/:id', authMiddleware, async (req, res) => {
+  const db = await readDB();
   db.watch = db.watch.filter(i => String(i.id) !== req.params.id);
-  writeDB(db);
+  await writeDB(db);
   res.json({ ok: true });
 });
 
 // Film groups CRUD (full-glue)
-app.post('/api/admin/film/fg', authMiddleware, (req, res) => {
-  const db = readDB();
+app.post('/api/admin/film/fg', authMiddleware, async (req, res) => {
+  const db = await readDB();
   const { filmName, brand, models } = req.body;
   if (!db.film) db.film = { fullGlue: {}, twoPointFiveD: [], privacy: [] };
   if (!db.film.fullGlue[filmName]) db.film.fullGlue[filmName] = [];
   db.film.fullGlue[filmName].push({ brand, models });
-  writeDB(db);
+  await writeDB(db);
   res.json({ ok: true });
 });
 
-app.put('/api/admin/film/fg/:filmName', authMiddleware, (req, res) => {
-  const db = readDB();
+app.put('/api/admin/film/fg/:filmName', authMiddleware, async (req, res) => {
+  const db = await readDB();
   const { entries } = req.body;
   db.film.fullGlue[req.params.filmName] = entries;
-  writeDB(db);
+  await writeDB(db);
   res.json({ ok: true });
 });
 
-app.delete('/api/admin/film/fg/:filmName', authMiddleware, (req, res) => {
-  const db = readDB();
+app.delete('/api/admin/film/fg/:filmName', authMiddleware, async (req, res) => {
+  const db = await readDB();
   delete db.film.fullGlue[decodeURIComponent(req.params.filmName)];
-  writeDB(db);
+  await writeDB(db);
   res.json({ ok: true });
 });
 
@@ -1186,16 +1244,16 @@ app.post('/api/admin/logo', authMiddleware, upload.single('logo'), (req, res) =>
 });
 
 // Settings
-app.put('/api/admin/settings', authMiddleware, (req, res) => {
-  const db = readDB();
+app.put('/api/admin/settings', authMiddleware, async (req, res) => {
+  const db = await readDB();
   db.settings = { ...db.settings, ...req.body };
-  writeDB(db);
+  await writeDB(db);
   res.json(db.settings);
 });
 
 // Translations admin
-app.get('/api/admin/translations', authMiddleware, (req, res) => {
-  const db = readDB();
+app.get('/api/admin/translations', authMiddleware, async (req, res) => {
+  const db = await readDB();
   const translations = db.translations || {};
   res.json({
     zh: translations.zh || DEFAULT_TRANSLATIONS.zh,
@@ -1204,27 +1262,27 @@ app.get('/api/admin/translations', authMiddleware, (req, res) => {
   });
 });
 
-app.put('/api/admin/translations', authMiddleware, (req, res) => {
-  const db = readDB();
+app.put('/api/admin/translations', authMiddleware, async (req, res) => {
+  const db = await readDB();
   const { zh, en, es } = req.body;
   if (!db.translations) db.translations = {};
   if (zh) db.translations.zh = { ...DEFAULT_TRANSLATIONS.zh, ...zh };
   if (en) db.translations.en = { ...DEFAULT_TRANSLATIONS.en, ...en };
   if (es) db.translations.es = { ...DEFAULT_TRANSLATIONS.es, ...es };
-  writeDB(db);
+  await writeDB(db);
   res.json({ ok: true });
 });
 
 // Amazon category translations
-app.get('/api/amazon-categories', (req, res) => {
-  const db = readDB();
+app.get('/api/amazon-categories', async (req, res) => {
+  const db = await readDB();
   res.json(db.amazonCategories || {});
 });
 
-app.put('/api/admin/amazon-categories', authMiddleware, (req, res) => {
-  const db = readDB();
+app.put('/api/admin/amazon-categories', authMiddleware, async (req, res) => {
+  const db = await readDB();
   db.amazonCategories = req.body;
-  writeDB(db);
+  await writeDB(db);
   res.json({ ok: true });
 });
 
@@ -1252,8 +1310,8 @@ app.delete('/api/admin/users/:id', authMiddleware, (req, res) => {
 });
 
 // Stats
-app.get('/api/admin/stats', authMiddleware, (req, res) => {
-  const db = readDB();
+app.get('/api/admin/stats', authMiddleware, async (req, res) => {
+  const db = await readDB();
   const filmData = readFilmFromXlsx();
   res.json({
     ipadCount: (db.ipad || []).length,
@@ -1270,5 +1328,11 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-initDB();
-app.listen(PORT, () => console.log(`AccessoryGuide running on http://localhost:${PORT}`));
+// Make initDB async and start server
+async function startServer() {
+  await connectDB(); // Ensure MongoDB is connected (or fallback)
+  await initDB();
+  app.listen(PORT, () => console.log(`AccessoryGuide running on http://localhost:${PORT}`));
+}
+
+startServer();
