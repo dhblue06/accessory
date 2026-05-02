@@ -569,19 +569,45 @@ input,textarea,select{font-family:inherit}
 .amazon-mode-btn.active[data-mode="MOST_WANTED"]{color:var(--accent-red)}
 
 /* ===== FILM HERO NEW ===== */
+
+#film-page.page{
+  max-width:100%!important;
+  padding:0!important;
+}
+
 .film-hero{
   display:flex;
-  align-items:center;
+  align-items:flex-end;
   justify-content:space-between;
-  padding:40px 48px;
+  max-width:1200px;
+  margin:0 auto;
+  padding:40px 24px 0;
+  gap:24px;
+  position:relative;
+  min-height:160px;
+}
+
+#film-page .film-hero-bg{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:50%;
+  right:50%;
+  margin-left:-50vw;
+  margin-right:-50vw;
+  width:100vw;
   background:linear-gradient(135deg,#eef2ff 0%,#e8f0ff 60%,#dde8ff 100%);
   border-bottom:1px solid var(--border);
-  overflow:hidden;
-  position:relative;
-  min-height:180px;
-  gap:24px;
+  z-index:0;
 }
-.film-hero-left{flex:1;max-width:580px}
+
+.film-hero-left{
+  flex:1;
+  max-width:580px;
+  padding-bottom:32px;
+  position:relative;
+  z-index:1;
+}
 .film-hero-left h1{
   font-size:26px;
   font-weight:700;
@@ -595,6 +621,7 @@ input,textarea,select{font-family:inherit}
   color:var(--text2);
   margin-bottom:20px;
 }
+
 .film-search-wrap{
   position:relative;
   max-width:500px;
@@ -642,27 +669,34 @@ input,textarea,select{font-family:inherit}
   flex-shrink:0;
 }
 .film-search-btn:hover{opacity:0.85}
+
 .film-hero-img{
-  width:280px;
+  width:240px;
   flex-shrink:0;
-  align-self:stretch;
+  align-self:flex-end;
   pointer-events:none;
   position:relative;
-  overflow:hidden;
+  z-index:1;
+  mask-image:linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
 }
 .film-hero-img img{
   width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:top center;
   display:block;
-  mask-image:linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
-  -webkit-mask-image:linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
+  object-fit:contain;
+  object-position:top center;
+  filter:drop-shadow(0 4px 16px rgba(31,141,237,0.12));
 }
-.film-page-body{background:var(--surface)}
+
+.film-page-body{
+  background:var(--surface);
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px;
+}
 
 /* Dark mode hero */
-[data-theme="dark"] .film-hero{
+[data-theme="dark"] .film-hero-bg{
   background:linear-gradient(135deg,#1e2340 0%,#1a1f3a 60%,#151929 100%);
 }
 [data-theme="dark"] .film-search-input{
@@ -674,26 +708,29 @@ input,textarea,select{font-family:inherit}
 /* Mobile film hero */
 @media(max-width:768px){
   .film-hero{
-    padding:24px 16px;
+    padding:24px 16px 0;
     min-height:auto;
-    background-image:
-      linear-gradient(to right,#eef2ff 45%,transparent 80%),
-      url('/film-hero-img.webp');
-    background-repeat:no-repeat,no-repeat;
-    background-position:0 0,right -10px center;
-    background-size:auto,170px auto;
   }
-  [data-theme="dark"] .film-hero{
+  .film-hero-bg{
     background-image:
-      linear-gradient(to right,#1e2340 45%,transparent 80%),
-      url('/film-hero-img.webp');
+      linear-gradient(to right,#eef2ff 50%,transparent 85%),
+      url('/film-hero-img.webp') !important;
+    background-repeat:no-repeat,no-repeat !important;
+    background-position:0 0,right -10px center !important;
+    background-size:auto,150px auto !important;
+  }
+  [data-theme="dark"] .film-hero-bg{
+    background-image:
+      linear-gradient(to right,#1e2340 50%,transparent 85%),
+      url('/film-hero-img.webp') !important;
   }
   .film-hero-left h1{font-size:20px}
+  .film-hero-left{padding-bottom:20px}
   .film-hero-img{display:none}
   .film-search-input{font-size:15px}
-  .film-page-body{padding:0}
-  #film-results{padding:16px!important}
-  #brand-filters{padding:12px 16px!important}
+  .film-page-body{padding:0 16px}
+  #film-results{padding:16px 0 !important}
+  #brand-filters{padding:12px 0 !important}
 }
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="19b44367-903d-40ba-80d9-d786bb17717b"></script>
@@ -893,10 +930,11 @@ input,textarea,select{font-family:inherit}
 </div>
 
 <!-- FILM PAGE -->
-<div id="film-page" class="page" style="padding:0!important;max-width:100%!important">
+<div id="film-page" class="page" style="padding:0!important">
 
   <!-- HERO 搜索区 -->
   <div class="film-hero">
+    <div class="film-hero-bg"></div>
     <div class="film-hero-left">
       <h1 data-i18n="title_film">Búsqueda Universal de Vidrio Templado</h1>
       <p data-i18n="subtitle_film">Guía de Compatibilidad de Vidrio Adhesivo Completo</p>
@@ -921,8 +959,8 @@ input,textarea,select{font-family:inherit}
   </div>
 
   <div class="film-page-body">
-    <div id="brand-filters" class="filter-bar" style="padding:16px 24px;margin:0;border-bottom:1px solid var(--border)"></div>
-    <div id="film-results" style="padding:20px 24px"></div>
+    <div id="brand-filters" class="filter-bar" style="margin:0;border-bottom:1px solid var(--border);padding:14px 0"></div>
+    <div id="film-results" style="padding:20px 0"></div>
   </div>
 </div>
 
