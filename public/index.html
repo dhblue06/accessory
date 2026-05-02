@@ -732,6 +732,232 @@ input,textarea,select{font-family:inherit}
   #film-results{padding:16px 0 !important}
   #brand-filters{padding:12px 0 !important}
 }
+
+/* ===== IPAD HERO ===== */
+
+#ipad-page.page{
+  max-width:100%!important;
+  padding:0!important;
+}
+
+.ipad-hero{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  max-width:1200px;
+  margin:0 auto;
+  padding:40px 24px 0;
+  gap:24px;
+  position:relative;
+  min-height:160px;
+}
+
+#ipad-page .ipad-hero-bg{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:50%;
+  right:50%;
+  margin-left:-50vw;
+  margin-right:-50vw;
+  width:100vw;
+  background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 50%,#e0f2fe 100%);
+  border-bottom:1px solid var(--border);
+  z-index:0;
+}
+
+.ipad-hero-left{
+  flex:1;
+  max-width:560px;
+  padding-bottom:32px;
+  position:relative;
+  z-index:1;
+}
+.ipad-hero-left h1{
+  font-size:26px;
+  font-weight:700;
+  color:var(--text);
+  line-height:1.3;
+  margin-bottom:6px;
+  letter-spacing:-0.3px;
+}
+.ipad-hero-left p{
+  font-size:13px;
+  color:var(--text2);
+  margin-bottom:20px;
+}
+
+.ipad-search-wrap{
+  position:relative;
+  max-width:480px;
+}
+.ipad-search-icon{
+  position:absolute;
+  left:14px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--text3);
+  pointer-events:none;
+}
+.ipad-search-input{
+  width:100%;
+  padding:13px 20px 13px 40px;
+  border:1.5px solid rgba(59,130,246,0.25);
+  border-radius:10px;
+  font-size:14px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
+  font-family:inherit;
+  box-shadow:0 2px 8px rgba(59,130,246,0.08);
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.ipad-search-input:focus{
+  border-color:#3b82f6;
+  box-shadow:0 0 0 3px rgba(59,130,246,0.12);
+}
+.ipad-search-input::placeholder{color:var(--text3)}
+
+/* 右侧 iPad 装饰图 */
+.ipad-hero-img{
+  width:260px;
+  flex-shrink:0;
+  align-self:flex-end;
+  pointer-events:none;
+  position:relative;
+  z-index:1;
+  mask-image:linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+}
+.ipad-hero-img img{
+  width:100%;
+  display:block;
+  object-fit:contain;
+  object-position:top center;
+  filter:drop-shadow(0 4px 20px rgba(59,130,246,0.15));
+}
+
+/* 内容区域居中 */
+.ipad-page-body{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px;
+  background:var(--surface);
+}
+
+/* 信息卡片横排 */
+.ipad-info-cards{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  padding:16px 0;
+  border-bottom:1px solid var(--border);
+}
+.ipad-info-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px;
+  border-radius:10px;
+  border:1px solid;
+  cursor:pointer;
+  transition:all 0.15s;
+  text-decoration:none;
+}
+.ipad-info-card:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+.ipad-info-amber{
+  background:linear-gradient(135deg,#fffbeb,#fef3c7);
+  border-color:#f59e0b;
+}
+.ipad-info-red{
+  background:linear-gradient(135deg,#fff1f2,#fee2e2);
+  border-color:#f87171;
+}
+.ipad-info-icon{
+  font-size:20px;
+  flex-shrink:0;
+}
+.ipad-info-text{flex:1;min-width:0}
+.ipad-info-title{
+  font-size:13px;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.ipad-info-amber .ipad-info-title{color:#92400e}
+.ipad-info-red .ipad-info-title{color:#991b1b}
+.ipad-info-sub{
+  font-size:12px;
+  color:var(--text3);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.ipad-info-arrow{
+  font-size:18px;
+  color:var(--text3);
+  flex-shrink:0;
+  transition:transform 0.15s;
+}
+.ipad-info-card:hover .ipad-info-arrow{
+  transform:translateX(3px);
+}
+
+/* 暗色模式 */
+[data-theme="dark"] .ipad-hero-bg{
+  background:linear-gradient(135deg,#1e3a5f 0%,#1e2d4a 50%,#1a2a3f 100%);
+}
+[data-theme="dark"] .ipad-search-input{
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  border-color:rgba(59,130,246,0.3);
+}
+[data-theme="dark"] .ipad-info-amber{
+  background:linear-gradient(135deg,#2a1f00,#332500);
+  border-color:#92400e;
+}
+[data-theme="dark"] .ipad-info-red{
+  background:linear-gradient(135deg,#2a0a0a,#330f0f);
+  border-color:#991b1b;
+}
+
+/* 手机端 */
+@media(max-width:768px){
+  .ipad-hero{
+    padding:24px 16px 0;
+    min-height:auto;
+  }
+  .ipad-hero-bg{
+    background-image:
+      linear-gradient(to right,#eff6ff 50%,transparent 85%),
+      url('/ipad-hero-img.webp') !important;
+    background-repeat:no-repeat,no-repeat !important;
+    background-position:0 0,right -10px center !important;
+    background-size:auto,160px auto !important;
+  }
+  [data-theme="dark"] .ipad-hero-bg{
+    background-image:
+      linear-gradient(to right,#1e3a5f 50%,transparent 85%),
+      url('/ipad-hero-img.webp') !important;
+  }
+  .ipad-hero-left h1{font-size:20px}
+  .ipad-hero-left{padding-bottom:20px}
+  .ipad-hero-img{display:none}
+  .ipad-search-input{font-size:15px}
+  .ipad-page-body{padding:0 16px}
+  .ipad-info-cards{
+    grid-template-columns:1fr;
+    gap:8px;
+    padding:12px 0;
+  }
+  #ipad-results{padding:16px 0 !important}
+}
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="19b44367-903d-40ba-80d9-d786bb17717b"></script>
 </head>
@@ -845,37 +1071,61 @@ input,textarea,select{font-family:inherit}
 </div>
 
 <!-- IPAD PAGE -->
-<div id="ipad-page" class="page">
-  <div class="search-hero">
-    <h1 data-i18n="title_ipad">iPad 配件兼容性</h1>
-    <p data-i18n="subtitle_ipad">查询不同 iPad 型号的保护壳和钢化膜通用情况</p>
-    <div class="search-box" style="margin-top:16px">
-      <input id="ipad-search" type="text" data-i18n-placeholder="search_ipad" placeholder="搜索 iPad 型号 (如: Pro 11, 2021)..." oninput="loadiPad()">
-      <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/></svg>
+<div id="ipad-page" class="page" style="padding:0!important">
+
+  <!-- HERO 搜索区 -->
+  <div class="ipad-hero">
+    <div class="ipad-hero-bg"></div>
+    <div class="ipad-hero-left">
+      <h1 data-i18n="title_ipad">Compatibilidad de Accesorios iPad</h1>
+      <p data-i18n="subtitle_ipad">Consultar compatibilidad de fundas y cristales para iPad</p>
+      <div class="ipad-search-wrap">
+        <svg class="ipad-search-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+          <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
+        </svg>
+        <input id="ipad-search" type="text" class="ipad-search-input"
+          data-i18n-placeholder="search_ipad"
+          placeholder="Buscar modelo iPad..."
+          oninput="loadiPad()">
+      </div>
+    </div>
+    <div class="ipad-hero-img">
+      <img src="/ipad-hero-img.webp" alt="" draggable="false">
     </div>
   </div>
-  
-  <!-- 财富密码 & 避坑指南 -->
-  <div class="info-cards-grid">
-    <div class="info-card amber">
-      <div class="info-card-title" id="ipad-film-title" onclick="toggleInfoCard(this)"></div>
-      <div class="info-card-content collapsed" id="ipad-film-content"></div>
+
+  <!-- 信息卡片（横向并排，可折叠） -->
+  <div class="ipad-page-body">
+    <div class="ipad-info-cards">
+      <div class="ipad-info-card ipad-info-amber" onclick="toggleiPadCard(this)">
+        <div class="ipad-info-icon">🏆</div>
+        <div class="ipad-info-text">
+          <div class="ipad-info-title" id="ipad-film-title">Secreto Universal del Cristal</div>
+          <div class="ipad-info-sub" id="ipad-film-content">Descubre el grosor, materiales y compatibilidad perfecta.</div>
+        </div>
+        <div class="ipad-info-arrow">›</div>
+      </div>
+      <div class="ipad-info-card ipad-info-red" onclick="toggleiPadCard(this)">
+        <div class="ipad-info-icon">📋</div>
+        <div class="ipad-info-text">
+          <div class="ipad-info-title" id="ipad-case-title">Guía de Trampas de Fundas</div>
+          <div class="ipad-info-sub" id="ipad-case-content">Evita errores comunes al elegir tu funda ideal.</div>
+        </div>
+        <div class="ipad-info-arrow">›</div>
+      </div>
     </div>
-    <div class="info-card red">
-      <div class="info-card-title" id="ipad-case-title" onclick="toggleInfoCard(this)"></div>
-      <div class="info-card-content collapsed" id="ipad-case-content"></div>
+
+    <!-- 外形筛选器 -->
+    <div class="filter-bar" id="ipad-shape-filter" style="padding:14px 0;margin:0;border-bottom:1px solid var(--border)">
+      <span class="filter-label" data-i18n="filter_shape">外形:</span>
+      <button class="pill" data-shape="" onclick="setiPadShape('', this)" data-i18n="filter_all">全部</button>
+      <button class="pill" data-shape="fullscreen" onclick="setiPadShape('fullscreen', this)" data-i18n="filter_fullscreen">全面屏 (无Home键)</button>
+      <button class="pill" data-shape="homebutton" onclick="setiPadShape('homebutton', this)" data-i18n="filter_homebutton">有Home键</button>
     </div>
+
+    <div id="ipad-results" style="padding:20px 0"></div>
   </div>
-  
-  <!-- 外形筛选器 -->
-  <div class="filter-bar" id="ipad-shape-filter" style="margin-bottom:20px">
-    <span class="filter-label" data-i18n="filter_shape">外形:</span>
-    <button class="pill" data-shape="" onclick="setiPadShape('', this)" data-i18n="filter_all">全部</button>
-    <button class="pill" data-shape="fullscreen" onclick="setiPadShape('fullscreen', this)" data-i18n="filter_fullscreen">全面屏 (无Home键)</button>
-    <button class="pill" data-shape="homebutton" onclick="setiPadShape('homebutton', this)" data-i18n="filter_homebutton">有Home键</button>
-  </div>
-  
-  <div id="ipad-results"></div>
+
 </div>
 
 <!-- WATCH PAGE -->
@@ -1319,18 +1569,24 @@ function toggleInfoCard(titleEl) {
   content.classList.toggle('expanded');
 }
 
+function toggleiPadCard(card) {
+  const arrow = card.querySelector('.ipad-info-arrow');
+  if (arrow) {
+    const isExpanded = arrow.textContent === '›';
+    arrow.textContent = isExpanded ? '‹' : '›';
+  }
+}
+
 function renderIpadInfoCards() {
-  // iPad film card
   const filmTitleEl = document.getElementById('ipad-film-title');
   const filmContentEl = document.getElementById('ipad-film-content');
-  if (filmTitleEl) filmTitleEl.innerHTML = `<span style="font-size:16px">💰</span> ${t('ipad_film_title')}`;
-  if (filmContentEl) filmContentEl.innerHTML = `<div style="margin-bottom:6px">${t('ipad_film_super')}</div><div>${t('ipad_film_13inch')}</div>`;
-  
-  // iPad case card
+  if (filmTitleEl) filmTitleEl.textContent = t('ipad_film_title');
+  if (filmContentEl) filmContentEl.textContent = t('ipad_film_super');
+
   const caseTitleEl = document.getElementById('ipad-case-title');
   const caseContentEl = document.getElementById('ipad-case-content');
-  if (caseTitleEl) caseTitleEl.innerHTML = `<span style="font-size:16px">⚠️</span> ${t('ipad_case_title')}`;
-  if (caseContentEl) caseContentEl.innerHTML = `<div style="margin-bottom:6px">${t('ipad_case_camera')}</div><div>${t('ipad_case_thickness')}</div>`;
+  if (caseTitleEl) caseTitleEl.textContent = t('ipad_case_title');
+  if (caseContentEl) caseContentEl.textContent = t('ipad_case_camera');
 }
 
 function renderWatchInfoCards() {
