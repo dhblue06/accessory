@@ -1877,7 +1877,6 @@ function renderWatchInfoCards() {
   if (newTitleEl) newTitleEl.textContent = t('watch_new_title');
   if (newContentEl) newContentEl.textContent = t('watch_new_se3');
 }
-}
 
 function renderIpadInfoCards() {
   const filmTitleEl = document.getElementById('ipad-film-title');
@@ -1889,26 +1888,6 @@ function renderIpadInfoCards() {
   const caseContentEl = document.getElementById('ipad-case-content');
   if (caseTitleEl) caseTitleEl.textContent = t('ipad_case_title');
   if (caseContentEl) caseContentEl.textContent = t('ipad_case_camera');
-}
-
-function renderWatchInfoCards() {
-  // Watch band card
-  const bandTitleEl = document.getElementById('watch-band-title');
-  const bandContentEl = document.getElementById('watch-band-content');
-  if (bandTitleEl) bandTitleEl.innerHTML = `<span style="font-size:16px">⌚</span> ${t('watch_band_title')}`;
-  if (bandContentEl) bandContentEl.innerHTML = `<div style="margin-bottom:6px">${t('watch_band_small')}</div><div style="margin-bottom:4px" class="badge-note">${t('watch_band_small_note')}</div><div>${t('watch_band_large')}</div>`;
-  
-  // Watch case card
-  const caseTitleEl = document.getElementById('watch-case-title');
-  const caseContentEl = document.getElementById('watch-case-content');
-  if (caseTitleEl) caseTitleEl.innerHTML = `<span style="font-size:16px">🛡️</span> ${t('watch_case_title')}`;
-  if (caseContentEl) caseContentEl.innerHTML = `<div style="margin-bottom:4px">${t('watch_case_46mm')}</div><div style="margin-bottom:4px">${t('watch_case_45_41')}</div><div style="margin-bottom:4px">${t('watch_case_44_40')}</div><div>${t('watch_case_ultra')}</div>`;
-  
-  // Watch new models card
-  const newTitleEl = document.getElementById('watch-new-title');
-  const newContentEl = document.getElementById('watch-new-content');
-  if (newTitleEl) newTitleEl.innerHTML = `<span style="font-size:16px">✨</span> ${t('watch_new_title')}`;
-  if (newContentEl) newContentEl.innerHTML = `<div style="margin-bottom:4px">${t('watch_new_se3')}</div><div>${t('watch_new_s11')}</div>`;
 }
 
 // ============ I18N ============
