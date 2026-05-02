@@ -964,6 +964,251 @@ input,textarea,select{font-family:inherit}
   }
   #ipad-results{padding:16px 0 !important}
 }
+
+/* ===== WATCH HERO ===== */
+
+#watch-page.page{
+  max-width:100%!important;
+  padding:0!important;
+}
+
+.watch-hero{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  max-width:1200px;
+  margin:0 auto;
+  padding:40px 24px 0;
+  gap:24px;
+  position:relative;
+  min-height:160px;
+}
+
+#watch-page .watch-hero-bg{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:50%;
+  right:50%;
+  margin-left:-50vw;
+  margin-right:-50vw;
+  width:100vw;
+  background:linear-gradient(135deg,#ecfdf5 0%,#d1fae5 50%,#a7f3d0 100%);
+  border-bottom:1px solid var(--border);
+  z-index:0;
+}
+
+.watch-hero-left{
+  flex:1;
+  max-width:560px;
+  padding-bottom:32px;
+  position:relative;
+  z-index:1;
+}
+.watch-hero-left h1{
+  font-size:26px;
+  font-weight:700;
+  color:var(--text);
+  line-height:1.3;
+  margin-bottom:6px;
+  letter-spacing:-0.3px;
+}
+.watch-hero-left p{
+  font-size:13px;
+  color:var(--text2);
+  margin-bottom:20px;
+}
+
+.watch-search-wrap{
+  position:relative;
+  max-width:480px;
+}
+.watch-search-icon{
+  position:absolute;
+  left:14px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--text3);
+  pointer-events:none;
+}
+.watch-search-input{
+  width:100%;
+  padding:13px 20px 13px 40px;
+  border:1.5px solid rgba(16,185,129,0.25);
+  border-radius:10px;
+  font-size:14px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
+  font-family:inherit;
+  box-shadow:0 2px 8px rgba(16,185,129,0.08);
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.watch-search-input:focus{
+  border-color:#10b981;
+  box-shadow:0 0 0 3px rgba(16,185,129,0.12);
+}
+.watch-search-input::placeholder{color:var(--text3)}
+
+/* 右侧 Watch 装饰图 */
+.watch-hero-img{
+  width:220px;
+  flex-shrink:0;
+  align-self:flex-end;
+  pointer-events:none;
+  position:relative;
+  z-index:1;
+  mask-image:linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+}
+.watch-hero-img img{
+  width:100%;
+  display:block;
+  object-fit:contain;
+  object-position:top center;
+  filter:drop-shadow(0 4px 20px rgba(16,185,129,0.2));
+}
+
+/* 内容区域居中 */
+.watch-page-body{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px;
+  background:var(--surface);
+}
+
+/* 信息卡片横排3张 */
+.watch-info-cards{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  padding:16px 0;
+  border-bottom:1px solid var(--border);
+  overflow:hidden;
+}
+.watch-info-card{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid;
+  cursor:pointer;
+  transition:all 0.15s;
+  overflow:hidden;
+  min-width:0;
+}
+.watch-info-card:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+.watch-info-blue{
+  background:linear-gradient(135deg,#eff6ff,#dbeafe);
+  border-color:#93c5fd;
+}
+.watch-info-red{
+  background:linear-gradient(135deg,#fff1f2,#fee2e2);
+  border-color:#f87171;
+}
+.watch-info-green{
+  background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+  border-color:#86efac;
+}
+.watch-info-icon{
+  font-size:18px;
+  flex-shrink:0;
+}
+.watch-info-text{
+  flex:1;
+  min-width:0;
+  overflow:hidden;
+}
+.watch-info-title{
+  font-size:12px;
+  font-weight:600;
+  margin-bottom:2px;
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-line-clamp:1;
+  -webkit-box-orient:vertical;
+}
+.watch-info-blue .watch-info-title{color:#1e40af}
+.watch-info-red .watch-info-title{color:#991b1b}
+.watch-info-green .watch-info-title{color:#166534}
+.watch-info-sub{
+  font-size:11px;
+  color:var(--text3);
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  line-height:1.4;
+}
+.watch-info-arrow{
+  font-size:16px;
+  color:var(--text3);
+  flex-shrink:0;
+  transition:transform 0.15s;
+}
+.watch-info-card:hover .watch-info-arrow{
+  transform:translateX(3px);
+}
+
+/* 暗色模式 */
+[data-theme="dark"] .watch-hero-bg{
+  background:linear-gradient(135deg,#064e3b 0%,#065f46 50%,#047857 100%);
+}
+[data-theme="dark"] .watch-search-input{
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  border-color:rgba(16,185,129,0.3);
+}
+[data-theme="dark"] .watch-info-blue{
+  background:linear-gradient(135deg,#1e2d4a,#1e3461);
+  border-color:#1e40af;
+}
+[data-theme="dark"] .watch-info-red{
+  background:linear-gradient(135deg,#2a0a0a,#330f0f);
+  border-color:#991b1b;
+}
+[data-theme="dark"] .watch-info-green{
+  background:linear-gradient(135deg,#052e16,#064e3b);
+  border-color:#166534;
+}
+
+/* 手机端 */
+@media(max-width:768px){
+  .watch-hero{
+    padding:24px 16px 0;
+    min-height:auto;
+  }
+  .watch-hero-bg{
+    background-image:
+      linear-gradient(to right,#ecfdf5 50%,transparent 85%),
+      url('/watch-hero-img.webp') !important;
+    background-repeat:no-repeat,no-repeat !important;
+    background-position:0 0,right -10px center !important;
+    background-size:auto,130px auto !important;
+  }
+  [data-theme="dark"] .watch-hero-bg{
+    background-image:
+      linear-gradient(to right,#064e3b 50%,transparent 85%),
+      url('/watch-hero-img.webp') !important;
+  }
+  .watch-hero-left h1{font-size:20px}
+  .watch-hero-left{padding-bottom:20px}
+  .watch-hero-img{display:none}
+  .watch-search-input{font-size:15px}
+  .watch-page-body{padding:0 16px}
+  .watch-info-cards{
+    grid-template-columns:1fr;
+    gap:8px;
+    padding:12px 0;
+  }
+  #watch-results{padding:16px 0 !important}
+  #watch-band-filter{padding:12px 0 !important}
+  #watch-screen-filter{padding:12px 0 !important}
+}
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="19b44367-903d-40ba-80d9-d786bb17717b"></script>
 </head>
@@ -1135,54 +1380,80 @@ input,textarea,select{font-family:inherit}
 </div>
 
 <!-- WATCH PAGE -->
-<div id="watch-page" class="page">
-  <div class="search-hero">
-    <h1 data-i18n="title_watch">Apple Watch 配件兼容性</h1>
-    <p data-i18n="subtitle_watch">查询各代 Apple Watch 的保护壳和表带通用情况</p>
-    <div class="search-box" style="margin-top:16px">
-      <input id="watch-search" type="text" data-i18n-placeholder="search_watch" placeholder="搜索 Watch 型号..." oninput="loadWatch()">
-      <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/></svg>
+<div id="watch-page" class="page" style="padding:0!important">
+
+  <!-- HERO 搜索区 -->
+  <div class="watch-hero">
+    <div class="watch-hero-bg"></div>
+    <div class="watch-hero-left">
+      <h1 data-i18n="title_watch">Compatibilidad de Accesorios Watch</h1>
+      <p data-i18n="subtitle_watch">Consultar compatibilidad de correas y cristales para Apple Watch</p>
+      <div class="watch-search-wrap">
+        <svg class="watch-search-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+          <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
+        </svg>
+        <input id="watch-search" type="text" class="watch-search-input"
+          data-i18n-placeholder="search_watch"
+          placeholder="Buscar modelo Watch..."
+          oninput="loadWatch()">
+      </div>
+    </div>
+    <div class="watch-hero-img">
+      <img src="/watch-hero-img.webp" alt="" draggable="false">
     </div>
   </div>
-  
-  <!-- Apple Watch 知识卡 -->
-  <div class="info-cards-grid">
-    <div class="info-card blue">
-      <div class="info-card-title" id="watch-band-title" onclick="toggleInfoCard(this)"></div>
-      <div class="info-card-content collapsed" id="watch-band-content"></div>
+
+  <!-- 信息卡片（横排3张） -->
+  <div class="watch-page-body">
+    <div class="watch-info-cards">
+      <div class="watch-info-card watch-info-blue" onclick="toggleWatchCard(this)">
+        <div class="watch-info-icon">⌚</div>
+        <div class="watch-info-text">
+          <div class="watch-info-title" id="watch-band-title">Grupos de Correa</div>
+          <div class="watch-info-sub" id="watch-band-content">Pequeña y Grande compatibilidad</div>
+        </div>
+        <div class="watch-info-arrow">›</div>
+      </div>
+      <div class="watch-info-card watch-info-red" onclick="toggleWatchCard(this)">
+        <div class="watch-info-icon">🛡️</div>
+        <div class="watch-info-text">
+          <div class="watch-info-title" id="watch-case-title">Cristales y Fundas</div>
+          <div class="watch-info-sub" id="watch-case-content">Compatibilidad por tamaño de pantalla</div>
+        </div>
+        <div class="watch-info-arrow">›</div>
+      </div>
+      <div class="watch-info-card watch-info-green" onclick="toggleWatchCard(this)">
+        <div class="watch-info-icon">✨</div>
+        <div class="watch-info-text">
+          <div class="watch-info-title" id="watch-new-title">Novedades 2024</div>
+          <div class="watch-info-sub" id="watch-new-content">Series 11, SE3 y Ultra 2</div>
+        </div>
+        <div class="watch-info-arrow">›</div>
+      </div>
     </div>
-    <div class="info-card red">
-      <div class="info-card-title" id="watch-case-title" onclick="toggleInfoCard(this)"></div>
-      <div class="info-card-content collapsed" id="watch-case-content"></div>
+
+    <!-- 表带组筛选器 -->
+    <div class="filter-bar" id="watch-band-filter"
+      style="padding:14px 0;margin:0;border-bottom:1px solid var(--border)">
+      <span class="filter-label" data-i18n="filter_band_group">表带组:</span>
+      <button class="pill" data-band="" onclick="setWatchBand('', this)" data-i18n="filter_all">全部</button>
+      <button class="pill" data-band="small" onclick="setWatchBand('small', this)" data-i18n="filter_small_band">小码 (38-42mm)</button>
+      <button class="pill" data-band="large" onclick="setWatchBand('large', this)" data-i18n="filter_large_band">大码 (44-49mm)</button>
     </div>
-  </div>
-  
-  <!-- 新款变动提示 -->
-  <div class="info-cards-single">
-    <div class="info-card green">
-      <div class="info-card-title" id="watch-new-title" onclick="toggleInfoCard(this)"></div>
-      <div class="info-card-content collapsed" id="watch-new-content"></div>
+
+    <!-- 屏幕类型筛选器 -->
+    <div class="filter-bar" id="watch-screen-filter"
+      style="padding:14px 0;margin:0;border-bottom:1px solid var(--border)">
+      <span class="filter-label" data-i18n="filter_screen">屏幕:</span>
+      <button class="pill" data-screen="" onclick="setWatchScreen('', this)" data-i18n="filter_all">全部</button>
+      <button class="pill" data-screen="flat" onclick="setWatchScreen('flat', this)" data-i18n="filter_flat">纯平 (Ultra)</button>
+      <button class="pill" data-screen="curved" onclick="setWatchScreen('curved', this)" data-i18n="filter_curved">弧面 (Series)</button>
+      <button class="pill" data-screen="classic" onclick="setWatchScreen('classic', this)" data-i18n="filter_classic">经典 (早期款)</button>
     </div>
+
+    <div id="watch-results" style="padding:20px 0"></div>
   </div>
-  
-  <!-- 表带组筛选器 -->
-  <div class="filter-bar" id="watch-band-filter" style="margin-bottom:12px">
-    <span class="filter-label" data-i18n="filter_band_group">表带组:</span>
-    <button class="pill" data-band="" onclick="setWatchBand('', this)" data-i18n="filter_all">全部</button>
-    <button class="pill" data-band="small" onclick="setWatchBand('small', this)" data-i18n="filter_small_band">小码 (38-42mm)</button>
-    <button class="pill" data-band="large" onclick="setWatchBand('large', this)" data-i18n="filter_large_band">大码 (44-49mm)</button>
-  </div>
-  
-  <!-- 屏幕类型筛选器 -->
-  <div class="filter-bar" id="watch-screen-filter" style="margin-bottom:20px">
-    <span class="filter-label" data-i18n="filter_screen">屏幕:</span>
-    <button class="pill" data-screen="" onclick="setWatchScreen('', this)" data-i18n="filter_all">全部</button>
-    <button class="pill" data-screen="flat" onclick="setWatchScreen('flat', this)" data-i18n="filter_flat">纯平 (Ultra)</button>
-    <button class="pill" data-screen="curved" onclick="setWatchScreen('curved', this)" data-i18n="filter_curved">弧面 (Series)</button>
-    <button class="pill" data-screen="classic" onclick="setWatchScreen('classic', this)" data-i18n="filter_classic">经典 (早期款)</button>
-  </div>
-  
-  <div id="watch-results"></div>
+
 </div>
 
 <!-- FILM PAGE -->
@@ -1581,6 +1852,31 @@ function toggleiPadCard(card) {
     const isExpanded = arrow.textContent === '›';
     arrow.textContent = isExpanded ? '‹' : '›';
   }
+}
+
+function toggleWatchCard(card) {
+  const arrow = card.querySelector('.watch-info-arrow');
+  if (arrow) {
+    arrow.textContent = arrow.textContent === '›' ? '‹' : '›';
+  }
+}
+
+function renderWatchInfoCards() {
+  const bandTitleEl = document.getElementById('watch-band-title');
+  const bandContentEl = document.getElementById('watch-band-content');
+  if (bandTitleEl) bandTitleEl.textContent = t('watch_band_title');
+  if (bandContentEl) bandContentEl.textContent = t('watch_band_small');
+
+  const caseTitleEl = document.getElementById('watch-case-title');
+  const caseContentEl = document.getElementById('watch-case-content');
+  if (caseTitleEl) caseTitleEl.textContent = t('watch_case_title');
+  if (caseContentEl) caseContentEl.textContent = t('watch_case_46mm');
+
+  const newTitleEl = document.getElementById('watch-new-title');
+  const newContentEl = document.getElementById('watch-new-content');
+  if (newTitleEl) newTitleEl.textContent = t('watch_new_title');
+  if (newContentEl) newContentEl.textContent = t('watch_new_se3');
+}
 }
 
 function renderIpadInfoCards() {
