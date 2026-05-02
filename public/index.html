@@ -567,6 +567,131 @@ input,textarea,select{font-family:inherit}
 .amazon-mode-btn:hover{color:var(--text)}
 .amazon-mode-btn.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow-sm)}
 .amazon-mode-btn.active[data-mode="MOST_WANTED"]{color:var(--accent-red)}
+
+/* ===== FILM HERO NEW ===== */
+.film-hero{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:40px 48px;
+  background:linear-gradient(135deg,#eef2ff 0%,#e8f0ff 60%,#dde8ff 100%);
+  border-bottom:1px solid var(--border);
+  overflow:hidden;
+  position:relative;
+  min-height:180px;
+  gap:24px;
+}
+.film-hero-left{flex:1;max-width:580px}
+.film-hero-left h1{
+  font-size:26px;
+  font-weight:700;
+  color:var(--text);
+  line-height:1.3;
+  margin-bottom:6px;
+  letter-spacing:-0.3px;
+}
+.film-hero-left p{
+  font-size:13px;
+  color:var(--text2);
+  margin-bottom:20px;
+}
+.film-search-wrap{
+  position:relative;
+  max-width:500px;
+  display:flex;
+  align-items:center;
+}
+.film-search-icon{
+  position:absolute;
+  left:14px;
+  color:var(--text3);
+  pointer-events:none;
+  z-index:1;
+}
+.film-search-input{
+  width:100%;
+  padding:13px 52px 13px 40px;
+  border:1.5px solid rgba(31,141,237,0.25);
+  border-radius:10px;
+  font-size:14px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
+  font-family:inherit;
+  box-shadow:0 2px 8px rgba(31,141,237,0.08);
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.film-search-input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(31,141,237,0.12);
+}
+.film-search-input::placeholder{color:var(--text3)}
+.film-search-btn{
+  position:absolute;
+  right:8px;
+  background:var(--accent);
+  border:none;
+  border-radius:7px;
+  width:32px;
+  height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:opacity 0.15s;
+  flex-shrink:0;
+}
+.film-search-btn:hover{opacity:0.85}
+.film-hero-img{
+  width:220px;
+  flex-shrink:0;
+  align-self:flex-end;
+  pointer-events:none;
+}
+.film-hero-img img{
+  width:100%;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 8px 24px rgba(31,141,237,0.15));
+  mask-image:linear-gradient(to top,transparent 0%,black 20%);
+  -webkit-mask-image:linear-gradient(to top,transparent 0%,black 20%);
+}
+.film-page-body{background:var(--surface)}
+
+/* Dark mode hero */
+[data-theme="dark"] .film-hero{
+  background:linear-gradient(135deg,#1e2340 0%,#1a1f3a 60%,#151929 100%);
+}
+[data-theme="dark"] .film-search-input{
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  border-color:rgba(31,141,237,0.3);
+}
+
+/* Mobile film hero */
+@media(max-width:768px){
+  .film-hero{
+    padding:24px 16px;
+    min-height:auto;
+    background-image:
+      linear-gradient(to right,#eef2ff 45%,transparent 80%),
+      url('/film-hero-img.webp');
+    background-repeat:no-repeat,no-repeat;
+    background-position:0 0,right -10px center;
+    background-size:auto,170px auto;
+  }
+  [data-theme="dark"] .film-hero{
+    background-image:
+      linear-gradient(to right,#1e2340 45%,transparent 80%),
+      url('/film-hero-img.webp');
+  }
+  .film-hero-left h1{font-size:20px}
+  .film-hero-img{display:none}
+  .film-search-input{font-size:15px}
+  .film-page-body{padding:0}
+  #film-results{padding:16px!important}
+  #brand-filters{padding:12px 16px!important}
+}
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="19b44367-903d-40ba-80d9-d786bb17717b"></script>
 </head>
@@ -765,17 +890,37 @@ input,textarea,select{font-family:inherit}
 </div>
 
 <!-- FILM PAGE -->
-<div id="film-page" class="page">
-  <div class="search-hero">
-    <h1 data-i18n="title_film">钢化膜通用型号查询</h1>
-    <p data-i18n="subtitle_film">全胶钢化膜通用型号兼容性对照</p>
-    <div class="search-box">
-      <input id="film-search" type="text" data-i18n-placeholder="search_film" placeholder="搜索型号，如 A71、POCO X3、Reno5..." oninput="loadFilm()">
-      <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/></svg>
+<div id="film-page" class="page" style="padding:0!important;max-width:100%!important">
+
+  <!-- HERO 搜索区 -->
+  <div class="film-hero">
+    <div class="film-hero-left">
+      <h1 data-i18n="title_film">Búsqueda Universal de Vidrio Templado</h1>
+      <p data-i18n="subtitle_film">Guía de Compatibilidad de Vidrio Adhesivo Completo</p>
+      <div class="film-search-wrap">
+        <svg class="film-search-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+          <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
+        </svg>
+        <input id="film-search" type="text" class="film-search-input"
+          data-i18n-placeholder="search_film"
+          placeholder="Buscar modelo, ej. A71, POCO X3, Reno5..."
+          oninput="loadFilm()">
+        <button class="film-search-btn" onclick="loadFilm()">
+          <svg viewBox="0 0 20 20" fill="white" width="16" height="16">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="film-hero-img">
+      <img src="/film-hero-img.webp" alt="" draggable="false">
     </div>
   </div>
-  <div id="brand-filters" class="filter-bar"></div>
-  <div id="film-results"></div>
+
+  <div class="film-page-body">
+    <div id="brand-filters" class="filter-bar" style="padding:16px 24px;margin:0;border-bottom:1px solid var(--border)"></div>
+    <div id="film-results" style="padding:20px 24px"></div>
+  </div>
 </div>
 
 <!-- ADMIN PAGE -->
