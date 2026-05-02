@@ -643,18 +643,21 @@ input,textarea,select{font-family:inherit}
 }
 .film-search-btn:hover{opacity:0.85}
 .film-hero-img{
-  width:220px;
+  width:280px;
   flex-shrink:0;
-  align-self:flex-end;
+  align-self:stretch;
   pointer-events:none;
+  position:relative;
+  overflow:hidden;
 }
 .film-hero-img img{
   width:100%;
-  object-fit:contain;
+  height:100%;
+  object-fit:cover;
+  object-position:top center;
   display:block;
-  filter:drop-shadow(0 8px 24px rgba(31,141,237,0.15));
-  mask-image:linear-gradient(to top,transparent 0%,black 20%);
-  -webkit-mask-image:linear-gradient(to top,transparent 0%,black 20%);
+  mask-image:linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
 }
 .film-page-body{background:var(--surface)}
 
