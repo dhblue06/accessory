@@ -1209,6 +1209,187 @@ input,textarea,select{font-family:inherit}
   #watch-band-filter{padding:12px 0 !important}
   #watch-screen-filter{padding:12px 0 !important}
 }
+
+/* ===== AMAZON HERO ===== */
+
+#amazon-page.page{
+  max-width:100%!important;
+  padding:0!important;
+}
+
+.amazon-hero{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  max-width:1200px;
+  margin:0 auto;
+  padding:40px 24px 32px;
+  gap:24px;
+  position:relative;
+  min-height:180px;
+}
+
+#amazon-page .amazon-hero-bg{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:50%;
+  right:50%;
+  margin-left:-50vw;
+  margin-right:-50vw;
+  width:100vw;
+  background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 50%,#e0f2fe 100%);
+  border-bottom:1px solid var(--border);
+  z-index:0;
+}
+
+.amazon-hero-left{
+  flex:1;
+  max-width:560px;
+  position:relative;
+  z-index:1;
+}
+
+.amazon-hero-left h1{
+  font-size:28px;
+  font-weight:700;
+  color:var(--text);
+  line-height:1.25;
+  margin-bottom:8px;
+  letter-spacing:-0.4px;
+}
+
+.amazon-hero-sub{
+  font-size:14px;
+  color:var(--text2);
+  margin-bottom:4px;
+}
+
+.amazon-hero-tagline{
+  font-size:13px;
+  color:var(--text2);
+  margin-bottom:12px;
+}
+
+.amazon-hero-meta{
+  margin-bottom:20px;
+}
+
+.amazon-hero-meta p{
+  font-size:12px;
+  color:var(--text3);
+  line-height:1.6;
+}
+
+.amazon-mode-tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.amazon-mode-btn{
+  padding:9px 20px;
+  border:1.5px solid var(--border2);
+  background:rgba(255,255,255,0.85);
+  font-size:13px;
+  font-weight:600;
+  color:var(--text2);
+  cursor:pointer;
+  border-radius:var(--radius-md);
+  transition:all 0.15s;
+  font-family:inherit;
+  backdrop-filter:blur(4px);
+}
+
+.amazon-mode-btn:hover{
+  border-color:var(--accent);
+  color:var(--text);
+  background:#fff;
+}
+
+.amazon-mode-btn.active[data-mode="BESTSELLER"]{
+  background:#fff;
+  border-color:#f97316;
+  color:#c2410c;
+  box-shadow:0 2px 8px rgba(249,115,22,0.2);
+}
+
+.amazon-mode-btn.active[data-mode="MOST_WANTED"]{
+  background:#fff;
+  border-color:#f43f5e;
+  color:#be123c;
+  box-shadow:0 2px 8px rgba(244,63,94,0.2);
+}
+
+.amazon-hero-img{
+  width:260px;
+  flex-shrink:0;
+  pointer-events:none;
+  position:relative;
+  z-index:1;
+  mask-image:linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+}
+
+.amazon-hero-img img{
+  width:100%;
+  display:block;
+  object-fit:contain;
+  filter:drop-shadow(0 8px 24px rgba(59,130,246,0.15));
+}
+
+.amazon-page-body{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px;
+  background:var(--surface);
+}
+
+[data-theme="dark"] .amazon-hero-bg{
+  background:linear-gradient(135deg,#1e2d4a 0%,#1a2540 50%,#162030 100%);
+}
+[data-theme="dark"] .amazon-mode-btn{
+  background:rgba(255,255,255,0.06);
+  border-color:var(--border);
+  color:var(--text2);
+}
+[data-theme="dark"] .amazon-mode-btn.active[data-mode="BESTSELLER"]{
+  background:rgba(249,115,22,0.15);
+  border-color:#f97316;
+  color:#fb923c;
+}
+[data-theme="dark"] .amazon-mode-btn.active[data-mode="MOST_WANTED"]{
+  background:rgba(244,63,94,0.15);
+  border-color:#f43f5e;
+  color:#fb7185;
+}
+
+@media(max-width:768px){
+  .amazon-hero{
+    padding:24px 16px 24px;
+    min-height:auto;
+    align-items:flex-start;
+  }
+  .amazon-hero-bg{
+    background-image:
+      linear-gradient(to right,#eff6ff 45%,transparent 80%),
+      url('/amazon-hero-img.webp') !important;
+    background-repeat:no-repeat,no-repeat !important;
+    background-position:0 0,right -10px center !important;
+    background-size:auto,150px auto !important;
+  }
+  [data-theme="dark"] .amazon-hero-bg{
+    background-image:
+      linear-gradient(to right,#1e2d4a 45%,transparent 80%),
+      url('/amazon-hero-img.webp') !important;
+  }
+  .amazon-hero-left h1{font-size:20px}
+  .amazon-hero-img{display:none}
+  .amazon-page-body{padding:0 16px}
+  #amazon-results{padding:16px 0 !important}
+  #amazon-cat-filter{padding:12px 0 !important}
+  .amazon-mode-btn{padding:8px 14px;font-size:12px}
+}
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="19b44367-903d-40ba-80d9-d786bb17717b"></script>
 </head>
@@ -1287,38 +1468,54 @@ input,textarea,select{font-family:inherit}
 </nav>
 
 <!-- AMAZON PAGE -->
-<div id="amazon-page" class="page">
-  <div class="search-hero">
-    <h1 data-i18n="title_amazon">Amazon榜单</h1>
-    <p data-i18n="subtitle_amazon">查看Amazon热门产品排行榜</p>
-    <p data-i18n="tagline_amazon" style="font-size:13px;color:var(--text2);margin-top:6px">精选好物，帮你做出明智选择</p>
-    <p id="amazon-updated" style="font-size:12px;color:var(--text3);margin-top:4px"></p>
-    <p data-i18n="amazon_update_schedule" style="font-size:11px;color:var(--text4);margin-top:2px">每周五更新数据</p>
+<div id="amazon-page" class="page" style="padding:0!important">
+
+  <!-- HERO 区域 -->
+  <div class="amazon-hero">
+    <div class="amazon-hero-bg"></div>
+    <div class="amazon-hero-left">
+      <h1 data-i18n="title_amazon">Los más vendidos en Amazon</h1>
+      <p data-i18n="subtitle_amazon" class="amazon-hero-sub">Guía completa para tu selección</p>
+      <p data-i18n="tagline_amazon" class="amazon-hero-tagline">Selección curada para ayudarte a comprar mejor</p>
+      <div class="amazon-hero-meta">
+        <p id="amazon-updated"></p>
+        <p data-i18n="amazon_update_schedule">Actualizado cada viernes</p>
+      </div>
+      <div id="amazon-mode-filter" class="amazon-mode-tabs">
+        <button class="amazon-mode-btn active" data-mode="BESTSELLER"
+          onclick="setAmazonMode('BESTSELLER',this)" id="mode-bestseller">
+          <span data-i18n="mode_bestseller">🔥 Más Vendidos</span>
+        </button>
+        <button class="amazon-mode-btn" data-mode="MOST_WANTED"
+          onclick="setAmazonMode('MOST_WANTED',this)" id="mode-mostwanted">
+          <span data-i18n="mode_mostwanted">❤️ Más Deseados</span>
+        </button>
+      </div>
+    </div>
+    <div class="amazon-hero-img">
+      <img src="/amazon-hero-img.webp" alt="" draggable="false">
+    </div>
   </div>
 
-  <!-- 榜单模式切换: Bestseller | Most Wanted -->
-  <div id="amazon-mode-filter" style="display:flex;gap:0;margin-bottom:16px;background:var(--surface2);border-radius:var(--radius-md);padding:4px;width:fit-content">
-    <button class="amazon-mode-btn active" data-mode="BESTSELLER" onclick="setAmazonMode('BESTSELLER',this)" id="mode-bestseller">
-      <span data-i18n="mode_bestseller">🔥 Bestseller</span>
-    </button>
-    <button class="amazon-mode-btn" data-mode="MOST_WANTED" onclick="setAmazonMode('MOST_WANTED',this)" id="mode-mostwanted">
-      <span data-i18n="mode_mostwanted">❤️ Most Wanted</span>
-    </button>
+  <div class="amazon-page-body">
+    <div id="amazon-cat-filter" class="filter-bar"
+      style="padding:14px 0;margin:0;border-bottom:1px solid var(--border);display:none"></div>
+    <div id="amazon-results" style="padding:20px 0">
+      <div class="amazon-loading">
+        <div class="amazon-loading-spinner"></div>
+        <div id="amazon-loading-text">正在加载...</div>
+      </div>
+    </div>
+    <div id="amazon-footer" style="text-align:center;padding:20px 0">
+      <div id="amazon-login-tip" data-i18n="amazon_login_tip"
+        style="display:none;margin-bottom:12px;color:var(--accent-red)">
+        登录后可查看完整100条
+      </div>
+      <button class="btn btn-secondary" onclick="loadMoreAmazon()"
+        data-i18n="btn_load_more">加载更多</button>
+    </div>
   </div>
 
-  <!-- 品类筛选 - 根据模式动态显示 -->
-  <div id="amazon-cat-filter" class="filter-bar" style="margin-bottom:20px;display:none"></div>
-
-  <!-- 结果区域 -->
-  <div id="amazon-results"><div class="amazon-loading"><div class="amazon-loading-spinner"></div><div id="amazon-loading-text">正在加载...</div></div></div>
-
-  <!-- 底部加载控制 -->
-  <div id="amazon-footer" style="text-align:center;padding:20px">
-    <div id="amazon-login-tip" data-i18n="amazon_login_tip" style="display:none;margin-bottom:12px;color:var(--accent-red)">登录后可查看完整100条</div>
-    <button class="pill" onclick="switchAmazonTab(20,this)"><span data-i18n="amazon_show_20">20条</span></button>
-    <button class="pill" onclick="switchAmazonTab(100,this)"><span data-i18n="amazon_show_100">100条</span></button>
-    <button class="btn btn-secondary" onclick="loadMoreAmazon()" data-i18n="btn_load_more">加载更多</button>
-  </div>
 </div>
 
 <!-- IPAD PAGE -->
