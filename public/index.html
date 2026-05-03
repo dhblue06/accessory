@@ -719,14 +719,32 @@ input,textarea,select{font-family:inherit}
   [data-theme="dark"] .film-hero-bg{
     background:linear-gradient(135deg,#1e2340 0%,#1a1f3a 50%,#151929 100%) !important;
   }
-  .film-hero-left{
-    max-width:62%;
+  .film-hero-img{
+    display:block;
+    position:absolute;
+    right:0;
+    top:0;
+    bottom:0;
+    width:auto;
+    height:100%;
+    margin:0;
+    pointer-events:none;
+    z-index:0;
+    mask-image:linear-gradient(to left, black 50%, transparent 100%);
+    -webkit-mask-image:linear-gradient(to left, black 50%, transparent 100%);
   }
-  .film-hero-left h1{font-size:18px;line-height:1.3}
-  .film-hero-left p{font-size:12px;margin-bottom:14px}
-  .film-search-wrap{max-width:100%}
-  .film-search-input{font-size:15px}
-  .film-hero-img{display:none}
+  .film-hero-img img{
+    height:100%;
+    width:auto;
+    object-fit:contain;
+    object-position:right center;
+    display:block;
+  }
+  .film-hero-left{
+    position:relative;
+    z-index:1;
+    max-width:65%;
+  }
   .film-page-body{padding:0 16px}
 }
 
@@ -944,14 +962,32 @@ input,textarea,select{font-family:inherit}
   [data-theme="dark"] .ipad-hero-bg{
     background:linear-gradient(135deg,#1e3a5f 0%,#1e2d4a 50%,#1a2a3f 100%) !important;
   }
-  .ipad-hero-left{
-    max-width:62%;
+  .ipad-hero-img{
+    display:block;
+    position:absolute;
+    right:0;
+    top:0;
+    bottom:0;
+    width:auto;
+    height:100%;
+    margin:0;
+    pointer-events:none;
+    z-index:0;
+    mask-image:linear-gradient(to left, black 50%, transparent 100%);
+    -webkit-mask-image:linear-gradient(to left, black 50%, transparent 100%);
   }
-  .ipad-hero-left h1{font-size:18px;line-height:1.3}
-  .ipad-hero-left p{font-size:12px;margin-bottom:14px}
-  .ipad-search-wrap{max-width:100%}
-  .ipad-search-input{font-size:15px}
-  .ipad-hero-img{display:none}
+  .ipad-hero-img img{
+    height:100%;
+    width:auto;
+    object-fit:contain;
+    object-position:right center;
+    display:block;
+  }
+  .ipad-hero-left{
+    position:relative;
+    z-index:1;
+    max-width:65%;
+  }
   .ipad-page-body{padding:0 16px}
   .ipad-info-cards{
     grid-template-columns:1fr;
@@ -1187,14 +1223,32 @@ input,textarea,select{font-family:inherit}
   [data-theme="dark"] .watch-hero-bg{
     background:linear-gradient(135deg,#064e3b 0%,#065f46 50%,#047857 100%) !important;
   }
-  .watch-hero-left{
-    max-width:62%;
+  .watch-hero-img{
+    display:block;
+    position:absolute;
+    right:0;
+    top:0;
+    bottom:0;
+    width:auto;
+    height:100%;
+    margin:0;
+    pointer-events:none;
+    z-index:0;
+    mask-image:linear-gradient(to left, black 50%, transparent 100%);
+    -webkit-mask-image:linear-gradient(to left, black 50%, transparent 100%);
   }
-  .watch-hero-left h1{font-size:18px;line-height:1.3}
-  .watch-hero-left p{font-size:12px;margin-bottom:14px}
-  .watch-search-wrap{max-width:100%}
-  .watch-search-input{font-size:15px}
-  .watch-hero-img{display:none}
+  .watch-hero-img img{
+    height:100%;
+    width:auto;
+    object-fit:contain;
+    object-position:right center;
+    display:block;
+  }
+  .watch-hero-left{
+    position:relative;
+    z-index:1;
+    max-width:65%;
+  }
   .watch-page-body{padding:0 16px}
   .watch-info-cards{
     grid-template-columns:1fr;
@@ -1373,14 +1427,32 @@ input,textarea,select{font-family:inherit}
   [data-theme="dark"] .amazon-hero-bg{
     background:linear-gradient(135deg,#1e2d4a 0%,#1a2540 50%,#162030 100%) !important;
   }
-  .amazon-hero-left{
-    max-width:62%;
+  .amazon-hero-img{
+    display:block;
+    position:absolute;
+    right:0;
+    top:0;
+    bottom:0;
+    width:auto;
+    height:100%;
+    margin:0;
+    pointer-events:none;
+    z-index:0;
+    mask-image:linear-gradient(to left, black 50%, transparent 100%);
+    -webkit-mask-image:linear-gradient(to left, black 50%, transparent 100%);
   }
-  .amazon-hero-left h1{font-size:18px;line-height:1.3}
-  .amazon-hero-left p{font-size:12px;margin-bottom:14px}
-  .amazon-mode-tabs{flex-wrap:wrap;gap:6px}
-  .amazon-mode-btn{padding:8px 14px;font-size:12px}
-  .amazon-hero-img{display:none}
+  .amazon-hero-img img{
+    height:100%;
+    width:auto;
+    object-fit:contain;
+    object-position:right center;
+    display:block;
+  }
+  .amazon-hero-left{
+    position:relative;
+    z-index:1;
+    max-width:65%;
+  }
   .amazon-page-body{padding:0 16px}
   #amazon-results{padding:16px 0 !important}
   #amazon-cat-filter{padding:12px 0 !important}
