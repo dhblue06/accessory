@@ -708,34 +708,20 @@ input,textarea,select{font-family:inherit}
 /* Mobile film hero */
 @media(max-width:768px){
   .film-hero{
-    padding:24px 16px 0;
-    min-height:auto;
-  }
-/* Mobile film hero */
-@media(max-width:768px){
-  .film-hero{
-    padding:20px 16px 24px;
-    min-height:140px;
+    position:relative;
+    min-height:160px;
     align-items:flex-start;
+    padding:20px 16px 20px;
   }
   .film-hero-bg{
-    background-image:
-      linear-gradient(to bottom,#eef2ff 60%,transparent 100%),
-      linear-gradient(to right,#eef2ff 55%,transparent 80%),
-      url('/film-hero-img.webp') !important;
-    background-repeat:no-repeat,no-repeat,no-repeat !important;
-    background-position:0 0,0 0,right 0px top !important;
-    background-size:auto,auto,auto,110px auto !important;
+    background:#eef2ff !important;
   }
   [data-theme="dark"] .film-hero-bg{
-    background-image:
-      linear-gradient(to bottom,#1e2340 60%,transparent 100%),
-      linear-gradient(to right,#1e2340 55%,transparent 80%),
-      url('/film-hero-img.webp') !important;
+    background:#1e2340 !important;
   }
   .film-hero-left{
-    padding-bottom:0;
-    max-width:calc(100% - 100px);
+    max-width:calc(100% - 120px);
+    position:relative;
     z-index:2;
   }
   .film-hero-left h1{font-size:19px;line-height:1.25}
@@ -949,34 +935,20 @@ input,textarea,select{font-family:inherit}
 /* 手机端 */
 @media(max-width:768px){
   .ipad-hero{
-    padding:24px 16px 0;
-    min-height:auto;
-  }
-/* 手机端 */
-@media(max-width:768px){
-  .ipad-hero{
-    padding:20px 16px 24px;
-    min-height:150px;
+    position:relative;
+    min-height:160px;
     align-items:flex-start;
+    padding:20px 16px 20px;
   }
   .ipad-hero-bg{
-    background-image:
-      linear-gradient(to bottom,#eff6ff 60%,transparent 100%),
-      linear-gradient(to right,#eff6ff 55%,transparent 80%),
-      url('/ipad-hero-img.webp') !important;
-    background-repeat:no-repeat,no-repeat !important;
-    background-position:0 0,0 0,right 0px top !important;
-    background-size:auto,auto,auto,120px auto !important;
+    background:#eff6ff !important;
   }
   [data-theme="dark"] .ipad-hero-bg{
-    background-image:
-      linear-gradient(to bottom,#1e3a5f 60%,transparent 100%),
-      linear-gradient(to right,#1e3a5f 55%,transparent 80%),
-      url('/ipad-hero-img.webp') !important;
+    background:#1e3a5f !important;
   }
   .ipad-hero-left{
-    padding-bottom:0;
-    max-width:calc(100% - 110px);
+    max-width:calc(100% - 120px);
+    position:relative;
     z-index:2;
   }
   .ipad-hero-left h1{font-size:19px;line-height:1.25}
@@ -992,24 +964,6 @@ input,textarea,select{font-family:inherit}
   }
   #ipad-results{padding:16px 0 !important}
   #ipad-band-filter{padding:12px 0 !important}
-}
-  .ipad-hero-left{max-width:calc(100% - 90px)}
-  [data-theme="dark"] .ipad-hero-bg{
-    background-image:
-      linear-gradient(to right,#1e3a5f 60%,transparent 80%),
-      url('/ipad-hero-img.webp') !important;
-  }
-  .ipad-hero-left h1{font-size:20px}
-  .ipad-hero-left{padding-bottom:20px}
-  .ipad-hero-img{display:none}
-  .ipad-search-input{font-size:15px}
-  .ipad-page-body{padding:0 16px}
-  .ipad-info-cards{
-    grid-template-columns:1fr;
-    gap:8px;
-    padding:12px 0;
-  }
-  #ipad-results{padding:16px 0 !important}
 }
 
 /* ===== WATCH HERO ===== */
@@ -1226,22 +1180,20 @@ input,textarea,select{font-family:inherit}
 /* 手机端 */
 @media(max-width:768px){
   .watch-hero{
-    padding:20px 16px 24px;
-    min-height:150px;
+    position:relative;
+    min-height:160px;
     align-items:flex-start;
+    padding:20px 16px 20px;
   }
   .watch-hero-bg{
-    background-image:
-      linear-gradient(to bottom,#ecfdf5 60%,transparent 100%),
-      linear-gradient(to right,#ecfdf5 55%,transparent 80%),
-      url('/watch-hero-img.webp') !important;
-    background-repeat:no-repeat,no-repeat !important;
-    background-position:0 0,0 0,right 0px top !important;
-    background-size:auto,auto,auto,auto,110px auto !important;
+    background:#ecfdf5 !important;
+  }
+  [data-theme="dark"] .watch-hero-bg{
+    background:#064e3b !important;
   }
   .watch-hero-left{
-    padding-bottom:0;
-    max-width:calc(100% - 100px);
+    max-width:calc(100% - 120px);
+    position:relative;
     z-index:2;
   }
   .watch-hero-left h1{font-size:19px;line-height:1.25}
@@ -1249,34 +1201,6 @@ input,textarea,select{font-family:inherit}
   .watch-search-wrap{max-width:100%}
   .watch-search-input{font-size:15px}
   .watch-hero-img{display:none}
-  .watch-page-body{padding:0 16px}
-  .watch-info-cards{
-    grid-template-columns:1fr;
-    gap:8px;
-    padding:12px 0;
-  }
-  #watch-results{padding:16px 0 !important}
-  #watch-band-filter{padding:12px 0 !important}
-  #watch-screen-filter{padding:12px 0 !important}
-}
-  .watch-hero-bg{
-    background-image:
-      linear-gradient(to right,#ecfdf5 60%,transparent 80%),
-      url('/watch-hero-img.webp') !important;
-    background-repeat:no-repeat,no-repeat !important;
-    background-position:0 0,right 0px bottom !important;
-    background-size:auto,100px auto !important;
-  }
-  .watch-hero-left{max-width:calc(100% - 90px)}
-  [data-theme="dark"] .watch-hero-bg{
-    background-image:
-      linear-gradient(to right,#064e3b 60%,transparent 80%),
-      url('/watch-hero-img.webp') !important;
-  }
-  .watch-hero-left h1{font-size:20px}
-  .watch-hero-left{padding-bottom:20px}
-  .watch-hero-img{display:none}
-  .watch-search-input{font-size:15px}
   .watch-page-body{padding:0 16px}
   .watch-info-cards{
     grid-template-columns:1fr;
@@ -1444,21 +1368,20 @@ input,textarea,select{font-family:inherit}
 
 @media(max-width:768px){
   .amazon-hero{
-    padding:20px 16px 24px;
-    min-height:auto;
+    position:relative;
+    min-height:160px;
     align-items:flex-start;
+    padding:20px 16px 20px;
   }
   .amazon-hero-bg{
-    background-image:
-      linear-gradient(to bottom,#eff6ff 60%,transparent 100%),
-      linear-gradient(to right,#eff6ff 55%,transparent 80%),
-      url('/amazon-hero-img.webp') !important;
-    background-repeat:no-repeat,no-repeat !important;
-    background-position:0 0,0 0,right 0px top !important;
-    background-size:auto,auto,auto,110px auto !important;
+    background:#eff6ff !important;
+  }
+  [data-theme="dark"] .amazon-hero-bg{
+    background:#1e2d4a !important;
   }
   .amazon-hero-left{
-    max-width:calc(100% - 100px);
+    max-width:calc(100% - 120px);
+    position:relative;
     z-index:2;
   }
   .amazon-hero-left h1{font-size:19px;line-height:1.25}
@@ -1470,26 +1393,27 @@ input,textarea,select{font-family:inherit}
   #amazon-results{padding:16px 0 !important}
   #amazon-cat-filter{padding:12px 0 !important}
 }
-  .amazon-hero-bg{
-    background-image:
-      linear-gradient(to right,#eff6ff 60%,transparent 80%),
-      url('/amazon-hero-img.webp') !important;
-    background-repeat:no-repeat,no-repeat !important;
-    background-position:0 0,right 0px center !important;
-    background-size:auto,110px auto !important;
+
+/* ===== HERO 装饰图（通用）===== */
+.hero-deco-img{
+  display:none;
+  position:absolute;
+  right:0;
+  top:0;
+  width:110px;
+  height:auto;
+  object-fit:contain;
+  object-position:top right;
+  pointer-events:none;
+  z-index:1;
+  mask-image:linear-gradient(to bottom, black 50%, transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom, black 50%, transparent 100%);
+  opacity:0.85;
+}
+@media(max-width:768px){
+  .hero-deco-img{
+    display:block;
   }
-  .amazon-hero-left{max-width:calc(100% - 90px)}
-  [data-theme="dark"] .amazon-hero-bg{
-    background-image:
-      linear-gradient(to right,#1e2d4a 60%,transparent 80%),
-      url('/amazon-hero-img.webp') !important;
-  }
-  .amazon-hero-left h1{font-size:20px}
-  .amazon-hero-img{display:none}
-  .amazon-page-body{padding:0 16px}
-  #amazon-results{padding:16px 0 !important}
-  #amazon-cat-filter{padding:12px 0 !important}
-  .amazon-mode-btn{padding:8px 14px;font-size:12px}
 }
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="19b44367-903d-40ba-80d9-d786bb17717b"></script>
@@ -1574,6 +1498,7 @@ input,textarea,select{font-family:inherit}
   <!-- HERO 区域 -->
   <div class="amazon-hero">
     <div class="amazon-hero-bg"></div>
+    <img class="hero-deco-img" src="/amazon-hero-img.webp" alt="">
     <div class="amazon-hero-left">
       <h1 data-i18n="title_amazon">Los más vendidos en Amazon</h1>
       <p data-i18n="subtitle_amazon" class="amazon-hero-sub">Guía completa para tu selección</p>
@@ -1625,6 +1550,7 @@ input,textarea,select{font-family:inherit}
   <!-- HERO 搜索区 -->
   <div class="ipad-hero">
     <div class="ipad-hero-bg"></div>
+    <img class="hero-deco-img" src="/ipad-hero-img.webp" alt="">
     <div class="ipad-hero-left">
       <h1 data-i18n="title_ipad">Compatibilidad de Accesorios iPad</h1>
       <p data-i18n="subtitle_ipad">Consultar compatibilidad de fundas y cristales para iPad</p>
@@ -1683,6 +1609,7 @@ input,textarea,select{font-family:inherit}
   <!-- HERO 搜索区 -->
   <div class="watch-hero">
     <div class="watch-hero-bg"></div>
+    <img class="hero-deco-img" src="/watch-hero-img.webp" alt="">
     <div class="watch-hero-left">
       <h1 data-i18n="title_watch">Compatibilidad de Accesorios Watch</h1>
       <p data-i18n="subtitle_watch">Consultar compatibilidad de correas y cristales para Apple Watch</p>
@@ -1760,6 +1687,7 @@ input,textarea,select{font-family:inherit}
   <!-- HERO 搜索区 -->
   <div class="film-hero">
     <div class="film-hero-bg"></div>
+    <img class="hero-deco-img" src="/film-hero-img.webp" alt="">
     <div class="film-hero-left">
       <h1 data-i18n="title_film">Búsqueda Universal de Vidrio Templado</h1>
       <p data-i18n="subtitle_film">Guía de Compatibilidad de Vidrio Adhesivo Completo</p>
