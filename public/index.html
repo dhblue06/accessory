@@ -708,10 +708,8 @@ input,textarea,select{font-family:inherit}
 /* Mobile film hero */
 @media(max-width:768px){
   .film-hero{
-    position:relative;
-    min-height:160px;
+    padding:16px 16px 20px;
     align-items:flex-start;
-    padding:20px 16px 20px;
   }
   .film-hero-bg{
     background:#eef2ff !important;
@@ -720,15 +718,24 @@ input,textarea,select{font-family:inherit}
     background:#1e2340 !important;
   }
   .film-hero-left{
-    max-width:calc(100% - 120px);
-    position:relative;
-    z-index:2;
+    flex:1;
+    min-width:0;
+    padding-right:8px;
   }
-  .film-hero-left h1{font-size:19px;line-height:1.25}
+  .film-hero-left h1{font-size:18px;line-height:1.3}
   .film-hero-left p{font-size:12px;margin-bottom:14px}
   .film-search-wrap{max-width:100%}
   .film-search-input{font-size:15px}
-  .film-hero-img{display:none}
+  .film-hero-img{
+    display:flex;
+    width:100px;
+    flex-shrink:0;
+    align-self:flex-start;
+    padding-top:4px;
+    mask-image:linear-gradient(to bottom,black 0%,black 65%,transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom,black 0%,black 65%,transparent 100%);
+  }
+  .film-hero-img img{width:100%;height:auto}
   .film-page-body{padding:0 16px}
 }
 
@@ -935,10 +942,8 @@ input,textarea,select{font-family:inherit}
 /* 手机端 */
 @media(max-width:768px){
   .ipad-hero{
-    position:relative;
-    min-height:160px;
+    padding:16px 16px 20px;
     align-items:flex-start;
-    padding:20px 16px 20px;
   }
   .ipad-hero-bg{
     background:#eff6ff !important;
@@ -947,15 +952,24 @@ input,textarea,select{font-family:inherit}
     background:#1e3a5f !important;
   }
   .ipad-hero-left{
-    max-width:calc(100% - 120px);
-    position:relative;
-    z-index:2;
+    flex:1;
+    min-width:0;
+    padding-right:8px;
   }
-  .ipad-hero-left h1{font-size:19px;line-height:1.25}
+  .ipad-hero-left h1{font-size:18px;line-height:1.3}
   .ipad-hero-left p{font-size:12px;margin-bottom:14px}
   .ipad-search-wrap{max-width:100%}
   .ipad-search-input{font-size:15px}
-  .ipad-hero-img{display:none}
+  .ipad-hero-img{
+    display:flex;
+    width:110px;
+    flex-shrink:0;
+    align-self:flex-start;
+    padding-top:4px;
+    mask-image:linear-gradient(to bottom,black 0%,black 65%,transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom,black 0%,black 65%,transparent 100%);
+  }
+  .ipad-hero-img img{width:100%;height:auto}
   .ipad-page-body{padding:0 16px}
   .ipad-info-cards{
     grid-template-columns:1fr;
@@ -1180,10 +1194,8 @@ input,textarea,select{font-family:inherit}
 /* 手机端 */
 @media(max-width:768px){
   .watch-hero{
-    position:relative;
-    min-height:160px;
+    padding:16px 16px 20px;
     align-items:flex-start;
-    padding:20px 16px 20px;
   }
   .watch-hero-bg{
     background:#ecfdf5 !important;
@@ -1192,15 +1204,24 @@ input,textarea,select{font-family:inherit}
     background:#064e3b !important;
   }
   .watch-hero-left{
-    max-width:calc(100% - 120px);
-    position:relative;
-    z-index:2;
+    flex:1;
+    min-width:0;
+    padding-right:8px;
   }
-  .watch-hero-left h1{font-size:19px;line-height:1.25}
+  .watch-hero-left h1{font-size:18px;line-height:1.3}
   .watch-hero-left p{font-size:12px;margin-bottom:14px}
   .watch-search-wrap{max-width:100%}
   .watch-search-input{font-size:15px}
-  .watch-hero-img{display:none}
+  .watch-hero-img{
+    display:flex;
+    width:90px;
+    flex-shrink:0;
+    align-self:flex-start;
+    padding-top:4px;
+    mask-image:linear-gradient(to bottom,black 0%,black 65%,transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom,black 0%,black 65%,transparent 100%);
+  }
+  .watch-hero-img img{width:100%;height:auto}
   .watch-page-body{padding:0 16px}
   .watch-info-cards{
     grid-template-columns:1fr;
@@ -1368,10 +1389,8 @@ input,textarea,select{font-family:inherit}
 
 @media(max-width:768px){
   .amazon-hero{
-    position:relative;
-    min-height:160px;
+    padding:16px 16px 20px;
     align-items:flex-start;
-    padding:20px 16px 20px;
   }
   .amazon-hero-bg{
     background:#eff6ff !important;
@@ -1380,41 +1399,29 @@ input,textarea,select{font-family:inherit}
     background:#1e2d4a !important;
   }
   .amazon-hero-left{
-    max-width:calc(100% - 120px);
-    position:relative;
-    z-index:2;
+    flex:1;
+    min-width:0;
+    padding-right:8px;
   }
-  .amazon-hero-left h1{font-size:19px;line-height:1.25}
+  .amazon-hero-left h1{font-size:18px;line-height:1.3}
   .amazon-hero-left p{font-size:12px;margin-bottom:14px}
   .amazon-mode-tabs{flex-wrap:wrap;gap:6px}
   .amazon-mode-btn{padding:8px 14px;font-size:12px}
-  .amazon-hero-img{display:none}
+  .amazon-hero-img{
+    display:flex;
+    width:100px;
+    flex-shrink:0;
+    align-self:flex-start;
+    padding-top:4px;
+    mask-image:linear-gradient(to bottom,black 0%,black 65%,transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom,black 0%,black 65%,transparent 100%);
+  }
+  .amazon-hero-img img{width:100%;height:auto}
   .amazon-page-body{padding:0 16px}
   #amazon-results{padding:16px 0 !important}
   #amazon-cat-filter{padding:12px 0 !important}
 }
 
-/* ===== HERO 装饰图（通用）===== */
-.hero-deco-img{
-  display:none;
-  position:absolute;
-  right:0;
-  top:0;
-  width:110px;
-  height:auto;
-  object-fit:contain;
-  object-position:top right;
-  pointer-events:none;
-  z-index:1;
-  mask-image:linear-gradient(to bottom, black 50%, transparent 100%);
-  -webkit-mask-image:linear-gradient(to bottom, black 50%, transparent 100%);
-  opacity:0.85;
-}
-@media(max-width:768px){
-  .hero-deco-img{
-    display:block;
-  }
-}
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="19b44367-903d-40ba-80d9-d786bb17717b"></script>
 </head>
@@ -1498,7 +1505,6 @@ input,textarea,select{font-family:inherit}
   <!-- HERO 区域 -->
   <div class="amazon-hero">
     <div class="amazon-hero-bg"></div>
-    <img class="hero-deco-img" src="/amazon-hero-img.webp" alt="">
     <div class="amazon-hero-left">
       <h1 data-i18n="title_amazon">Los más vendidos en Amazon</h1>
       <p data-i18n="subtitle_amazon" class="amazon-hero-sub">Guía completa para tu selección</p>
@@ -1550,7 +1556,6 @@ input,textarea,select{font-family:inherit}
   <!-- HERO 搜索区 -->
   <div class="ipad-hero">
     <div class="ipad-hero-bg"></div>
-    <img class="hero-deco-img" src="/ipad-hero-img.webp" alt="">
     <div class="ipad-hero-left">
       <h1 data-i18n="title_ipad">Compatibilidad de Accesorios iPad</h1>
       <p data-i18n="subtitle_ipad">Consultar compatibilidad de fundas y cristales para iPad</p>
@@ -1609,7 +1614,6 @@ input,textarea,select{font-family:inherit}
   <!-- HERO 搜索区 -->
   <div class="watch-hero">
     <div class="watch-hero-bg"></div>
-    <img class="hero-deco-img" src="/watch-hero-img.webp" alt="">
     <div class="watch-hero-left">
       <h1 data-i18n="title_watch">Compatibilidad de Accesorios Watch</h1>
       <p data-i18n="subtitle_watch">Consultar compatibilidad de correas y cristales para Apple Watch</p>
@@ -1687,7 +1691,6 @@ input,textarea,select{font-family:inherit}
   <!-- HERO 搜索区 -->
   <div class="film-hero">
     <div class="film-hero-bg"></div>
-    <img class="hero-deco-img" src="/film-hero-img.webp" alt="">
     <div class="film-hero-left">
       <h1 data-i18n="title_film">Búsqueda Universal de Vidrio Templado</h1>
       <p data-i18n="subtitle_film">Guía de Compatibilidad de Vidrio Adhesivo Completo</p>
