@@ -274,6 +274,8 @@ input,textarea,select{font-family:inherit}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:var(--radius-md);font-size:13px;font-weight:500;border:none;cursor:pointer;transition:all 0.15s}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-primary:hover{background:var(--accent-hover)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--accent-hover)}
 .btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
 .btn-secondary:hover{background:var(--surface2);border-color:var(--border2)}
 .btn-danger{background:var(--red-bg);color:var(--red-text);border:1px solid transparent}
@@ -1501,6 +1503,45 @@ input,textarea,select{font-family:inherit}
   </div>
 </div>
 
+<!-- MEMBER AUTH MODAL -->
+<div id="member-auth-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)hideMemberAuth()">
+  <div class="modal-card" style="width:380px;padding:32px">
+    <div style="display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border)">
+      <button id="member-auth-tab-login" class="member-auth-tab active" onclick="switchMemberAuthTab('login')" style="flex:1;padding:10px 0;border:none;background:none;cursor:pointer;font-size:14px;font-weight:600;color:var(--text);border-bottom:2px solid var(--accent);margin-bottom:-2px">Iniciar sesión</button>
+      <button id="member-auth-tab-register" class="member-auth-tab" onclick="switchMemberAuthTab('register')" style="flex:1;padding:10px 0;border:none;background:none;cursor:pointer;font-size:14px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px">Registrarse</button>
+    </div>
+    <div id="member-auth-error" class="error-msg" style="display:none;margin-bottom:12px"></div>
+    <!-- Login form -->
+    <div id="member-login-form">
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Correo electrónico</label>
+        <input id="member-login-email" class="form-input" type="email" placeholder="email@ejemplo.com" autocomplete="email">
+      </div>
+      <div class="form-group" style="margin-bottom:20px">
+        <label class="form-label">Contraseña</label>
+        <input id="member-login-password" class="form-input" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="memberLogin()">Iniciar sesión</button>
+    </div>
+    <!-- Register form -->
+    <div id="member-register-form" style="display:none">
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Correo electrónico</label>
+        <input id="member-reg-email" class="form-input" type="email" placeholder="email@ejemplo.com" autocomplete="email">
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Nombre</label>
+        <input id="member-reg-name" class="form-input" type="text" placeholder="Nombre">
+      </div>
+      <div class="form-group" style="margin-bottom:20px">
+        <label class="form-label">Contraseña</label>
+        <input id="member-reg-password" class="form-input" type="password" placeholder="Al menos 6 caracteres" autocomplete="new-password">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="memberRegister()">Registrarse</button>
+    </div>
+  </div>
+</div>
+
 <!-- MAIN NAV -->
 <nav class="nav" id="main-nav" style="display:none">
   <div class="nav-inner">
@@ -1545,6 +1586,15 @@ input,textarea,select{font-family:inherit}
         <option value="zh">中文</option>
       </select>
       <span id="nav-version" class="nav-badge">v1.0</span>
+      <!-- Member area -->
+      <div id="member-area" style="display:flex;align-items:center;gap:6px">
+        <button id="member-login-btn" class="btn btn-secondary btn-sm" onclick="showMemberAuth('login')" style="font-size:12px">Iniciar sesión</button>
+        <button id="member-register-btn" class="btn btn-accent btn-sm" onclick="showMemberAuth('register')" style="font-size:12px">Registrarse</button>
+        <div id="member-info" style="display:none;align-items:center;gap:6px">
+          <span id="member-email-display" style="font-size:12px;color:var(--text2);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+          <button id="member-logout-btn" class="btn btn-secondary btn-sm" onclick="memberLogout()" style="font-size:12px">Salir</button>
+        </div>
+      </div>
       <button id="admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()">后台管理</button>
       <button id="logout-btn" class="btn btn-secondary btn-sm" style="display:none" onclick="doLogout()">退出</button>
     </div>
@@ -1760,6 +1810,7 @@ input,textarea,select{font-family:inherit}
           </svg>
         </button>
       </div>
+      <div id="film-quota-bar" style="font-size:11px;color:var(--text3);margin-top:6px;min-height:16px"></div>
     </div>
     <div class="film-hero-img">
       <img src="/film-hero-img.webp" alt="" draggable="false">
@@ -2068,6 +2119,10 @@ let amazonMode = 'BESTSELLER'; // BESTSELLER | MOST_WANTED
 const AMAZON_SHEET_ID = '1AbsHChexrwhUgMlFQWH1JxoP7tIkbVSDDo7SRoKWE6I';
 const AMAZON_SHEET_NAME = 'latest';
 
+// Member
+let memberToken = localStorage.getItem('ag_member_token') || '';
+let memberUser = null;
+
 // Category translation map
 const CATEGORY_MAP = {
   es: {
@@ -2325,6 +2380,7 @@ async function init() {
   await loadSettings();
   await loadTranslations();
   await loadAmazonCatTranslations();
+  await checkMemberSession(); // Restore member session
   if (window.location.hash === '#admin') {
     if (token) { showAdmin(); }
     else { showLogin(); }
@@ -2402,6 +2458,167 @@ function updateAuthUI() {
   document.getElementById('logout-btn').style.display = loggedIn ? 'inline-flex' : 'none';
   document.getElementById('admin-btn').style.display = loggedIn ? 'inline-flex' : 'none';
   document.getElementById('admin-btn').textContent = loggedIn ? '后台管理' : '管理员登录';
+}
+
+// ============ MEMBER AUTH ============
+function showMemberAuth(tab) {
+  document.getElementById('member-auth-modal').style.display = 'flex';
+  switchMemberAuthTab(tab);
+}
+
+function hideMemberAuth() {
+  document.getElementById('member-auth-modal').style.display = 'none';
+  document.getElementById('member-auth-error').style.display = 'none';
+}
+
+function switchMemberAuthTab(tab) {
+  const loginTab = document.getElementById('member-auth-tab-login');
+  const regTab = document.getElementById('member-auth-tab-register');
+  if (tab === 'login') {
+    loginTab.className = 'member-auth-tab active';
+    loginTab.style.color = 'var(--text)';
+    loginTab.style.borderBottomColor = 'var(--accent)';
+    regTab.className = 'member-auth-tab';
+    regTab.style.color = 'var(--text3)';
+    regTab.style.borderBottomColor = 'transparent';
+    document.getElementById('member-login-form').style.display = 'block';
+    document.getElementById('member-register-form').style.display = 'none';
+  } else {
+    regTab.className = 'member-auth-tab active';
+    regTab.style.color = 'var(--text)';
+    regTab.style.borderBottomColor = 'var(--accent)';
+    loginTab.className = 'member-auth-tab';
+    loginTab.style.color = 'var(--text3)';
+    loginTab.style.borderBottomColor = 'transparent';
+    document.getElementById('member-login-form').style.display = 'none';
+    document.getElementById('member-register-form').style.display = 'block';
+  }
+  document.getElementById('member-auth-error').style.display = 'none';
+}
+
+async function memberLogin() {
+  const email = document.getElementById('member-login-email').value.trim();
+  const password = document.getElementById('member-login-password').value;
+  const errEl = document.getElementById('member-auth-error');
+  errEl.style.display = 'none';
+  if (!email || !password) { errEl.textContent = 'Please fill in all fields'; errEl.style.display = 'block'; return; }
+  try {
+    const r = await fetch('/api/member/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email,password}) });
+    const data = await r.json();
+    if (!r.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+    memberToken = data.token;
+    memberUser = data.user;
+    localStorage.setItem('ag_member_token', memberToken);
+    hideMemberAuth();
+    updateMemberUI();
+    toast(t('member_login_success') || 'Login successful', 'success');
+  } catch(e) {
+    errEl.textContent = 'Network error'; errEl.style.display = 'block';
+  }
+}
+
+async function memberRegister() {
+  const email = document.getElementById('member-reg-email').value.trim();
+  const name = document.getElementById('member-reg-name').value.trim();
+  const password = document.getElementById('member-reg-password').value;
+  const errEl = document.getElementById('member-auth-error');
+  errEl.style.display = 'none';
+  if (!email || !password) { errEl.textContent = 'Please fill in all fields'; errEl.style.display = 'block'; return; }
+  if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters'; errEl.style.display = 'block'; return; }
+  try {
+    const r = await fetch('/api/member/register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email,password,name}) });
+    const data = await r.json();
+    if (!r.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+    memberToken = data.token;
+    memberUser = data.user;
+    localStorage.setItem('ag_member_token', memberToken);
+    hideMemberAuth();
+    updateMemberUI();
+    toast(t('member_register_success') || 'Registration successful', 'success');
+  } catch(e) {
+    errEl.textContent = 'Network error'; errEl.style.display = 'block';
+  }
+}
+
+async function memberLogout() {
+  memberToken = '';
+  memberUser = null;
+  localStorage.removeItem('ag_member_token');
+  updateMemberUI();
+  // Re-render current page to apply restrictions
+  if (currentPage === 'amazon') { fetchAmazonData(); }
+  else if (currentPage === 'film') { loadFilm(); }
+  toast(t('member_logout_success') || 'Logged out', 'info');
+}
+
+async function checkMemberSession() {
+  if (memberToken) {
+    try {
+      const r = await fetch('/api/member/me', { headers: { 'Authorization': 'Bearer ' + memberToken } });
+      if (r.ok) {
+        const data = await r.json();
+        memberUser = data.user;
+      } else {
+        memberToken = '';
+        localStorage.removeItem('ag_member_token');
+      }
+    } catch {
+      memberToken = '';
+      localStorage.removeItem('ag_member_token');
+    }
+  }
+  updateMemberUI();
+}
+
+function updateMemberUI() {
+  const isLoggedIn = !!memberUser;
+  const loginBtn = document.getElementById('member-login-btn');
+  const regBtn = document.getElementById('member-register-btn');
+  const info = document.getElementById('member-info');
+  const emailDisplay = document.getElementById('member-email-display');
+  if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'inline-flex';
+  if (regBtn) regBtn.style.display = isLoggedIn ? 'none' : 'inline-flex';
+  if (info) info.style.display = isLoggedIn ? 'flex' : 'none';
+  if (emailDisplay && memberUser) emailDisplay.textContent = memberUser.email || memberUser.name;
+  // Update UI text for current language
+  applyMemberTranslations();
+}
+
+function applyMemberTranslations() {
+  const loginBtn = document.getElementById('member-login-btn');
+  const regBtn = document.getElementById('member-register-btn');
+  const logoutBtn = document.getElementById('member-logout-btn');
+  if (loginBtn) loginBtn.textContent = t('member_login') || 'Iniciar sesión';
+  if (regBtn) regBtn.textContent = t('member_register') || 'Registrarse';
+  if (logoutBtn) logoutBtn.textContent = t('member_logout') || 'Salir';
+  // Modal tabs
+  const loginTab = document.getElementById('member-auth-tab-login');
+  const regTab = document.getElementById('member-auth-tab-register');
+  if (loginTab) loginTab.textContent = t('member_login') || 'Iniciar sesión';
+  if (regTab) regTab.textContent = t('member_register') || 'Registrarse';
+  // Login form button
+  const loginFormBtn = document.querySelector('#member-login-form .btn-primary');
+  if (loginFormBtn) loginFormBtn.textContent = t('member_login') || 'Iniciar sesión';
+  const regFormBtn = document.querySelector('#member-register-form .btn-primary');
+  if (regFormBtn) regFormBtn.textContent = t('member_register') || 'Registrarse';
+  // Labels
+  const emailLabels = document.querySelectorAll('#member-auth-modal .form-label');
+  if (emailLabels[0]) emailLabels[0].textContent = t('member_email') || 'Correo electrónico';
+  if (emailLabels[1]) emailLabels[1].textContent = t('member_email') || 'Correo electrónico';
+  if (emailLabels[2]) emailLabels[2].textContent = t('member_name') || 'Nombre';
+  if (emailLabels[3]) emailLabels[3].textContent = t('member_password') || 'Contraseña';
+  if (emailLabels[4]) emailLabels[4].textContent = t('member_password') || 'Contraseña';
+  // Placeholders
+  const placeholders = {
+    'member-login-email': t('member_email') || 'Correo electrónico',
+    'member-login-password': t('member_password') || 'Contraseña',
+    'member-reg-email': t('member_email') || 'Correo electrónico',
+    'member-reg-password': t('member_password') || 'Contraseña',
+  };
+  Object.entries(placeholders).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.placeholder = val;
+  });
 }
 
 // ============ AUTH ============
@@ -2696,14 +2913,42 @@ async function loadFilm() {
   const q = document.getElementById('film-search').value.trim();
   const brand = filmBrand || '';
   const el = document.getElementById('film-results');
+  const quotaBar = document.getElementById('film-quota-bar');
 
   // Fetch fresh data if first load or search/brand changed
   if (filmData.length === 0 || q !== filmSearchQ || brand !== filmSearchBrand) {
-    filmData = await fetch(`/api/film?q=${encodeURIComponent(q)}&brand=${encodeURIComponent(brand)}`).then(r=>r.json());
+    const res = await fetch(`/api/film?q=${encodeURIComponent(q)}&brand=${encodeURIComponent(brand)}`, {
+      headers: memberToken ? { 'Authorization': 'Bearer ' + memberToken } : {}
+    });
+    if (res.status === 403) {
+      const errData = await res.json();
+      if (errData.error === 'query_limit_reached') {
+        el.innerHTML = '<div class="amazon-empty" style="padding:40px;text-align:center"><div style="font-size:40px;margin-bottom:12px">🔒</div><div style="font-size:15px;color:var(--text2);margin-bottom:8px">'+(t('member_film_exceeded')||'Daily free query limit reached')+'</div><div style="font-size:13px;color:var(--text3)"><button class="btn btn-accent btn-sm" onclick="showMemberAuth(\'login\')" style="font-size:12px">'+(t('member_login')||'Login')+'</button> '+(t('member_login_to_unlimited')||'for unlimited queries')+'</div></div>';
+        if (quotaBar) quotaBar.innerHTML = '<span style="color:var(--accent-red)">'+(t('member_film_exceeded')||'Limit reached')+'</span>';
+        return;
+      }
+    }
+    filmData = await res.json();
     filmSearchQ = q;
     filmSearchBrand = brand;
     filmLoadedCount = 20;
     allLoaded = false;
+
+    // Update quota bar for non-members
+    if (quotaBar && !memberUser) {
+      // Show remaining for guests
+      try {
+        const qr = await fetch('/api/member/film-quota', {
+          headers: memberToken ? { 'Authorization': 'Bearer ' + memberToken } : {}
+        });
+        if (qr.ok) {
+          const qd = await qr.json();
+          quotaBar.innerHTML = (t('member_film_remaining')||'Free queries remaining:') + ' ' + qd.remaining + '/' + qd.total;
+        }
+      } catch {}
+    } else if (quotaBar && memberUser) {
+      quotaBar.innerHTML = '';
+    }
 
     // Only update allFilmBrands when there's no search query (to get complete brand list)
     if (!q && !brand) {
@@ -3563,7 +3808,12 @@ function renderAmazonData() {
   if (filtered.length === 0) {
     el.innerHTML = '<div class="amazon-empty"><div>未找到</div></div>'; return;
   }
-  const shown = filtered.slice(0, amazonDisplayLimit);
+  // Non-members: limit to 20 items
+  let effectiveLimit = amazonDisplayLimit;
+  if (!memberUser) {
+    effectiveLimit = Math.min(amazonDisplayLimit, 20);
+  }
+  const shown = filtered.slice(0, effectiveLimit);
   const grouped = {};
   shown.forEach(item => {
     const key = normalizeCategory(item.categoryRaw);
@@ -3591,6 +3841,10 @@ function renderAmazonData() {
     html += '</div></div>';
   }
   el.innerHTML = html;
+  // Add login prompt for non-members
+  if (!memberUser && filtered.length > 20) {
+    el.innerHTML += '<div style="text-align:center;padding:24px;border-top:1px solid var(--border);margin-top:8px"><div style="font-size:13px;color:var(--text3);margin-bottom:8px">'+(t('member_amazon_limit')||'Login to view full Top 100 list')+'</div><button class="btn btn-accent btn-sm" onclick="showMemberAuth(\'login\')">'+(t('member_login')||'Login')+'</button></div>';
+  }
 }
 
 // ============ START ============
