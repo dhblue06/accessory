@@ -2,6 +2,8 @@
 const express = require('./node_modules/express');
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
+const axios = require('axios');
 const bcrypt = require('./node_modules/bcryptjs');
 const jwt = require('./node_modules/jsonwebtoken');
 const XLSX = require('xlsx');
@@ -14,6 +16,7 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://xjm0616_db_user:fOkVE5
 const DB_NAME = 'accessory_guide';
 let db;
 let mongoClient;
+let httpServer;
 
 // Multer config for logo upload
 const storage = multer.diskStorage({
@@ -456,13 +459,13 @@ const DEFAULT_TRANSLATIONS = {
     placeholder_password: 'At least 6 characters'
   },
   es: {
-    nav_film: 'Vidrio Templado',
+    nav_film: 'Cristal Templado',
     nav_ipad: 'iPad',
     nav_watch: 'Watch',
-    title_film: 'Búsqueda Universal de Vidrio Templado',
+    title_film: 'Búsqueda Universal de Cristal Templado',
     title_ipad: 'Compatibilidad de Accesorios iPad',
     title_watch: 'Compatibilidad de Accesorios Apple Watch',
-    subtitle_film: 'Guía de Compatibilidad de Vidrio Adhesivo Completo',
+    subtitle_film: 'Guía de Compatibilidad de Cristal Adhesivo Completo',
     subtitle_ipad: 'Consultar compatibilidad de fundas y cristales para iPad',
     subtitle_watch: 'Consultar compatibilidad de fundas y correas para Apple Watch',
     title_amazon: 'Los más vendidos en Amazon',
@@ -946,6 +949,13 @@ function authMiddleware(req, res, next) {
   } catch { res.status(401).json({ error: 'Invalid token' }); }
 }
 
+function requireAdmin(req, res, next) {
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  next();
+}
+
 // ============ AUTH ============
 app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body;
@@ -1125,6 +1135,137 @@ app.get('/api/settings', async (req, res) => {
   res.json(db.settings || { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' });
 });
 
+const PRODUCT_TRANSLATIONS = {
+  zh: {
+    nav_products: '产品素材',
+    products_title: '产品素材库',
+    products_search_placeholder: '搜索 SKU 或名称...',
+    products_all_categories: '所有分类',
+    products_empty: '没有找到产品',
+    products_loading: '加载中...',
+    products_count: '共 {count} 个产品',
+    products_filtered_count: '共 {count} 个产品 (筛选自 {total} 个)',
+    product_images: '图片',
+    product_videos: '视频',
+    product_docs: '文案',
+    product_image_resources: '图片资源',
+    product_video_resources: '视频资源',
+    product_descriptions: '文案与描述',
+    product_download: '下载',
+    product_download_all: '下载全部',
+    product_download_selected: '下载选中...',
+    product_packaging: '打包中...',
+    product_download_invalid: '下载链接无效',
+    product_jszip_missing: 'JSZip 未加载',
+    product_packaged: '已打包 {count} 张图片',
+    product_pack_failed: '打包失败: {message}',
+    product_copy_all: '复制全部',
+    product_copied: '✓ 已复制',
+    product_copy_failed: '复制失败',
+    product_no_image: '无图'
+    ,product_main_image: '主产品图',
+    product_group_image2: '产品海报',
+    product_group_image3: '产品展示',
+    product_group_image4: '使用场景图',
+    product_lang_es: '西语版',
+    product_lang_zh: '中文版',
+    product_video_ad: '广告视频',
+    product_video_tutorial: '使用说明视频',
+    admin_sync_products: '同步产品素材',
+    admin_syncing_products: '同步中...',
+    admin_sync_products_success: '产品素材已同步，共 {count} 个产品',
+    admin_sync_products_failed: '同步失败: {message}'
+  },
+  es: {
+    nav_products: 'Materiales',
+    products_title: 'Biblioteca de materiales',
+    products_search_placeholder: 'Buscar SKU o nombre...',
+    products_all_categories: 'Todas las categorías',
+    products_empty: 'No se encontraron productos',
+    products_loading: 'Cargando...',
+    products_count: '{count} productos',
+    products_filtered_count: '{count} productos (filtrados de {total})',
+    product_images: 'Imágenes',
+    product_videos: 'Vídeos',
+    product_docs: 'Textos',
+    product_image_resources: 'Recursos de imagen',
+    product_video_resources: 'Recursos de vídeo',
+    product_descriptions: 'Textos y descripciones',
+    product_download: 'Descargar',
+    product_download_all: 'Descargar todo',
+    product_download_selected: 'Descargando seleccionados...',
+    product_packaging: 'Comprimiendo...',
+    product_download_invalid: 'Enlace de descarga no válido',
+    product_jszip_missing: 'JSZip no está cargado',
+    product_packaged: '{count} imágenes comprimidas',
+    product_pack_failed: 'Error al comprimir: {message}',
+    product_copy_all: 'Copiar todo',
+    product_copied: '✓ Copiado',
+    product_copy_failed: 'Error al copiar',
+    product_no_image: 'Sin imagen',
+    product_main_image: 'Imagen principal',
+    product_group_image2: 'Cartel de producto',
+    product_group_image3: 'Presentación del producto',
+    product_group_image4: 'Escena de uso',
+    product_lang_es: 'Versión ES',
+    product_lang_zh: 'Versión CN',
+    product_video_ad: 'Vídeo publicitario',
+    product_video_tutorial: 'Vídeo tutorial',
+    admin_sync_products: 'Sincronizar materiales',
+    admin_syncing_products: 'Sincronizando...',
+    admin_sync_products_success: 'Materiales sincronizados: {count} productos',
+    admin_sync_products_failed: 'Error al sincronizar: {message}'
+  },
+  en: {
+    nav_products: 'Assets',
+    products_title: 'Product Asset Library',
+    products_search_placeholder: 'Search SKU or name...',
+    products_all_categories: 'All categories',
+    products_empty: 'No products found',
+    products_loading: 'Loading...',
+    products_count: '{count} products',
+    products_filtered_count: '{count} products (filtered from {total})',
+    product_images: 'Images',
+    product_videos: 'Videos',
+    product_docs: 'Copy',
+    product_image_resources: 'Image Assets',
+    product_video_resources: 'Video Assets',
+    product_descriptions: 'Copy and Descriptions',
+    product_download: 'Download',
+    product_download_all: 'Download all',
+    product_download_selected: 'Downloading selected...',
+    product_packaging: 'Packaging...',
+    product_download_invalid: 'Invalid download link',
+    product_jszip_missing: 'JSZip is not loaded',
+    product_packaged: 'Packaged {count} images',
+    product_pack_failed: 'Packaging failed: {message}',
+    product_copy_all: 'Copy all',
+    product_copied: '✓ Copied',
+    product_copy_failed: 'Copy failed',
+    product_no_image: 'No image',
+    product_main_image: 'Main image',
+    product_group_image2: 'Product poster',
+    product_group_image3: 'Product showcase',
+    product_group_image4: 'Usage scene',
+    product_lang_es: 'Spanish version',
+    product_lang_zh: 'Chinese version',
+    product_video_ad: 'Ad video',
+    product_video_tutorial: 'Tutorial video',
+    admin_sync_products: 'Sync product assets',
+    admin_syncing_products: 'Syncing...',
+    admin_sync_products_success: 'Product assets synced: {count} products',
+    admin_sync_products_failed: 'Sync failed: {message}'
+  }
+};
+
+function getTranslationTexts(lang, dbTranslations = {}) {
+  return {
+    ...(DEFAULT_TRANSLATIONS[lang] || DEFAULT_TRANSLATIONS.zh),
+    ...(PRODUCT_TRANSLATIONS[lang] || PRODUCT_TRANSLATIONS.zh),
+    ...(dbTranslations[lang] || {})
+  };
+}
+
 // Translations API
 app.get('/api/translations', async (req, res) => {
   const db = await readDB();
@@ -1132,7 +1273,7 @@ app.get('/api/translations', async (req, res) => {
   const translations = db.translations || {};
   res.json({
     lang,
-    texts: translations[lang] || DEFAULT_TRANSLATIONS[lang] || DEFAULT_TRANSLATIONS.zh
+    texts: getTranslationTexts(lang, translations)
   });
 });
 
@@ -1256,9 +1397,9 @@ app.get('/api/admin/translations', authMiddleware, async (req, res) => {
   const db = await readDB();
   const translations = db.translations || {};
   res.json({
-    zh: translations.zh || DEFAULT_TRANSLATIONS.zh,
-    en: translations.en || DEFAULT_TRANSLATIONS.en,
-    es: translations.es || DEFAULT_TRANSLATIONS.es
+    zh: getTranslationTexts('zh', translations),
+    en: getTranslationTexts('en', translations),
+    es: getTranslationTexts('es', translations)
   });
 });
 
@@ -1266,9 +1407,9 @@ app.put('/api/admin/translations', authMiddleware, async (req, res) => {
   const db = await readDB();
   const { zh, en, es } = req.body;
   if (!db.translations) db.translations = {};
-  if (zh) db.translations.zh = { ...DEFAULT_TRANSLATIONS.zh, ...zh };
-  if (en) db.translations.en = { ...DEFAULT_TRANSLATIONS.en, ...en };
-  if (es) db.translations.es = { ...DEFAULT_TRANSLATIONS.es, ...es };
+  if (zh) db.translations.zh = { ...DEFAULT_TRANSLATIONS.zh, ...PRODUCT_TRANSLATIONS.zh, ...zh };
+  if (en) db.translations.en = { ...DEFAULT_TRANSLATIONS.en, ...PRODUCT_TRANSLATIONS.en, ...en };
+  if (es) db.translations.es = { ...DEFAULT_TRANSLATIONS.es, ...PRODUCT_TRANSLATIONS.es, ...es };
   await writeDB(db);
   res.json({ ok: true });
 });
@@ -1309,6 +1450,120 @@ app.delete('/api/admin/users/:id', authMiddleware, (req, res) => {
   res.json({ ok: true });
 });
 
+// ============ PRODUCT LIBRARY ============
+const productService = require('./services/products');
+
+app.get('/api/products', authMiddleware, async (req, res) => {
+  try {
+    const { q, category } = req.query;
+    const products = await productService.searchProducts({ q, category });
+    const lite = products.map(p => ({
+      sku: p.sku, name: p.name, category: p.category,
+      mainImage: p.mainImage, stats: p.stats
+    }));
+    res.json(lite);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/products/categories', authMiddleware, async (req, res) => {
+  try {
+    res.json(await productService.getAllCategories());
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/products/_debug', authMiddleware, requireAdmin, async (req, res) => {
+  try {
+    const products = await productService.getAllProducts(true);
+    res.json({
+      count: products.length,
+      sample: products[0] || null,
+      allSkus: products.map(p => p.sku)
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/products/image/:fileId', (req, res) => {
+  const fileId = req.params.fileId;
+  if (!/^[a-zA-Z0-9_-]+$/.test(fileId)) {
+    return res.status(400).json({ error: 'Invalid file id' });
+  }
+
+  const imageUrl = `https://lh3.googleusercontent.com/d/${fileId}=w1200`;
+  https.get(imageUrl, upstream => {
+    if (upstream.statusCode !== 200) {
+      upstream.resume();
+      return res.sendStatus(upstream.statusCode || 502);
+    }
+
+    res.setHeader('Content-Type', upstream.headers['content-type'] || 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    upstream.pipe(res);
+  }).on('error', err => {
+    console.error('Product image proxy failed:', err.message);
+    if (!res.headersSent) res.sendStatus(502);
+  });
+});
+
+app.get('/api/products/download/:fileId', async (req, res) => {
+  const fileId = req.params.fileId;
+  if (!/^[a-zA-Z0-9_-]+$/.test(fileId)) {
+    return res.status(400).json({ error: 'Invalid file id' });
+  }
+
+  const filename = String(req.query.filename || `${fileId}.bin`).replace(/[\\/:*?"<>|]/g, '_');
+  const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+  try {
+    const upstream = await axios.get(downloadUrl, {
+      responseType: 'stream',
+      timeout: 90000,
+      maxRedirects: 5,
+      headers: { 'User-Agent': 'Mozilla/5.0 AccessoryGuide/1.0' }
+    });
+
+    res.setHeader('Content-Type', upstream.headers['content-type'] || 'application/octet-stream');
+    if (upstream.headers['content-length']) {
+      res.setHeader('Content-Length', upstream.headers['content-length']);
+    }
+    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`);
+    res.setHeader('Cache-Control', 'private, max-age=300');
+    upstream.data.pipe(res);
+    upstream.data.on('error', err => {
+      console.error('Product download stream failed:', err.message);
+      if (!res.headersSent) res.sendStatus(502);
+      else res.destroy(err);
+    });
+  } catch (err) {
+    console.error('Product download proxy failed:', err.message);
+    if (!res.headersSent) res.status(err.response?.status || 502).json({ error: 'Download failed' });
+  }
+});
+
+app.get('/api/products/:sku', authMiddleware, async (req, res) => {
+  try {
+    const product = await productService.getProductBySku(req.params.sku);
+    if (!product) return res.status(404).json({ error: 'Not found' });
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/products/refresh', authMiddleware, requireAdmin, async (req, res) => {
+  try {
+    productService.clearCache();
+    const products = await productService.getAllProducts(true);
+    res.json({ success: true, count: products.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Stats
 app.get('/api/admin/stats', authMiddleware, async (req, res) => {
   const db = await readDB();
@@ -1332,7 +1587,7 @@ app.get('*', (req, res) => {
 async function startServer() {
   await connectDB(); // Ensure MongoDB is connected (or fallback)
   await initDB();
-  app.listen(PORT, () => console.log(`AccessoryGuide running on http://localhost:${PORT}`));
+  httpServer = app.listen(PORT, () => console.log(`AccessoryGuide running on http://localhost:${PORT}`));
 }
 
 startServer();

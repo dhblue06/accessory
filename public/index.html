@@ -1479,8 +1479,165 @@ input,textarea,select{font-family:inherit}
   #amazon-cat-filter{padding:12px 0 !important}
 }
 
+/* ===== PRODUCT LIBRARY ===== */
+.products-page-body{
+  max-width:1200px;
+  margin:0 auto;
+  padding:24px;
+}
+.products-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+  flex-wrap:wrap;
+  gap:16px;
+}
+.products-header h1{font-size:24px;font-weight:700;color:var(--text)}
+.products-toolbar{display:flex;gap:12px;align-items:center}
+.products-toolbar input[type="search"]{
+  padding:10px 14px 10px 38px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") 12px center no-repeat;
+  width:280px;font-size:14px;color:var(--text);outline:none;
+}
+.products-toolbar select{
+  padding:10px 14px;border:1px solid var(--border);border-radius:8px;
+  background:var(--bg);font-size:14px;color:var(--text);outline:none;cursor:pointer;
+}
+.products-stats-bar{
+  font-size:13px;color:var(--text3);margin-bottom:16px;
+}
+.products-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+  gap:20px;
+}
+.product-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;
+}
+.product-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.product-card-img{
+  position:relative;aspect-ratio:1/1;background:#f5f5f7;overflow:hidden;
+}
+.product-card-img img{width:100%;height:100%;object-fit:contain}
+.product-card-badge{
+  position:absolute;top:12px;right:12px;
+  padding:4px 10px;background:rgba(255,255,255,0.95);
+  border-radius:6px;font-size:12px;color:#374151;border:1px solid var(--border);
+}
+.product-card-body{padding:16px}
+.product-card-sku{color:var(--accent);font-weight:600;font-size:13px;margin-bottom:6px}
+.product-card-name{font-size:16px;font-weight:500;margin-bottom:12px;color:var(--text)}
+.product-card-stats{display:flex;gap:12px;font-size:13px;color:var(--text3)}
+@media(max-width:768px){
+  .products-header{flex-direction:column;align-items:stretch}
+  .products-toolbar{width:100%;flex-direction:column}
+  .products-toolbar input[type="search"],.products-toolbar select{width:100%}
+  .products-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+}
+
+/* ===== PRODUCT DETAIL ===== */
+.back-link{
+  display:inline-flex;align-items:center;gap:6px;
+  color:var(--text3);text-decoration:none;font-size:14px;margin-bottom:20px;
+}
+.back-link:hover{color:var(--accent)}
+.detail-header{
+  display:flex;gap:20px;align-items:flex-start;
+  padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px;
+}
+.detail-header-img{
+  width:96px;height:96px;border-radius:12px;
+  object-fit:contain;background:#f5f5f7;flex-shrink:0;
+}
+.detail-header-info{flex:1}
+.detail-header-meta{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.detail-cat-tag{padding:3px 10px;background:var(--accent);color:#fff;border-radius:6px;font-size:12px}
+.detail-sku{font-size:13px;color:var(--text3)}
+.detail-name{font-size:24px;font-weight:600;margin:4px 0 12px;color:var(--text)}
+.detail-stats{display:flex;gap:12px;margin-top:16px}
+.stat-card{
+  flex:1;text-align:center;padding:16px 12px;
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+}
+.stat-card-val{font-size:24px;font-weight:600;color:var(--text)}
+.stat-card-lbl{font-size:13px;color:var(--text3);margin-top:4px}
+.detail-section{margin-bottom:32px;padding-top:24px;border-top:1px solid var(--border)}
+.detail-section-title{font-size:18px;font-weight:600;margin-bottom:16px;color:var(--text)}
+.detail-group{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:16px;margin-bottom:12px;
+}
+.detail-group-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:12px;
+}
+.detail-group-grid .detail-group{margin-bottom:0}
+@media(max-width:768px){.detail-group-grid{grid-template-columns:1fr}}
+.detail-group-hdr{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;
+}
+.detail-group-title{font-size:14px;font-weight:500;color:var(--text)}
+.btn-download{
+  padding:6px 12px;border:1px solid var(--border);border-radius:6px;
+  background:var(--bg);cursor:pointer;font-size:13px;color:var(--text);
+  display:inline-flex;align-items:center;gap:4px;
+}
+.btn-download:hover{background:var(--surface2)}
+.btn-download[disabled]{opacity:0.5;cursor:wait}
+.image-row{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;
+}
+.image-item{
+  position:relative;aspect-ratio:1/1;border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;background:#f5f5f7;cursor:pointer;
+}
+.image-item.selected{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,102,204,0.16)}
+.image-item-check{
+  position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:50%;
+  border:1px solid rgba(0,0,0,0.18);background:rgba(255,255,255,0.9);
+  display:flex;align-items:center;justify-content:center;color:transparent;
+  font-size:14px;font-weight:700;z-index:2;
+}
+.image-item.selected .image-item-check{background:var(--accent);border-color:var(--accent);color:#fff}
+.image-item img{width:100%;height:100%;object-fit:contain}
+.image-item-lbl{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(0,0,0,0.6);color:#fff;font-size:11px;
+  padding:4px 8px;text-align:center;
+}
+.video-item{margin-bottom:16px}
+.video-item-hdr{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;
+}
+.video-iframe{width:100%;aspect-ratio:16/9;border:none;border-radius:8px;background:#000}
+.desc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:768px){.desc-grid{grid-template-columns:1fr}}
+.desc-card{
+  position:relative;padding:16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:10px;
+}
+.desc-card-lang{
+  display:inline-block;padding:2px 8px;background:var(--bg);
+  border:1px solid var(--border);border-radius:4px;
+  font-size:11px;color:var(--text3);margin-bottom:8px;
+}
+.desc-card-text{font-size:13px;line-height:1.6;color:var(--text);white-space:pre-wrap}
+.desc-copy-btn{
+  position:absolute;top:12px;right:12px;
+  padding:4px 8px;background:transparent;border:1px solid var(--border);
+  border-radius:4px;cursor:pointer;font-size:12px;color:var(--text3);
+}
+.desc-copy-btn:hover{color:var(--accent)}
+
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="19b44367-903d-40ba-80d9-d786bb17717b"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
 <body>
 
@@ -1529,6 +1686,10 @@ input,textarea,select{font-family:inherit}
       <a class="nav-tab" data-page="watch" onclick="switchPage('watch');return false" href="#">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><path d="M9 2h6l1 4H8zM9 22h6l1-4H8z"/></svg>
         <span>Watch</span>
+      </a>
+      <a class="nav-tab member-only" data-page="products" onclick="switchPage('products');return false" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        <span data-i18n="nav_products">产品素材</span>
       </a>
     </div>
     <div class="nav-actions">
@@ -1605,6 +1766,31 @@ input,textarea,select{font-family:inherit}
     </div>
   </div>
 
+</div>
+
+<!-- PRODUCTS PAGE -->
+<div id="products-page" class="page" style="padding:0!important">
+  <div class="products-page-body">
+    <div class="products-header">
+      <h1 data-i18n="products_title">产品素材库</h1>
+      <div class="products-toolbar">
+        <input type="search" id="products-search" data-i18n-placeholder="products_search_placeholder" placeholder="搜索 SKU 或名称..." oninput="handleProductSearch(this.value)">
+        <select id="products-category-filter" onchange="handleProductCategoryChange(this.value)"><option value="">所有分类</option></select>
+      </div>
+    </div>
+    <div class="products-stats-bar" id="products-stats-bar"></div>
+    <div id="products-grid" class="products-grid"></div>
+    <div id="products-empty" style="display:none;text-align:center;padding:60px;color:var(--text3)">没有找到产品</div>
+    <div id="products-loading" style="display:none;text-align:center;padding:60px;color:var(--text3)">加载中...</div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL PAGE -->
+<div id="product-detail-page" class="page" style="padding:0!important">
+  <div class="products-page-body">
+    <a href="#" onclick="switchPage('products');return false;" class="back-link">← 返回产品列表</a>
+    <div id="product-detail-content"></div>
+  </div>
 </div>
 
 <!-- IPAD PAGE -->
@@ -1749,8 +1935,8 @@ input,textarea,select{font-family:inherit}
   <div class="film-hero">
     <div class="film-hero-bg"></div>
     <div class="film-hero-left">
-      <h1 data-i18n="title_film">Búsqueda Universal de Vidrio Templado</h1>
-      <p data-i18n="subtitle_film">Guía de Compatibilidad de Vidrio Adhesivo Completo</p>
+      <h1 data-i18n="title_film">Búsqueda Universal de Cristal Templado</h1>
+      <p data-i18n="subtitle_film">Guía de Compatibilidad de Cristal Adhesivo Completo</p>
       <div class="film-search-wrap">
         <svg class="film-search-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
           <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
@@ -1837,6 +2023,7 @@ input,textarea,select{font-family:inherit}
             <button class="btn btn-secondary" onclick="switchPanel('ipad-mgmt',document.querySelector('[data-panel=ipad-mgmt]'))" data-i18n="admin_ipad_mgmt">管理 iPad 数据</button>
             <button class="btn btn-secondary" onclick="switchPanel('film-mgmt',document.querySelector('[data-panel=film-mgmt]'))" data-i18n="admin_film_mgmt">管理膜数据</button>
             <button class="btn btn-secondary" onclick="switchPanel('users-mgmt',document.querySelector('[data-panel=users-mgmt]'))" data-i18n="admin_users_mgmt">管理用户</button>
+            <button id="sync-products-btn" class="btn btn-primary" onclick="syncProducts()" data-i18n="admin_sync_products">同步产品素材</button>
           </div>
         </div>
         <!-- Film Search Stats -->
@@ -2181,6 +2368,13 @@ function t(key) {
   return translations[currentLang]?.[key] || translations.zh?.[key] || key;
 }
 
+function tf(key, values = {}) {
+  return Object.entries(values).reduce(
+    (text, [name, value]) => text.replaceAll('{' + name + '}', value),
+    t(key)
+  );
+}
+
 // Get localized value from field that might be string or {zh,en,es}
 function getLocalized(field, lang) {
   if (!field) return '';
@@ -2208,6 +2402,8 @@ function setLanguage(lang) {
     if (currentPage === 'film') loadFilm();
     else if (currentPage === 'ipad') loadiPad();
     else if (currentPage === 'watch') loadWatch();
+    else if (currentPage === 'products') loadProductsPage();
+    else if (currentPage === 'product-detail' && currentProduct) renderProductDetail(currentProduct);
     else if (currentPage === 'amazon') {
       // Reset Amazon data with new translations
       amazonCatFilter = '';
@@ -2275,9 +2471,16 @@ function applyTranslations() {
   const filmTab = document.querySelector('[data-page="film"] span');
   const ipadTab = document.querySelector('[data-page="ipad"] span');
   const watchTab = document.querySelector('[data-page="watch"] span');
+  const productsTab = document.querySelector('[data-page="products"] span');
   if (filmTab) filmTab.textContent = t('nav_film');
   if (ipadTab) ipadTab.textContent = t('nav_ipad');
   if (watchTab) watchTab.textContent = t('nav_watch');
+  if (productsTab) productsTab.textContent = t('nav_products');
+
+  const productsEmpty = document.getElementById('products-empty');
+  const productsLoading = document.getElementById('products-loading');
+  if (productsEmpty) productsEmpty.textContent = t('products_empty');
+  if (productsLoading) productsLoading.textContent = t('products_loading');
 
   // Admin button
   const adminBtn = document.getElementById('admin-btn');
@@ -2388,6 +2591,10 @@ function goAdmin() {
 }
 
 function switchPage(page, load=true) {
+  if (page === 'products' && !token) {
+    showLogin();
+    return;
+  }
   currentPage = page;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(page+'-page').classList.add('active');
@@ -2399,6 +2606,7 @@ function switchPage(page, load=true) {
     else if (page==='watch') loadWatch();
     else if (page==='film') loadFilm();
     else if (page==='amazon') fetchAmazonData();
+    else if (page==='products') loadProductsPage();
   }
 }
 
@@ -2407,6 +2615,9 @@ function updateAuthUI() {
   document.getElementById('logout-btn').style.display = loggedIn ? 'inline-flex' : 'none';
   document.getElementById('admin-btn').style.display = loggedIn ? 'inline-flex' : 'none';
   document.getElementById('admin-btn').textContent = loggedIn ? '后台管理' : '管理员登录';
+  document.querySelectorAll('.member-only').forEach(el => {
+    el.style.display = loggedIn ? 'inline-flex' : 'none';
+  });
 }
 
 // ============ AUTH ============
@@ -2866,6 +3077,29 @@ async function loadAdminDashboard() {
     document.getElementById('stat-users').textContent = s.userCount;
     loadFilmSearchStats();
   } catch {}
+}
+
+async function syncProducts() {
+  const btn = document.getElementById('sync-products-btn');
+  const originalText = btn ? btn.textContent : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = t('admin_syncing_products');
+  }
+  try {
+    const result = await api('/api/admin/products/refresh', { method: 'POST' });
+    allProducts = [];
+    toast(tf('admin_sync_products_success', { count: result.count || 0 }), 'success');
+    if (currentPage === 'products') loadProductsPage();
+    if (currentPage === 'product-detail' && currentProduct) openProductDetail(currentProduct.sku);
+  } catch (err) {
+    toast(tf('admin_sync_products_failed', { message: err.message || 'Error' }), 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = originalText || t('admin_sync_products');
+    }
+  }
 }
 
 async function loadFilmSearchStats() {
@@ -3596,6 +3830,309 @@ function renderAmazonData() {
     html += '</div></div>';
   }
   el.innerHTML = html;
+}
+
+// ============ PRODUCT LIBRARY ============
+let allProducts = [];
+let productSearchQuery = '';
+let productCategoryFilter = '';
+
+async function loadProductsPage() {
+  if (!token) {
+    showLogin();
+    return;
+  }
+  document.getElementById('products-loading').style.display = 'block';
+  document.getElementById('products-grid').style.display = 'none';
+  document.getElementById('products-empty').style.display = 'none';
+  try {
+    const [products, categories] = await Promise.all([
+      api('/api/products'),
+      api('/api/products/categories')
+    ]);
+    allProducts = products;
+    const sel = document.getElementById('products-category-filter');
+    sel.innerHTML = '<option value="">'+t('products_all_categories')+'</option>' + categories.map(c => '<option value="'+escHtml(c)+'">'+escHtml(c)+'</option>').join('');
+    renderProductsGrid();
+  } catch (err) {
+    document.getElementById('products-grid').innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">加载失败: '+err.message+'</div>';
+    document.getElementById('products-grid').style.display = 'block';
+  }
+  document.getElementById('products-loading').style.display = 'none';
+}
+
+function renderProductsGrid() {
+  let list = allProducts;
+  if (productSearchQuery) {
+    const q = productSearchQuery.toLowerCase();
+    list = list.filter(p => p.sku.toLowerCase().includes(q) || p.name.toLowerCase().includes(q));
+  }
+  if (productCategoryFilter) list = list.filter(p => p.category === productCategoryFilter);
+
+  const grid = document.getElementById('products-grid');
+  const empty = document.getElementById('products-empty');
+  const bar = document.getElementById('products-stats-bar');
+  if (list.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    bar.innerHTML = '';
+    return;
+  }
+
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
+  bar.innerHTML = list.length < allProducts.length
+    ? tf('products_filtered_count', { count: list.length, total: allProducts.length })
+    : tf('products_count', { count: list.length });
+  grid.innerHTML = list.map(p => `
+    <div class="product-card" onclick="openProductDetail(${attrJs(p.sku)})">
+      <div class="product-card-img">
+        ${p.mainImage
+          ? `<img src="${escHtml(p.mainImage.url)}" alt="${escHtml(p.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=&quot;display:flex;align-items:center;justify-content:center;height:100%;color:#999;font-size:13px&quot;>${escHtml(t('product_no_image'))}</div>'">`
+          : '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#999;font-size:13px">'+escHtml(t('product_no_image'))+'</div>'}
+        ${p.category ? `<span class="product-card-badge">${escHtml(p.category)}</span>` : ''}
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-sku">${escHtml(p.sku)}</div>
+        <div class="product-card-name">${escHtml(p.name)}</div>
+        <div class="product-card-stats">
+          <span>${t('product_images')} ${p.stats.imageCount}</span>
+          <span>${t('product_videos')} ${p.stats.videoCount}</span>
+          <span>${t('product_docs')} ${p.stats.docCount}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function handleProductSearch(v) { productSearchQuery = v; renderProductsGrid(); }
+function handleProductCategoryChange(v) { productCategoryFilter = v; renderProductsGrid(); }
+
+function escHtml(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+function attrJs(value) { return escHtml(JSON.stringify(String(value || ''))); }
+
+function productGroupTitle(group) {
+  return t('product_group_' + group.groupKey);
+}
+
+function productImageLabel(item) {
+  return item.lang === 'es' ? t('product_lang_es') : t('product_lang_zh');
+}
+
+function productVideoTitle(video) {
+  return video.type === 'tutorial' ? t('product_video_tutorial') : t('product_video_ad');
+}
+
+// ============ PRODUCT DETAIL ============
+let currentProduct = null;
+let selectedProductImages = new Set();
+
+async function openProductDetail(sku) {
+  switchPage('product-detail');
+  const c = document.getElementById('product-detail-content');
+  c.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text3)">加载中...</div>';
+  try {
+    const product = await api('/api/products/'+encodeURIComponent(sku));
+    currentProduct = product;
+    selectedProductImages = new Set();
+    renderProductDetail(product);
+  } catch (err) {
+    c.innerHTML = '<div style="text-align:center;padding:60px;color:var(--accent-red)">'+escHtml(err.message)+'</div>';
+  }
+}
+
+function renderProductDetail(p) {
+  const c = document.getElementById('product-detail-content');
+  let html = `
+    <div class="detail-header">
+      ${p.mainImage ? `<img class="detail-header-img" src="${escHtml(p.mainImage.url)}" alt="${escHtml(p.name)}">` : ''}
+      <div class="detail-header-info">
+        <div class="detail-header-meta">
+          ${p.category ? `<span class="detail-cat-tag">${escHtml(p.category)}</span>` : ''}
+          <span class="detail-sku">SKU: ${escHtml(p.sku)}</span>
+        </div>
+        <div class="detail-name">${escHtml(p.name)}</div>
+        <div class="detail-stats">
+          <div class="stat-card"><div class="stat-card-val">${p.stats.imageCount}</div><div class="stat-card-lbl">${t('product_images')}</div></div>
+          <div class="stat-card"><div class="stat-card-val">${p.stats.videoCount}</div><div class="stat-card-lbl">${t('product_videos')}</div></div>
+          <div class="stat-card"><div class="stat-card-val">${p.stats.docCount}</div><div class="stat-card-lbl">${t('product_docs')}</div></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const renderMainImageGroup = () => {
+    if (!p.mainImage) return '';
+    return `
+      <div class="detail-group">
+        <div class="detail-group-hdr">
+          <span class="detail-group-title">${t('product_main_image')} (1)</span>
+          <button class="btn-download" onclick="downloadMainImage(${attrJs(p.sku)}, this)">${t('product_download')}</button>
+        </div>
+        <div class="image-row">
+          <div class="image-item" data-image-key="main" onclick="toggleProductImageSelection('main', this)">
+            <div class="image-item-check">✓</div>
+            <img src="${escHtml(p.mainImage.url)}" alt="${t('product_main_image')}">
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  const renderImageGroup = (g) => {
+    if (!g) return '';
+    let groupHtml = `
+      <div class="detail-group">
+        <div class="detail-group-hdr">
+          <span class="detail-group-title">${productGroupTitle(g)} (${g.items.length})</span>
+          <button class="btn-download" onclick="downloadGroupZip(${attrJs(p.sku)}, ${attrJs(g.groupKey)}, ${attrJs(g.title)}, this)">${t('product_download_all')}</button>
+        </div>
+        <div class="image-row">
+    `;
+    for (const item of g.items) {
+      const itemKey = `${g.groupKey}:${item.lang}`;
+      groupHtml += `
+        <div class="image-item" data-image-key="${escHtml(itemKey)}" onclick="toggleProductImageSelection(${attrJs(itemKey)}, this)">
+          <div class="image-item-check">✓</div>
+          <img src="${escHtml(item.url)}" alt="${productImageLabel(item)}" loading="lazy">
+          <div class="image-item-lbl">${productImageLabel(item)}</div>
+        </div>
+      `;
+    }
+    groupHtml += '</div></div>';
+    return groupHtml;
+  };
+
+  // Images
+  if (p.mainImage || p.imageGroups.length > 0) {
+    html += '<div class="detail-section"><div class="detail-section-title">'+t('product_image_resources')+'</div>';
+    const image2 = p.imageGroups.find(g => g.groupKey === 'image2');
+    const image3 = p.imageGroups.find(g => g.groupKey === 'image3');
+    const image4 = p.imageGroups.find(g => g.groupKey === 'image4');
+    html += '<div class="detail-group-grid">' + renderMainImageGroup() + renderImageGroup(image2) + '</div>';
+    html += '<div class="detail-group-grid">' + renderImageGroup(image3) + renderImageGroup(image4) + '</div>';
+    html += '</div>';
+  }
+
+  // Videos
+  if (p.videos.length > 0) {
+    html += '<div class="detail-section"><div class="detail-section-title">'+t('product_video_resources')+'</div>';
+    for (const v of p.videos) {
+      html += `
+        <div class="video-item">
+          <div class="video-item-hdr">
+            <span class="detail-group-title">${productVideoTitle(v)} (1)</span>
+            <button class="btn-download" onclick="downloadFile(${attrJs(v.downloadUrl)}, ${attrJs(p.sku + '_' + v.type + '.mp4')})">${t('product_download')}</button>
+          </div>
+          <iframe class="video-iframe" src="${escHtml(v.embedUrl)}" allow="autoplay;encrypted-media" allowfullscreen></iframe>
+        </div>
+      `;
+    }
+    html += '</div>';
+  }
+
+  // Descriptions
+  if (p.descriptions.es || p.descriptions.zh) {
+    html += '<div class="detail-section"><div class="detail-section-title">'+t('product_descriptions')+'</div><div class="desc-grid">';
+    if (p.descriptions.es) {
+      html += '<div class="desc-card"><span class="desc-card-lang">ES</span><button class="desc-copy-btn" onclick="copyDescription(\'es\', this)">'+t('product_copy_all')+'</button><div class="desc-card-text">'+escHtml(p.descriptions.es)+'</div></div>';
+    }
+    if (p.descriptions.zh) {
+      html += '<div class="desc-card"><span class="desc-card-lang">CN</span><button class="desc-copy-btn" onclick="copyDescription(\'zh\', this)">'+t('product_copy_all')+'</button><div class="desc-card-text">'+escHtml(p.descriptions.zh)+'</div></div>';
+    }
+    html += '</div></div>';
+  }
+
+  c.innerHTML = html;
+}
+
+// ============ DOWNLOAD UTILITIES ============
+function toggleProductImageSelection(key, el) {
+  if (selectedProductImages.has(key)) {
+    selectedProductImages.delete(key);
+    el.classList.remove('selected');
+  } else {
+    selectedProductImages.add(key);
+    el.classList.add('selected');
+  }
+}
+
+function withDownloadFilename(url, filename) {
+  if (!url || !filename || !url.startsWith('/api/products/download/')) return url;
+  const sep = url.includes('?') ? '&' : '?';
+  return url + sep + 'filename=' + encodeURIComponent(filename);
+}
+
+function downloadFile(url, filename) {
+  if (!url) return toast(t('product_download_invalid'), 'error');
+  const a = document.createElement('a');
+  a.href = withDownloadFilename(url, filename);
+  a.download = filename || '';
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function downloadMainImage(sku, btn) {
+  if (!currentProduct || !currentProduct.mainImage) return;
+  const filename = sku + '_main.jpg';
+  downloadFile(currentProduct.mainImage.downloadUrl, filename);
+}
+
+async function downloadGroupZip(sku, groupKey, groupTitle, btn) {
+  if (!currentProduct) return;
+  const group = currentProduct.imageGroups.find(g => g.groupKey === groupKey);
+  if (!group) return;
+  if (typeof JSZip === 'undefined') { toast(t('product_jszip_missing'), 'error'); return; }
+  const selectedItems = group.items.filter(item => selectedProductImages.has(groupKey + ':' + item.lang));
+  const itemsToDownload = selectedItems.length ? selectedItems : group.items;
+  btn.disabled = true;
+  btn.textContent = selectedItems.length ? t('product_download_selected') : t('product_packaging');
+  try {
+    const zip = new JSZip();
+    let count = 0;
+    for (const item of itemsToDownload) {
+      try {
+        const filename = sku + '_' + groupKey + '_' + item.lang + '.jpg';
+        const res = await fetch(withDownloadFilename(item.downloadUrl, filename));
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const blob = await res.blob();
+        const ext = blob.type.split('/')[1] || 'jpg';
+        zip.file(sku + '_' + groupKey + '_' + item.lang + '.' + ext, blob);
+        count++;
+      } catch (e) { console.warn('Skip', item.url); }
+    }
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(zipBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = sku + '_' + (groupTitle || groupKey) + '.zip';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast(tf('product_packaged', { count }), 'success');
+  } catch (err) {
+    toast(tf('product_pack_failed', { message: err.message }), 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = t('product_download_all');
+  }
+}
+
+function copyDescription(lang, btn) {
+  if (!currentProduct || !currentProduct.descriptions) return;
+  return copyText(btn, currentProduct.descriptions[lang] || '');
+}
+
+async function copyText(btn, text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    const orig = btn.textContent;
+    btn.textContent = t('product_copied');
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  } catch { toast(t('product_copy_failed'), 'error'); }
 }
 
 // ============ START ============
