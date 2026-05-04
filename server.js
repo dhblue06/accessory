@@ -275,22 +275,7 @@ const DEFAULT_TRANSLATIONS = {
     placeholder_film_name: '如: SAM A12, RM NOTE9S',
     placeholder_models_list: 'A12/A13/A14/A15...',
     placeholder_username: 'username',
-    placeholder_password: '至少6位',
-    // Member
-    member_login: '登录',
-    member_logout: '退出',
-    member_register: '注册',
-    member_email: '邮箱',
-    member_password: '密码',
-    member_name: '昵称',
-    member_profile: '我的账号',
-    member_film_remaining: '今日免费查询剩余',
-    member_film_exceeded: '今日免费查询已达上限',
-    member_login_to_unlimited: '登录会员无限查询',
-    member_amazon_limit: '登录后可查看完整Top 100榜单',
-    member_register_success: '注册成功',
-    member_login_success: '登录成功',
-    member_logout_success: '已退出登录'
+    placeholder_password: '至少6位'
   },
   en: {
     nav_film: 'Tempered Glass',
@@ -468,22 +453,7 @@ const DEFAULT_TRANSLATIONS = {
     placeholder_film_name: 'e.g. SAM A12, RM NOTE9S',
     placeholder_models_list: 'A12/A13/A14/A15...',
     placeholder_username: 'username',
-    placeholder_password: 'At least 6 characters',
-    // Member
-    member_login: 'Login',
-    member_logout: 'Logout',
-    member_register: 'Register',
-    member_email: 'Email',
-    member_password: 'Password',
-    member_name: 'Name',
-    member_profile: 'My Account',
-    member_film_remaining: 'Free queries remaining today',
-    member_film_exceeded: 'Daily free query limit reached',
-    member_login_to_unlimited: 'Login for unlimited queries',
-    member_amazon_limit: 'Login to view full Top 100 list',
-    member_register_success: 'Registration successful',
-    member_login_success: 'Login successful',
-    member_logout_success: 'Logged out'
+    placeholder_password: 'At least 6 characters'
   },
   es: {
     nav_film: 'Vidrio Templado',
@@ -660,22 +630,7 @@ const DEFAULT_TRANSLATIONS = {
     placeholder_film_name: 'ej. SAM A12, RM NOTE9S',
     placeholder_models_list: 'A12/A13/A14/A15...',
     placeholder_username: 'usuario',
-    placeholder_password: 'Al menos 6 caracteres',
-    // Member
-    member_login: 'Iniciar sesión',
-    member_logout: 'Cerrar sesión',
-    member_register: 'Registrarse',
-    member_email: 'Correo electrónico',
-    member_password: 'Contraseña',
-    member_name: 'Nombre',
-    member_profile: 'Mi cuenta',
-    member_film_remaining: 'Consultas gratuitas restantes hoy',
-    member_film_exceeded: 'Límite de consultas gratuitas alcanzado',
-    member_login_to_unlimited: 'Inicia sesión para consultas ilimitadas',
-    member_amazon_limit: 'Inicia sesión para ver el Top 100 completo',
-    member_register_success: 'Registro exitoso',
-    member_login_success: 'Inicio de sesión exitoso',
-    member_logout_success: 'Sesión cerrada'
+    placeholder_password: 'Al menos 6 caracteres'
   }
 };
 
@@ -782,36 +737,6 @@ function readUsers() {
 }
 function writeUsers(users) {
   fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
-}
-
-// --- Member auth helpers ---
-const MEMBER_JWT_SECRET = process.env.MEMBER_JWT_SECRET || 'member-secret-key-2024';
-
-function memberAuthMiddleware(req, res, next) {
-  const token = (req.headers.authorization || '').replace('Bearer ', '');
-  if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  try {
-    req.member = jwt.verify(token, MEMBER_JWT_SECRET);
-    next();
-  } catch { res.status(401).json({ error: 'Invalid token' }); }
-}
-
-// Get Spain midnight timestamp for today
-function getSpainMidnight() {
-  const now = new Date();
-  const spainOffset = 2; // CEST (UTC+2 in summer)
-  const utcHours = now.getUTCHours();
-  const utcMinutes = now.getUTCMinutes();
-  const utcSeconds = now.getUTCSeconds();
-  // Spain time = UTC + 2
-  const spainHours = (utcHours + 2) % 24;
-  // Today's Spain midnight in UTC
-  const spainMidnightUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 22, 0, 0, 0));
-  // If Spain time is before 2am (UTC before midnight), subtract a day
-  if (spainHours < 2) {
-    spainMidnightUTC.setDate(spainMidnightUTC.getDate() - 1);
-  }
-  return spainMidnightUTC;
 }
 
 // Initialize DB from film_data.json if empty
@@ -1037,67 +962,6 @@ app.get('/api/auth/me', authMiddleware, (req, res) => {
   res.json({ user: req.user });
 });
 
-// ============ MEMBER AUTH ============
-app.post('/api/member/register', async (req, res) => {
-  try {
-    const { email, password, name } = req.body;
-    if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
-    if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
-
-    // Check if member exists in MongoDB
-    if (db) {
-      const existing = await db.collection('members').findOne({ email: email.toLowerCase() });
-      if (existing) return res.status(400).json({ error: 'Email already registered' });
-
-      const hashedPw = await bcrypt.hash(password, 10);
-      const member = {
-        email: email.toLowerCase(),
-        password: hashedPw,
-        name: name || email.split('@')[0],
-        plan: 'free',
-        createdAt: new Date().toISOString()
-      };
-      await db.collection('members').insertOne(member);
-      const token = jwt.sign({ email: member.email, name: member.name, plan: member.plan }, MEMBER_JWT_SECRET, { expiresIn: '30d' });
-      res.json({ token, user: { email: member.email, name: member.name, plan: member.plan } });
-    } else {
-      res.status(503).json({ error: 'Database not available' });
-    }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post('/api/member/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
-
-    if (db) {
-      const member = await db.collection('members').findOne({ email: email.toLowerCase() });
-      if (!member || !(await bcrypt.compare(password, member.password))) {
-        return res.status(401).json({ error: 'Invalid email or password' });
-      }
-      const token = jwt.sign({ email: member.email, name: member.name, plan: member.plan }, MEMBER_JWT_SECRET, { expiresIn: '30d' });
-      res.json({ token, user: { email: member.email, name: member.name, plan: member.plan } });
-    } else {
-      res.status(503).json({ error: 'Database not available' });
-    }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get('/api/member/me', memberAuthMiddleware, async (req, res) => {
-  if (db) {
-    const member = await db.collection('members').findOne({ email: req.member.email }, { projection: { password: 0 } });
-    if (!member) return res.status(404).json({ error: 'Member not found' });
-    res.json({ user: member });
-  } else {
-    res.status(503).json({ error: 'Database not available' });
-  }
-});
-
 // ============ PUBLIC APIs ============
 // Get localized text from a field that may be string or {zh,en,es}
 function getLocalized(field, lang) {
@@ -1202,37 +1066,7 @@ app.get('/api/film', async (req, res) => {
   const q = (req.query.q || '').toLowerCase().trim();
   const brand = req.query.brand || '';
 
-  // --- Query quota check (non-members: 3/day) ---
-  if (q) {
-    const token = (req.headers.authorization || '').replace('Bearer ', '');
-    let isMember = false;
-    if (token) {
-      try {
-        jwt.verify(token, MEMBER_JWT_SECRET);
-        isMember = true;
-      } catch {}
-    }
-
-    if (!isMember && db) {
-      const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
-      const midnight = getSpainMidnight();
-      const dateStr = midnight.toISOString().split('T')[0];
-
-      const quota = await db.collection('guestQuota').findOne({ ip, date: dateStr });
-      const count = quota ? quota.count : 0;
-      if (count >= 3) {
-        return res.status(403).json({ error: 'query_limit_reached', remaining: 0 });
-      }
-      // Increment quota
-      await db.collection('guestQuota').updateOne(
-        { ip, date: dateStr },
-        { $inc: { count: 1 } },
-        { upsert: true }
-      );
-    }
-  }
-
-  // --- Track search query (existing) ---
+  // Track search query (don't block the response)
   if (q) {
     const db = await readDB();
     const stats = db.filmSearchStats || [];
@@ -1489,66 +1323,7 @@ app.get('/api/admin/stats', authMiddleware, async (req, res) => {
   });
 });
 
-// ============ MEMBER APIs ============
-
-// Film query quota: check remaining
-app.get('/api/member/film-quota', memberAuthMiddleware, async (req, res) => {
-  try {
-    if (!db) return res.json({ remaining: 0, total: 3, resetTime: null });
-
-    const midnight = getSpainMidnight();
-    const quota = await db.collection('filmQuota').findOne({
-      email: req.member.email,
-      date: midnight.toISOString().split('T')[0]
-    });
-    const count = quota ? quota.count : 0;
-    res.json({ remaining: Math.max(0, 3 - count), total: 3, used: count, resetDate: midnight.toISOString() });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Record a film query
-app.post('/api/member/film-query', memberAuthMiddleware, async (req, res) => {
-  try {
-    if (!db) return res.json({ remaining: 0 });
-
-    const midnight = getSpainMidnight();
-    const dateStr = midnight.toISOString().split('T')[0];
-    const quota = await db.collection('filmQuota').findOne({
-      email: req.member.email,
-      date: dateStr
-    });
-    const count = quota ? quota.count : 0;
-    if (count >= 3) return res.status(403).json({ error: 'Daily quota exceeded', remaining: 0 });
-
-    await db.collection('filmQuota').updateOne(
-      { email: req.member.email, date: dateStr },
-      { $inc: { count: 1 } },
-      { upsert: true }
-    );
-    res.json({ remaining: Math.max(0, 2 - count), used: count + 1 });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Amazon data proxy (for future server-side filtering if needed)
-app.get('/api/member/amazon-proxy', async (req, res) => {
-  try {
-    const AMAZON_SHEET_ID = process.env.AMAZON_SHEET_ID || '1FRvFIsM0fyDgmB5tEnyCR7spG8FOgXg2HvkAIB2h4QQ';
-    const AMAZON_SHEET_NAME = process.env.AMAZON_SHEET_NAME || 'latest';
-    const url = `https://docs.google.com/spreadsheets/d/${AMAZON_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(AMAZON_SHEET_NAME)}`;
-    const response = await fetch(url);
-    const text = await response.text();
-    const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)?.[1];
-    if (!jsonStr) return res.status(500).json({ error: 'Failed to parse data' });
-    const json = JSON.parse(jsonStr);
-    res.json(json);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// SPA fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
