@@ -2128,7 +2128,7 @@ input,textarea,select{font-family:inherit}
           <button class="btn btn-primary" onclick="openModal('user')" data-i18n="btn_add_user">+ 新增用户</button>
         </div>
         <table class="data-table">
-          <thead><tr><th data-i18n="th_username">用户名</th><th data-i18n="th_role">角色</th><th data-i18n="th_created">创建时间</th><th data-i18n="th_action">操作</th></tr></thead>
+          <thead><tr><th data-i18n="th_username">用户名</th><th data-i18n="register_phone">电话</th><th data-i18n="register_store">商店 / 公司</th><th data-i18n="th_role">角色</th><th data-i18n="th_created">创建时间</th><th data-i18n="th_action">操作</th></tr></thead>
           <tbody id="users-admin-tbody"></tbody>
         </table>
       </div>
@@ -2352,6 +2352,7 @@ let filmSelectedBrand = ''; // Track which brand button is highlighted
 let allFilmBrands = []; // Keep all brands for filter bar
 let modalMode = '';
 let modalData = null;
+let adminUsersCache = [];
 let currentLang = localStorage.getItem('ag_lang') || 'es';
 // Always default to Spanish if no language preference saved
 if (!localStorage.getItem('ag_lang')) {
@@ -3665,27 +3666,35 @@ async function loadAdminFilm() {
 
 async function loadAdminUsers() {
   const users = await api('/api/admin/users');
+  adminUsersCache = users;
   const tbody = document.getElementById('users-admin-tbody');
   tbody.innerHTML = users.map(u => `<tr>
-    <td><strong>${u.name || u.username}</strong><br><span style="font-size:11px;color:var(--text3)">${u.email}</span></td>
-    <td><span class="${u.role==='admin'?'badge-admin':'badge-user'}" style="padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600">${u.role}</span></td>
-    <td style="color:var(--text3);font-size:12px">${new Date(u.createdAt).toLocaleDateString('zh-CN')}</td>
+    <td><strong>${escapeHtml(u.name || u.username)}</strong><br><span style="font-size:11px;color:var(--text3)">${escapeHtml(u.email)}</span></td>
+    <td>${escapeHtml(u.phone || '—')}</td>
+    <td>${escapeHtml(u.store || '—')}</td>
+    <td><span class="${u.role==='admin'?'badge-admin':'badge-user'}" style="padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600">${escapeHtml(u.role)}</span></td>
+    <td style="color:var(--text3);font-size:12px">${new Date(u.createdAt).toLocaleDateString(currentLang === 'zh' ? 'zh-CN' : currentLang)}</td>
     <td style="display:flex;gap:4px">
-      <button class="btn btn-secondary btn-sm" onclick='editUser(${JSON.stringify(u).replace(/'/g,"&#39;")})'>编辑</button>
+      <button class="btn btn-secondary btn-sm" onclick="editUserById('${u.id}')">${t('btn_edit')}</button>
       <button class="btn btn-danger btn-sm" onclick="deleteItem('users','${u.id}')">${t('btn_delete')}</button>
     </td>
   </tr>`).join('');
 }
 
+function editUserById(id) {
+  const user = adminUsersCache.find(u => u.id === id);
+  if (user) editUser(user);
+}
+
 function editUser(u) {
-  document.getElementById('modal-title').textContent = '编辑用户';
+  document.getElementById('modal-title').textContent = t('modal_edit') + ' ' + t('admin_users_mgmt');
   document.getElementById('modal-body').innerHTML = `
-    <input type="hidden" id="edit-user-id" value="${u.id}">
-    <div class="form-group"><label class="form-label">姓名</label><input id="edit-name" class="form-input" value="${u.name || ''}"></div>
-    <div class="form-group"><label class="form-label">邮箱</label><input id="edit-email" class="form-input" value="${u.email || ''}" disabled style="opacity:0.7"></div>
-    <div class="form-group"><label class="form-label">电话</label><input id="edit-phone" class="form-input" value="${u.phone || ''}"></div>
-    <div class="form-group"><label class="form-label">商店/公司</label><input id="edit-store" class="form-input" value="${u.store || ''}"></div>
-    <div class="form-group"><label class="form-label">角色</label>
+    <input type="hidden" id="edit-user-id" value="${escapeAttr(u.id)}">
+    <div class="form-group"><label class="form-label">${t('register_name')}</label><input id="edit-name" class="form-input" value="${escapeAttr(u.name || '')}"></div>
+    <div class="form-group"><label class="form-label">${t('login_email')}</label><input id="edit-email" class="form-input" value="${escapeAttr(u.email || '')}" disabled style="opacity:0.7"></div>
+    <div class="form-group"><label class="form-label">${t('register_phone')}</label><input id="edit-phone" class="form-input" value="${escapeAttr(u.phone || '')}"></div>
+    <div class="form-group"><label class="form-label">${t('register_store')}</label><input id="edit-store" class="form-input" value="${escapeAttr(u.store || '')}"></div>
+    <div class="form-group"><label class="form-label">${t('form_role')}</label>
       <select id="edit-role" class="form-input">
         <option value="member" ${u.role==='member'?'selected':''}>Member</option>
         <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
@@ -3693,7 +3702,7 @@ function editUser(u) {
     </div>
   `;
   document.getElementById('modal-save').onclick = saveEditUser;
-  document.getElementById('modal').style.display = 'flex';
+  document.getElementById('modal-overlay').classList.remove('hidden');
 }
 
 async function saveEditUser() {
@@ -3704,10 +3713,10 @@ async function saveEditUser() {
   const role = document.getElementById('edit-role').value;
   try {
     await api('/api/admin/users/' + id, { method: 'PUT', body: JSON.stringify({ name, phone, store, role }) });
-    toast('用户已更新', 'success');
+    toast(t('save_success'), 'success');
     closeModal();
     loadAdminUsers();
-  } catch(e) { toast('更新失败: '+e.message, 'error'); }
+  } catch(e) { toast(t('password_update_failed') + ': '+e.message, 'error'); }
 }
 
 async function loadSettings() {
@@ -3847,6 +3856,7 @@ function openModal(type, data=null) {
   const title = { ipad:t('modal_add_ipad'), watch:t('modal_add_watch'), film:t('modal_add_film'), user:t('modal_add_user') };
   document.getElementById('modal-title').textContent = data ? t('modal_edit') : (title[type]||t('modal_add'));
   document.getElementById('modal-body').innerHTML = getModalForm(type, data);
+  document.getElementById('modal-save').onclick = saveModal;
 }
 
 function editItem(type, data) { openModal(type, data); }
@@ -3926,8 +3936,20 @@ function getModalForm(type, d={}) {
   if (type === 'user') {
     return `
       <div class="form-group">
-        <label class="form-label">${t('form_username')} *</label>
+        <label class="form-label">${t('login_email')} *</label>
         <input id="f-uname" class="form-input" placeholder="${t('placeholder_username')}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">${t('register_name')}</label>
+        <input id="f-user-name" class="form-input" placeholder="${t('register_name')}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">${t('register_phone')}</label>
+        <input id="f-user-phone" class="form-input" placeholder="${t('register_phone')}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">${t('register_store')}</label>
+        <input id="f-user-store" class="form-input" placeholder="${t('register_store')}">
       </div>
       <div class="form-group">
         <label class="form-label">${t('form_password')} *</label>
@@ -3936,7 +3958,7 @@ function getModalForm(type, d={}) {
       <div class="form-group">
         <label class="form-label">${t('form_role')}</label>
         <select id="f-urole" class="form-input form-select">
-          <option value="editor">${t('role_editor')} (editor)</option>
+          <option value="member">Member</option>
           <option value="admin">${t('role_admin')} (admin)</option>
         </select>
       </div>`;
@@ -3995,7 +4017,14 @@ async function saveModal() {
       loadAdminFilm();
     }
     else if (modalMode === 'user') {
-      const body = { username: document.getElementById('f-uname').value.trim(), password: document.getElementById('f-upass').value, role: document.getElementById('f-urole').value };
+      const body = {
+        username: document.getElementById('f-uname').value.trim(),
+        name: document.getElementById('f-user-name').value.trim(),
+        phone: document.getElementById('f-user-phone').value.trim(),
+        store: document.getElementById('f-user-store').value.trim(),
+        password: document.getElementById('f-upass').value,
+        role: document.getElementById('f-urole').value
+      };
       if (!body.username || body.password.length < 6) { toast('请填写用户名且密码至少6位', 'error'); return; }
       await api('/api/admin/users', { method:'POST', body:JSON.stringify(body) });
       toast('用户已创建', 'success');
@@ -4027,6 +4056,20 @@ function closeModal(e) {
 }
 
 // ============ UTILS ============
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value);
+}
+
 function hl(text, q) {
   if (!q || !text) return text||'';
   // Highlight each word in the query

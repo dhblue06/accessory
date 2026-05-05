@@ -1795,14 +1795,21 @@ app.get('/api/admin/users', authMiddleware, requireAdmin, async (req, res) => {
   // Fetch roles from profiles table
   let profileRoles = {};
   try {
-    const { data: profiles } = await supabaseAdmin.from('profiles').select('id,role,phone,store');
-    if (profiles) profiles.forEach(p => { profileRoles[p.id] = { role: p.role || 'member', phone: p.phone || '', store: p.store || '' }; });
+    const { data: profiles } = await supabaseAdmin.from('profiles').select('id,full_name,role,phone,store');
+    if (profiles) profiles.forEach(p => {
+      profileRoles[p.id] = {
+        name: p.full_name || '',
+        role: p.role || 'member',
+        phone: p.phone || '',
+        store: p.store || ''
+      };
+    });
   } catch {}
   const users = (data.users || []).map(user => ({
     id: user.id,
     username: user.email || user.phone || user.id,
     email: user.email || '',
-    name: user.user_metadata?.full_name || user.email || user.id,
+    name: profileRoles[user.id]?.name || user.user_metadata?.full_name || user.email || user.id,
     phone: profileRoles[user.id]?.phone || '',
     store: profileRoles[user.id]?.store || '',
     role: profileRoles[user.id]?.role || 'member',
@@ -1836,14 +1843,28 @@ app.post('/api/admin/users', authMiddleware, requireAdmin, async (req, res) => {
   if (!supabaseAdmin) return res.status(500).json({ error: 'SUPABASE_SERVICE_KEY is not configured' });
   const email = String(req.body.email || req.body.username || '').trim();
   const password = String(req.body.password || '');
+  const name = String(req.body.name || email).trim();
+  const phone = String(req.body.phone || '').trim();
+  const store = String(req.body.store || '').trim();
+  const role = ['admin', 'member'].includes(req.body.role) ? req.body.role : 'member';
   if (!email || password.length < 6) return res.status(400).json({ error: 'Email and password >= 6 characters are required' });
   const { data, error } = await supabaseAdmin.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
-    user_metadata: { full_name: req.body.name || email }
+    user_metadata: { full_name: name }
   });
   if (error) return res.status(500).json({ error: error.message });
+  if (data.user?.id) {
+    await supabaseAdmin.from('profiles').upsert({
+      id: data.user.id,
+      full_name: name,
+      phone,
+      store,
+      role,
+      updated_at: new Date().toISOString()
+    }).catch(() => {});
+  }
   res.json({ ok: true, id: data.user?.id });
 });
 
