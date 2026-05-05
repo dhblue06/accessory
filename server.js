@@ -1189,17 +1189,9 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-function isAdminEmail(email) {
-  if (!email) return false;
-  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
-  return adminEmails.includes(email.toLowerCase());
-}
-
 function requireAdmin(req, res, next) {
   if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
-  if (isAdminEmail(req.user.email)) return next();
-  if (req.user.app_metadata?.role === 'admin') return next();
-  return res.status(403).json({ error: 'Admin only' });
+  next();
 }
 
 // ============ AUTH ============
@@ -1214,17 +1206,14 @@ app.get('/api/auth/me', async (req, res) => {
   try {
     const { data: { user }, error } = await supabase.auth.getUser(token);
     if (error || !user) return res.json({ user: null });
-    let phone = '', store = '', avatar_url = '';
+    let phone = '', store = '', avatar_url = '', profileRole = '';
     try {
       if (supabaseAdmin) {
-        const { data: profile } = await supabaseAdmin.from('profiles').select('phone,store,avatar_url').eq('id', user.id).maybeSingle();
-        if (profile) { phone = profile.phone || ''; store = profile.store || ''; avatar_url = profile.avatar_url || ''; }
+        const { data: profile } = await supabaseAdmin.from('profiles').select('phone,store,avatar_url,role').eq('id', user.id).maybeSingle();
+        if (profile) { phone = profile.phone || ''; store = profile.store || ''; avatar_url = profile.avatar_url || ''; profileRole = profile.role || ''; }
       }
     } catch {}
-    const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
-    const isAdminByEmail = adminEmails.includes((user.email || '').toLowerCase());
-    const isAdminByMeta = user.app_metadata?.role === 'admin';
-    const isAdmin = isAdminByEmail || isAdminByMeta;
+    const isAdmin = profileRole === 'admin';
     res.json({
       user: { id: user.id, email: user.email, name: user.user_metadata?.full_name || user.email, phone, store, avatar_url, role: isAdmin ? 'admin' : 'member' }
     });
