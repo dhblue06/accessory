@@ -1250,7 +1250,7 @@ app.put('/api/member/avatar', uploadMemory.single('avatar'), async (req, res) =>
     const filePath = `${user.id}-${Date.now()}.${fileExt}`;
     const { error: uploadError } = await supabaseAdmin.storage.from('avatars').upload(filePath, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
     if (uploadError) return res.status(400).json({ error: uploadError.message });
-    const { data: { publicUrl } } = supabaseAdmin.storage.from('avatars').getPublicUrl(filePath);
+    const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/avatars/${filePath}`;
     await supabaseAdmin.from('profiles').upsert({ id: user.id, avatar_url: publicUrl, updated_at: new Date().toISOString() });
     res.json({ avatarUrl: publicUrl });
   } catch (err) {

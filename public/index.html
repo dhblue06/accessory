@@ -2736,8 +2736,14 @@ async function showMember() {
     document.getElementById('member-avatar-img').style.display = 'none';
     if (me.user.avatar_url) {
       document.getElementById('member-avatar-img').src = me.user.avatar_url;
-      document.getElementById('member-avatar-img').style.display = 'block';
-      document.getElementById('member-avatar-letter').style.display = 'none';
+      document.getElementById('member-avatar-img').onload = function() {
+        document.getElementById('member-avatar-img').style.display = 'block';
+        document.getElementById('member-avatar-letter').style.display = 'none';
+      };
+      document.getElementById('member-avatar-img').onerror = function() {
+        document.getElementById('member-avatar-img').style.display = 'none';
+        document.getElementById('member-avatar-letter').style.display = 'block';
+      };
     } else {
       document.getElementById('member-avatar-letter').style.display = 'block';
     }
