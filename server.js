@@ -1174,6 +1174,8 @@ app.get('/api/auth/me', async (req, res) => {
         id: user.id,
         email: user.email,
         name: user.user_metadata?.full_name || user.email,
+        phone: user.user_metadata?.phone || '',
+        store: user.user_metadata?.store || '',
         role: isAdmin ? 'admin' : 'member'
       }
     });

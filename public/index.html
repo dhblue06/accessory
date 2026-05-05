@@ -2157,43 +2157,20 @@ input,textarea,select{font-family:inherit}
 
 <!-- MEMBER PAGE -->
 <div id="member-page" class="page">
-  <div style="max-width:700px;margin:40px auto;padding:0 20px">
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px">
-      <div style="width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600" id="member-avatar">U</div>
-      <div>
-        <h2 style="font-size:20px;margin-bottom:4px" id="member-name">用户</h2>
-        <p style="color:var(--text3);font-size:13px" id="member-email">user@example.com</p>
-      </div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px">
-      <h3 style="font-size:15px;margin-bottom:16px">📊 数据概览</h3>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px">
-        <div style="background:var(--surface2);border-radius:var(--radius);padding:16px;text-align:center">
-          <div style="font-size:24px;font-weight:700;color:var(--accent)" id="mem-ipad-count">-</div>
-          <div style="font-size:12px;color:var(--text3);margin-top:4px">iPad 型号</div>
+  <div style="max-width:500px;margin:40px auto;padding:0 20px">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center">
+      <div id="member-avatar" style="width:80px;height:80px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:600;margin:0 auto 16px">U</div>
+      <h2 style="font-size:20px;margin-bottom:4px" id="member-name">用户</h2>
+      <p style="color:var(--text3);font-size:13px;margin-bottom:24px" id="member-email">user@example.com</p>
+      <div style="text-align:left;border-top:1px solid var(--border);padding-top:20px">
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+          <span style="color:var(--text3);font-size:13px">电话</span>
+          <span style="font-size:13px" id="member-phone">-</span>
         </div>
-        <div style="background:var(--surface2);border-radius:var(--radius);padding:16px;text-align:center">
-          <div style="font-size:24px;font-weight:700;color:var(--accent)" id="mem-watch-count">-</div>
-          <div style="font-size:12px;color:var(--text3);margin-top:4px">Watch 型号</div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0">
+          <span style="color:var(--text3);font-size:13px">商店 / 公司</span>
+          <span style="font-size:13px" id="member-store">-</span>
         </div>
-        <div style="background:var(--surface2);border-radius:var(--radius);padding:16px;text-align:center">
-          <div style="font-size:24px;font-weight:700;color:var(--accent)" id="mem-film-count">-</div>
-          <div style="font-size:12px;color:var(--text3);margin-top:4px">膜型号</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:var(--radius);padding:16px;text-align:center">
-          <div style="font-size:24px;font-weight:700;color:var(--accent)" id="mem-product-count">-</div>
-          <div style="font-size:12px;color:var(--text3);margin-top:4px">产品素材</div>
-        </div>
-      </div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px">
-      <h3 style="font-size:15px;margin-bottom:12px">🔗 快捷导航</h3>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">
-        <a href="#" onclick="switchPage('ipad');return false" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text)">iPad 兼容性</a>
-        <a href="#" onclick="switchPage('watch');return false" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text)">Watch 兼容性</a>
-        <a href="#" onclick="switchPage('film');return false" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text)">钢化膜查询</a>
-        <a href="#" onclick="switchPage('amazon');return false" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text)">Amazon 榜单</a>
-        <a href="#" onclick="switchPage('products');return false" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text)">产品素材库</a>
       </div>
     </div>
   </div>
@@ -2726,21 +2703,14 @@ async function showMember() {
   document.getElementById('member-page').classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   window.location.hash = '#member';
-  // Load member data
   const me = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') } }).then(r => r.json());
   if (me.user) {
     document.getElementById('member-name').textContent = me.user.name || me.user.email;
     document.getElementById('member-email').textContent = me.user.email;
     document.getElementById('member-avatar').textContent = (me.user.name || me.user.email || 'U')[0].toUpperCase();
+    document.getElementById('member-phone').textContent = me.user.phone || '-';
+    document.getElementById('member-store').textContent = me.user.store || '-';
   }
-  // Load stats
-  try {
-    const stats = await fetch('/api/admin/stats', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') } }).then(r => r.json());
-    document.getElementById('mem-ipad-count').textContent = stats.ipadCount || 0;
-    document.getElementById('mem-watch-count').textContent = stats.watchCount || 0;
-    document.getElementById('mem-film-count').textContent = stats.fgCount || 0;
-    document.getElementById('mem-product-count').textContent = stats.productCount || 0;
-  } catch {}
   updateAuthUI();
 }
 
