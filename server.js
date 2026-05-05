@@ -16,6 +16,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://xjm0616_db_user:fOkVE5dAVKu8F5Ty@cluster0.afxj3we.mongodb.net/?appName=Cluster0';
 const DB_NAME = 'accessory_guide';
+const DEFAULT_SETTINGS = { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' };
 let db;
 let mongoClient;
 let httpServer;
@@ -49,7 +50,12 @@ async function connectDB() {
   }
 
   connectPromise = (async () => {
-    mongoClient = new MongoClient(MONGO_URI);
+    mongoClient = new MongoClient(MONGO_URI, {
+      serverSelectionTimeoutMS: Number(process.env.MONGO_SERVER_SELECTION_TIMEOUT_MS || 5000),
+      connectTimeoutMS: Number(process.env.MONGO_CONNECT_TIMEOUT_MS || 5000),
+      socketTimeoutMS: Number(process.env.MONGO_SOCKET_TIMEOUT_MS || 10000),
+      maxPoolSize: Number(process.env.MONGO_MAX_POOL_SIZE || 5)
+    });
     await mongoClient.connect();
     db = mongoClient.db(DB_NAME);
     console.log('✅ Connected to MongoDB Atlas');
@@ -68,7 +74,7 @@ function getDefaultDBData() {
     ipad: [],
     watch: [],
     film: { fullGlue: {}, twoPointFiveD: [], privacy: [] },
-    settings: { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' },
+    settings: DEFAULT_SETTINGS,
     translations: {},
     filmSearchStats: []
   };
@@ -1138,8 +1144,13 @@ app.get('/api/film', async (req, res) => {
 });
 
 app.get('/api/settings', async (req, res) => {
-  const db = await readDB();
-  res.json(db.settings || { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' });
+  try {
+    const db = await readDB();
+    res.json(db.settings || DEFAULT_SETTINGS);
+  } catch (err) {
+    console.error('[settings] MongoDB unavailable, using defaults:', err.message);
+    res.json(DEFAULT_SETTINGS);
+  }
 });
 
 const PRODUCT_TRANSLATIONS = {
@@ -1275,9 +1286,14 @@ function getTranslationTexts(lang, dbTranslations = {}) {
 
 // Translations API
 app.get('/api/translations', async (req, res) => {
-  const db = await readDB();
   const lang = req.query.lang || 'zh';
-  const translations = db.translations || {};
+  let translations = {};
+  try {
+    const db = await readDB();
+    translations = db.translations || {};
+  } catch (err) {
+    console.error('[translations] MongoDB unavailable, using defaults:', err.message);
+  }
   res.json({
     lang,
     texts: getTranslationTexts(lang, translations)

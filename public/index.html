@@ -2382,10 +2382,20 @@ function getLocalized(field, lang) {
   return field[lang] || field.zh || '';
 }
 
+async function fetchJsonWithTimeout(url, timeoutMs = 5000, opts = {}) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const r = await fetch(url, { ...opts, signal: controller.signal });
+    return await r.json();
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 async function loadTranslations() {
   try {
-    const r = await fetch(`/api/translations?lang=${currentLang}`);
-    const data = await r.json();
+    const data = await fetchJsonWithTimeout(`/api/translations?lang=${currentLang}`);
     translations[currentLang] = data.texts;
   } catch (e) {
     console.error('Failed to load translations:', e);
@@ -2548,8 +2558,7 @@ async function init() {
 
 async function loadSettings() {
   try {
-    const r = await fetch('/api/settings');
-    const s = await r.json();
+    const s = await fetchJsonWithTimeout('/api/settings');
     document.title = (s.siteName || 'TEMCO ACCESORIOS') + ' — TEMCO ACCESORIOS';
     const vEl = document.getElementById('nav-version');
     if (vEl) vEl.textContent = s.version || 'v1.0';
