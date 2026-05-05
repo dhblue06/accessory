@@ -1510,23 +1510,260 @@ app.delete('/api/admin/users/:id', authMiddleware, async (req, res) => {
   res.json({ ok: true });
 });
 
-// ============ PRODUCT LIBRARY ============
-const productService = require('./services/products');
+// --- Product Sync to MongoDB ---
+const SHEET_ID = process.env.PRODUCT_SHEET_ID || '10C954V-_NJU7dCO9M7Ts1pLudCk8F8BrhCXcsRqT12M';
+const SHEET_NAME = process.env.PRODUCT_SHEET_NAME || 'Sheet1';
+let productSyncInterval = null;
 
-productService.setPersistentStore({
-  async read() {
-    if (!db) return null;
-    return await db.collection('productCache').findOne({ _id: 'products' });
-  },
-  async write(payload) {
-    const database = await connectDB();
-    await database.collection('productCache').replaceOne(
-      { _id: 'products' },
-      { _id: 'products', ...payload },
-      { upsert: true }
-    );
+async function syncProductsToMongoDB() {
+  const database = await connectDB();
+  const productsCollection = database.collection('products');
+  const metaCollection = database.collection('productsMeta');
+
+  console.log('[product-sync] Starting Google Sheet sync...');
+  try {
+    const products = await fetchProductsFromGoogleSheet();
+    if (products && products.length > 0) {
+      await productsCollection.deleteMany({});
+      await productsCollection.insertMany(products.map(p => ({
+        ...p,
+        _syncedAt: new Date().toISOString()
+      })));
+      await metaCollection.replaceOne(
+        { _id: 'syncMeta' },
+        { _id: 'syncMeta', count: products.length, source: 'google-sheet', updatedAt: new Date().toISOString() },
+        { upsert: true }
+      );
+      console.log(`[product-sync] ✅ Synced ${products.length} products to MongoDB`);
+      return products;
+    }
+  } catch (err) {
+    console.error('[product-sync] ❌ Sync failed:', err.message);
   }
-});
+  return [];
+}
+
+async function fetchProductsFromGoogleSheet() {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+  const { data } = await axios.get(url, { timeout: 30000 });
+  const table = parseGvizResponse(data);
+
+  const products = [];
+  for (const row of table.rows || []) {
+    if (!row || !row.c) continue;
+    try {
+      const product = rowToProduct(row);
+      if (product) products.push(product);
+    } catch (err) {
+      console.error('Skip invalid product row:', err.message);
+    }
+  }
+  return products;
+}
+
+function parseGvizResponse(text) {
+  const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?\s*$/);
+  if (!match) throw new Error('Invalid gviz response');
+  return JSON.parse(match[1]).table;
+}
+
+const COL = {
+  NAME: 0, SKU: 1, CAT: 2,
+  MAIN_IMG: 3, MAIN_DL: 4,
+  IMG2_ES: 5, IMG2_ES_DL: 6, IMG2_ZH: 7, IMG2_ZH_DL: 8,
+  IMG3_ES: 9, IMG3_ES_DL: 10, IMG3_ZH: 11, IMG3_ZH_DL: 12,
+  IMG4_ES: 13, IMG4_ES_DL: 14, IMG4_ZH: 15, IMG4_ZH_DL: 16,
+  DESC_ES: 17, DESC_ZH: 18, VIDEO_AD: 19, VIDEO_TUT: 20
+};
+
+function cellAt(row, idx) {
+  return row.c && row.c[idx] ? row.c[idx] : null;
+}
+
+function extractDriveFileId(url) {
+  if (!url) return null;
+  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  return m ? m[1] : null;
+}
+
+function extractUrlFromCell(cell) {
+  if (!cell) return null;
+  if (cell.l && typeof cell.l.Target === 'string' && /^https?:\/\//.test(cell.l.Target)) return cell.l.Target;
+  const { v, f } = cell;
+  if (typeof v === 'string') {
+    const trimmed = v.trim();
+    if (/^https?:\/\//.test(trimmed)) return trimmed;
+  }
+  if (typeof f === 'string') {
+    const urlMatch = f.match(/https?:\/\/[^\s)"']+/);
+    if (urlMatch) return urlMatch[0];
+  }
+  return null;
+}
+
+function extractTextFromCell(cell) {
+  if (!cell || cell.v == null) return null;
+  return String(cell.v).trim() || null;
+}
+
+function toDisplayImageUrl(url) {
+  if (!url) return null;
+  const fileId = extractDriveFileId(url);
+  if (fileId) return `/api/products/image/${encodeURIComponent(fileId)}`;
+  return url;
+}
+
+function toDownloadUrl(url) {
+  if (!url) return null;
+  const fileId = extractDriveFileId(url);
+  if (fileId) return `/api/products/download/${encodeURIComponent(fileId)}`;
+  return url;
+}
+
+function toVideoEmbedUrl(url) {
+  if (!url) return null;
+  const fileId = extractDriveFileId(url);
+  if (fileId) return `https://drive.google.com/file/d/${fileId}/preview`;
+  return url;
+}
+
+function rowToProduct(row) {
+  const sku = extractTextFromCell(cellAt(row, COL.SKU));
+  if (!sku || sku.toLowerCase() === 'sku') return null;
+
+  const product = {
+    sku,
+    name: extractTextFromCell(cellAt(row, COL.NAME)) || '',
+    category: extractTextFromCell(cellAt(row, COL.CAT)) || '',
+    mainImage: null,
+    imageGroups: [],
+    videos: [],
+    descriptions: {
+      es: extractTextFromCell(cellAt(row, COL.DESC_ES)) || '',
+      zh: extractTextFromCell(cellAt(row, COL.DESC_ZH)) || ''
+    },
+    stats: { imageCount: 0, videoCount: 0, docCount: 0 }
+  };
+
+  const mainImageUrl = extractUrlFromCell(cellAt(row, COL.MAIN_IMG));
+  const mainDownloadUrl = extractUrlFromCell(cellAt(row, COL.MAIN_DL));
+  const mainViewUrl = mainImageUrl || mainDownloadUrl;
+  if (mainViewUrl) {
+    product.mainImage = {
+      url: toDisplayImageUrl(mainViewUrl),
+      downloadUrl: toDownloadUrl(mainDownloadUrl || mainImageUrl),
+      label: '主产品图'
+    };
+    product.stats.imageCount++;
+  }
+
+  const groups = [
+    { key: 'image2', title: '产品海报', esCol: COL.IMG2_ES, esDl: COL.IMG2_ES_DL, zhCol: COL.IMG2_ZH, zhDl: COL.IMG2_ZH_DL },
+    { key: 'image3', title: '颜色展示图', esCol: COL.IMG3_ES, esDl: COL.IMG3_ES_DL, zhCol: COL.IMG3_ZH, zhDl: COL.IMG3_ZH_DL },
+    { key: 'image4', title: '使用场景图', esCol: COL.IMG4_ES, esDl: COL.IMG4_ES_DL, zhCol: COL.IMG4_ZH, zhDl: COL.IMG4_ZH_DL }
+  ];
+
+  for (const group of groups) {
+    const items = [];
+    for (const lang of ['es', 'zh']) {
+      const imgCol = lang === 'es' ? group.esCol : group.zhCol;
+      const dlCol = lang === 'es' ? group.esDl : group.zhDl;
+      const imgUrl = extractUrlFromCell(cellAt(row, imgCol));
+      const dlUrl = extractUrlFromCell(cellAt(row, dlCol));
+      const viewUrl = imgUrl || dlUrl;
+      if (viewUrl) {
+        items.push({
+          lang,
+          url: toDisplayImageUrl(viewUrl),
+          downloadUrl: toDownloadUrl(dlUrl || imgUrl),
+          label: lang === 'es' ? '西语版' : '中文版'
+        });
+        product.stats.imageCount++;
+      }
+    }
+    if (items.length > 0) {
+      product.imageGroups.push({ title: group.title, groupKey: group.key, items });
+    }
+  }
+
+  const adUrl = extractUrlFromCell(cellAt(row, COL.VIDEO_AD));
+  if (adUrl) {
+    product.videos.push({ type: 'ad', title: '广告视频', url: adUrl, embedUrl: toVideoEmbedUrl(adUrl), downloadUrl: toDownloadUrl(adUrl) });
+    product.stats.videoCount++;
+  }
+  const tutorialUrl = extractUrlFromCell(cellAt(row, COL.VIDEO_TUT));
+  if (tutorialUrl) {
+    product.videos.push({ type: 'tutorial', title: '使用说明视频', url: tutorialUrl, embedUrl: toVideoEmbedUrl(tutorialUrl), downloadUrl: toDownloadUrl(tutorialUrl) });
+    product.stats.videoCount++;
+  }
+  if (product.descriptions.es) product.stats.docCount++;
+  if (product.descriptions.zh) product.stats.docCount++;
+
+  return product;
+}
+
+async function startProductSyncScheduler() {
+  const SYNC_INTERVAL_MS = parseInt(process.env.PRODUCT_SYNC_INTERVAL_MS || '3600000', 10);
+  if (productSyncInterval) clearInterval(productSyncInterval);
+  productSyncInterval = setInterval(async () => {
+    console.log('[product-sync] Scheduled sync triggered');
+    await syncProductsToMongoDB();
+  }, SYNC_INTERVAL_MS);
+  console.log(`[product-sync] Scheduler started, interval: ${SYNC_INTERVAL_MS}ms`);
+}
+
+// ============ PRODUCT LIBRARY (MongoDB only) ============
+const productService = {
+  _cache: null,
+  _cacheMeta: null,
+
+  async getAllProducts() {
+    if (this._cache) return this._cache;
+    const database = await connectDB();
+    const productsCollection = database.collection('products');
+    const products = await productsCollection.find({}).toArray();
+    const meta = await database.collection('productsMeta').findOne({ _id: 'syncMeta' });
+    this._cache = products.map(({ _syncedAt, ...p }) => p);
+    this._cacheMeta = meta || { count: 0, source: 'empty', updatedAt: null };
+    return this._cache;
+  },
+
+  async getProductBySku(sku) {
+    const products = await this.getAllProducts();
+    return products.find(p => p.sku === sku) || null;
+  },
+
+  async getAllCategories() {
+    const products = await this.getAllProducts();
+    const categories = new Set();
+    products.forEach(p => { if (p.category) categories.add(p.category); });
+    return Array.from(categories).sort();
+  },
+
+  async searchProducts({ q, category }) {
+    let products = await this.getAllProducts();
+    if (category) products = products.filter(p => p.category === category);
+    if (q) {
+      const lower = q.toLowerCase();
+      products = products.filter(p => p.sku.toLowerCase().includes(lower) || p.name.toLowerCase().includes(lower));
+    }
+    return products;
+  },
+
+  clearCache() {
+    this._cache = null;
+    this._cacheMeta = null;
+  },
+
+  getCacheMeta() {
+    return this._cacheMeta;
+  },
+
+  async refresh() {
+    this.clearCache();
+    return await syncProductsToMongoDB();
+  }
+};
 
 app.get('/api/products', async (req, res) => {
   try {
@@ -1642,8 +1879,7 @@ app.get('/api/products/:sku', async (req, res) => {
 
 app.post('/api/admin/products/refresh', authMiddleware, requireAdmin, async (req, res) => {
   try {
-    productService.clearCache();
-    const products = await productService.syncProductsFromGoogleSheet();
+    const products = await productService.refresh();
     res.json({ success: true, count: products.length, cache: productService.getCacheMeta() });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1656,10 +1892,8 @@ app.get('/api/cron/products/sync', async (req, res) => {
   if (expectedSecret && providedSecret !== expectedSecret) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-
   try {
-    productService.clearCache();
-    const products = await productService.syncProductsFromGoogleSheet();
+    const products = await productService.refresh();
     res.json({ success: true, count: products.length, cache: productService.getCacheMeta() });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1672,10 +1906,8 @@ app.get('/api/product-sync', async (req, res) => {
   if (expectedSecret && providedSecret !== expectedSecret) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-
   try {
-    productService.clearCache();
-    const products = await productService.syncProductsFromGoogleSheet();
+    const products = await productService.refresh();
     res.json({ success: true, count: products.length, cache: productService.getCacheMeta() });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1685,14 +1917,17 @@ app.get('/api/product-sync', async (req, res) => {
 // Stats
 app.get('/api/admin/stats', authMiddleware, async (req, res) => {
   const db = await readDB();
-  const filmData = readFilmFromXlsx();
+  const database = await connectDB();
+  const productMeta = await database.collection('productsMeta').findOne({ _id: 'syncMeta' });
+  const productCount = productMeta?.count || 0;
   res.json({
     ipadCount: (db.ipad || []).length,
     watchCount: (db.watch || []).length,
-    fgCount: Object.keys(filmData).length,
+    fgCount: Object.keys((await readPublicDB()).film?.fullGlue || {}).length,
     tdCount: 0,
     privacyCount: 0,
-    userCount: (await readUsers()).length
+    userCount: (await readUsers()).length,
+    productCount
   });
 });
 
@@ -1701,10 +1936,12 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Make initDB async and start server
+// Start server
 async function startServer() {
-  await connectDB(); // Ensure MongoDB Atlas is connected
+  await connectDB();
   await initDB();
+  await syncProductsToMongoDB();
+  await startProductSyncScheduler();
   httpServer = app.listen(PORT, () => console.log(`AccessoryGuide running on http://localhost:${PORT}`));
 }
 
