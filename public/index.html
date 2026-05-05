@@ -1687,9 +1687,9 @@ input,textarea,select{font-family:inherit}
       </button>
       <span id="nav-version" class="nav-badge">v1.0</span>
       <button id="login-btn" class="btn btn-primary btn-sm" onclick="showLogin()" data-i18n="login_register">登录 / 注册</button>
-      <button id="member-btn" class="btn btn-secondary btn-sm" onclick="goMember()" style="display:none">会员中心</button>
+      <button id="member-btn" class="btn btn-secondary btn-sm" onclick="goMember()" style="display:none" data-i18n="member_center">会员中心</button>
       <button id="admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()" style="display:none">后台管理</button>
-      <button id="logout-btn" class="btn btn-secondary btn-sm" style="display:none" onclick="doLogout()">退出</button>
+      <button id="logout-btn" class="btn btn-secondary btn-sm" style="display:none" onclick="doLogout()" data-i18n="logout">退出</button>
     </div>
   </div>
 </nav>
@@ -2171,27 +2171,27 @@ input,textarea,select{font-family:inherit}
     </div>
     <form id="member-form" onsubmit="event.preventDefault();saveMember()">
       <div class="form-group" style="text-align:left">
-        <label class="form-label">姓名</label>
+        <label class="form-label" data-i18n="register_name">姓名</label>
         <input id="mem-name" class="form-input" type="text">
       </div>
       <div class="form-group" style="text-align:left">
-        <label class="form-label">电话</label>
+        <label class="form-label" data-i18n="register_phone">电话</label>
         <input id="mem-phone" class="form-input" type="tel">
       </div>
       <div class="form-group" style="text-align:left">
-        <label class="form-label">商店 / 公司</label>
+        <label class="form-label" data-i18n="register_store">商店 / 公司</label>
         <input id="mem-store" class="form-input" type="text">
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%">保存修改</button>
+      <button type="submit" class="btn btn-primary" style="width:100%" data-i18n="save_changes">保存修改</button>
     </form>
     <hr style="border:none;border-top:1px solid var(--border);margin:20px 0">
-    <h3 style="font-size:13px;font-weight:600;margin-bottom:12px;text-align:left">修改密码</h3>
+    <h3 style="font-size:13px;font-weight:600;margin-bottom:12px;text-align:left" data-i18n="change_password">修改密码</h3>
     <form id="password-form" onsubmit="event.preventDefault();changePassword()">
       <div class="form-group" style="text-align:left">
-        <label class="form-label">新密码</label>
-        <input id="mem-new-pwd" class="form-input" type="password" placeholder="至少6位">
+        <label class="form-label" data-i18n="new_password">新密码</label>
+        <input id="mem-new-pwd" class="form-input" type="password" data-i18n-placeholder="password_placeholder" placeholder="至少6位">
       </div>
-      <button type="submit" class="btn btn-secondary" style="width:100%">修改密码</button>
+      <button type="submit" class="btn btn-secondary" style="width:100%" data-i18n="change_password">修改密码</button>
     </form>
     <div id="member-msg" style="margin-top:12px;font-size:13px;text-align:center;display:none"></div>
   </div>
