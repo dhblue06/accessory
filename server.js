@@ -1179,38 +1179,38 @@ app.get('/api/auth/me', async (req, res) => {
   try {
     const { data: { user }, error } = await supabase.auth.getUser(token);
     if (error || !user) return res.json({ user: null });
-    const isAdmin = isAdminEmail(user.email);
+    let phone = '', store = '';
+    try {
+      const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
+      const { data: profile } = await supabaseUser.from('profiles').select('phone,store').eq('id', user.id).single();
+      if (profile) { phone = profile.phone || ''; store = profile.store || ''; }
+    } catch {}
+    const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
+    const isAdmin = adminEmails.includes((user.email || '').toLowerCase());
     res.json({
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.user_metadata?.full_name || user.email,
-        phone: user.user_metadata?.phone || '',
-        store: user.user_metadata?.store || '',
-        role: isAdmin ? 'admin' : 'member'
-      }
+      user: { id: user.id, email: user.email, name: user.user_metadata?.full_name || user.email, phone, store, role: isAdmin ? 'admin' : 'member' }
     });
   } catch {
     res.json({ user: null });
   }
 });
 
-// ============ MEMBER APIs ============
+// ============ MEMBER APIs (via profiles table + RLS) ============
 
 app.put('/api/member/update', async (req, res) => {
-  if (!supabaseAdmin) return res.status(503).json({ error: 'Service key not configured' });
   const token = (req.headers.authorization || '').replace('Bearer ', '');
   if (!token) return res.status(401).json({ error: 'No token' });
   try {
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-    if (error || !user) return res.status(401).json({ error: 'Invalid token' });
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
     const { name, phone, store } = req.body;
-    const metadata = {};
-    if (name !== undefined) metadata.full_name = name;
-    if (phone !== undefined) metadata.phone = phone;
-    if (store !== undefined) metadata.store = store;
-    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, { user_metadata: { ...user.user_metadata, ...metadata } });
-    if (updateError) return res.status(400).json({ error: updateError.message });
+    const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
+    const updates = { id: user.id, updated_at: new Date().toISOString() };
+    if (name !== undefined) updates.full_name = name;
+    if (phone !== undefined) updates.phone = phone;
+    if (store !== undefined) updates.store = store;
+    const { error } = await supabaseUser.from('profiles').upsert(updates);
+    if (error) return res.status(400).json({ error: error.message });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1218,17 +1218,17 @@ app.put('/api/member/update', async (req, res) => {
 });
 
 app.put('/api/member/change-password', async (req, res) => {
-  if (!supabaseAdmin) return res.status(503).json({ error: 'Service key not configured' });
   const token = (req.headers.authorization || '').replace('Bearer ', '');
   if (!token) return res.status(401).json({ error: 'No token' });
   try {
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-    if (error || !user) return res.status(401).json({ error: 'Invalid token' });
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
     const { currentPassword, newPassword } = req.body;
     const tempClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
     const { error: signInError } = await tempClient.auth.signInWithPassword({ email: user.email, password: currentPassword });
     if (signInError) return res.status(400).json({ error: '当前密码不正确' });
-    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, { password: newPassword });
+    const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
+    const { error: updateError } = await supabaseUser.auth.updateUser({ password: newPassword });
     if (updateError) return res.status(400).json({ error: updateError.message });
     res.json({ success: true });
   } catch (err) {
