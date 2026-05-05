@@ -2641,10 +2641,7 @@ async function init() {
 
   if (window.location.hash === '#admin' || window.location.hash === '#member') {
     const token = localStorage.getItem('ag_token');
-    const role = localStorage.getItem('ag_role');
-    if (token && role === 'admin') { loggedIn = true; showAdmin(); }
-    else if (token && role === 'member') { loggedIn = true; showMember(); }
-    else if (token) {
+    if (token) {
       try {
         const r = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer '+token } });
         if (r.ok) { const d = await r.json(); if (d.user) { localStorage.setItem('ag_role', d.user.role); loggedIn = true; d.user.role === 'admin' ? showAdmin() : showMember(); } else showLogin(); }
@@ -2865,9 +2862,16 @@ function updateAuthUI() {
   document.getElementById('member-btn').style.display = loggedIn ? 'inline-flex' : 'none';
   document.getElementById('admin-btn').style.display = (loggedIn && role === 'admin') ? 'inline-flex' : 'none';
   document.getElementById('logout-btn').style.display = loggedIn ? 'inline-flex' : 'none';
-  document.querySelectorAll('.member-only').forEach(el => {
-    el.style.display = loggedIn ? 'inline-flex' : 'none';
-  });
+  document.querySelectorAll('.member-only').forEach(el => { el.style.display = loggedIn ? 'inline-flex' : 'none'; });
+  // Refresh role from server if logged in
+  if (loggedIn) {
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') } }).then(r => r.json()).then(d => {
+      if (d.user && d.user.role !== localStorage.getItem('ag_role')) {
+        localStorage.setItem('ag_role', d.user.role);
+        document.getElementById('admin-btn').style.display = d.user.role === 'admin' ? 'inline-flex' : 'none';
+      }
+    }).catch(() => {});
+  }
 }
 
 async function checkAuth() {
