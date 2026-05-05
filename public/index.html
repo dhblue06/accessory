@@ -1687,7 +1687,8 @@ input,textarea,select{font-family:inherit}
       </button>
       <span id="nav-version" class="nav-badge">v1.0</span>
       <button id="login-btn" class="btn btn-primary btn-sm" onclick="showLogin()" data-i18n="login_register">登录 / 注册</button>
-      <button id="admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()" style="display:none">后台管理</button>
+      <button id="system-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()" style="display:none">&#31995;&#32479;&#35774;&#32622;</button>
+      <button id="member-btn" class="btn btn-secondary btn-sm" onclick="goMember()" style="display:none">&#20250;&#21592;&#20013;&#24515;</button>
       <button id="logout-btn" class="btn btn-secondary btn-sm" style="display:none" onclick="doLogout()">退出</button>
     </div>
   </div>
@@ -2587,9 +2588,13 @@ function applyTranslations() {
   if (productsEmpty) productsEmpty.textContent = t('products_empty');
   if (productsLoading) productsLoading.textContent = t('products_loading');
 
-  // Admin button
-  const adminBtn = document.getElementById('admin-btn');
-  if (adminBtn) adminBtn.textContent = loggedIn ? t('admin_settings_mgmt') : t('login_admin');
+  const systemBtn = document.getElementById('system-btn');
+  const memberBtn = document.getElementById('member-btn');
+  if (systemBtn) systemBtn.textContent = t('admin_settings_mgmt') || '\u7cfb\u7edf\u8bbe\u7f6e';
+  if (memberBtn) {
+    const memberText = t('member_center');
+    memberBtn.textContent = memberText === 'member_center' ? '\u4f1a\u5458\u4e2d\u5fc3' : memberText;
+  }
 
   // Filter labels
   const brandLabel = document.querySelector('#brand-filters .filter-label');
@@ -2742,32 +2747,25 @@ async function showMember() {
 function goAdmin() {
   const token = localStorage.getItem('ag_token');
   const role = localStorage.getItem('ag_role');
-  if (token && role) {
-    if (role === 'admin') showAdmin();
-    else showMember();
-  } else if (token) {
-    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer '+token } }).then(r => {
-      if (r.ok) { r.json().then(d => {
-        if (d.user) {
-          localStorage.setItem('ag_role', d.user.role);
-          loggedIn = true;
-          if (d.user.role === 'admin') showAdmin();
-          else showMember();
-        } else { showLogin(); }
-      }); }
-      else { showLogin(); }
-    }).catch(() => showLogin());
-  } else { showLogin(); }
+  if (token && role === 'admin') { showAdmin(); return; }
+  if (!token) { showLogin(); return; }
+  fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer '+token } }).then(r => {
+    if (r.ok) { r.json().then(d => {
+      if (d.user) {
+        localStorage.setItem('ag_role', d.user.role);
+        loggedIn = true;
+        if (d.user.role === 'admin') showAdmin();
+        else showMember();
+      } else { showLogin(); }
+    }); }
+    else { showLogin(); }
+  }).catch(() => showLogin());
 }
 
-function goAdmin() {
+function goMember() {
   const token = localStorage.getItem('ag_token');
-  if (token) {
-    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer '+token } }).then(r => {
-      if (r.ok) { r.json().then(d => { if (d.user) { loggedIn = true; showAdmin(); } else { showLogin(); } }); }
-      else { showLogin(); }
-    }).catch(() => showLogin());
-  } else { showLogin(); }
+  if (!token) { showLogin(); return; }
+  showMember();
 }
 
 function switchPage(page, load=true) {
@@ -2790,9 +2788,9 @@ function updateAuthUI() {
   const loggedIn = !!localStorage.getItem('ag_token');
   document.getElementById('login-btn').style.display = loggedIn ? 'none' : 'inline-flex';
   document.getElementById('logout-btn').style.display = loggedIn ? 'inline-flex' : 'none';
-  document.getElementById('admin-btn').style.display = loggedIn ? 'inline-flex' : 'none';
   const role = localStorage.getItem('ag_role') || '';
-  document.getElementById('admin-btn').textContent = role === 'admin' ? '后台管理' : '会员中心';
+  document.getElementById('system-btn').style.display = loggedIn && role === 'admin' ? 'inline-flex' : 'none';
+  document.getElementById('member-btn').style.display = loggedIn && role !== 'admin' ? 'inline-flex' : 'none';
   document.querySelectorAll('.member-only').forEach(el => {
     el.style.display = loggedIn ? 'inline-flex' : 'none';
   });

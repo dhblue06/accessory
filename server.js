@@ -1132,6 +1132,11 @@ const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_nEbL1
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const supabaseAdmin = process.env.SUPABASE_SERVICE_KEY ? createClient(SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY) : null;
 
+function isAdminEmail(email) {
+  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+  return adminEmails.includes((email || '').toLowerCase());
+}
+
 // Auth middleware
 async function authMiddleware(req, res, next) {
   const token = (req.headers.authorization || '').replace('Bearer ', '');
@@ -1148,6 +1153,7 @@ async function authMiddleware(req, res, next) {
 
 function requireAdmin(req, res, next) {
   if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
+  if (!isAdminEmail(req.user.email)) return res.status(403).json({ error: 'Admin only' });
   next();
 }
 
@@ -1162,8 +1168,7 @@ app.get('/api/auth/me', async (req, res) => {
   try {
     const { data: { user }, error } = await supabase.auth.getUser(token);
     if (error || !user) return res.json({ user: null });
-    const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
-    const isAdmin = adminEmails.includes((user.email || '').toLowerCase());
+    const isAdmin = isAdminEmail(user.email);
     res.json({
       user: {
         id: user.id,
@@ -1640,18 +1645,43 @@ app.put('/api/admin/amazon-categories', authMiddleware, async (req, res) => {
   res.json({ ok: true });
 });
 
-// Users (managed via Logto Console)
-app.get('/api/admin/users', authMiddleware, async (req, res) => {
-  const { claims } = req.user;
-  res.json([{ id: claims.sub, username: claims.name || claims.sub, role: 'admin', createdAt: new Date().toISOString() }]);
+// Users from Supabase Auth
+app.get('/api/admin/users', authMiddleware, requireAdmin, async (req, res) => {
+  if (!supabaseAdmin) return res.status(500).json({ error: 'SUPABASE_SERVICE_KEY is not configured' });
+  const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+  if (error) return res.status(500).json({ error: error.message });
+  const users = (data.users || []).map(user => ({
+    id: user.id,
+    username: user.email || user.phone || user.id,
+    email: user.email || '',
+    name: user.user_metadata?.full_name || user.email || user.id,
+    role: isAdminEmail(user.email) ? 'admin' : 'member',
+    createdAt: user.created_at
+  }));
+  res.json(users);
 });
 
-app.post('/api/admin/users', authMiddleware, async (req, res) => {
-  res.status(400).json({ error: 'User management is handled in Logto Console' });
+app.post('/api/admin/users', authMiddleware, requireAdmin, async (req, res) => {
+  if (!supabaseAdmin) return res.status(500).json({ error: 'SUPABASE_SERVICE_KEY is not configured' });
+  const email = String(req.body.email || req.body.username || '').trim();
+  const password = String(req.body.password || '');
+  if (!email || password.length < 6) return res.status(400).json({ error: 'Email and password >= 6 characters are required' });
+  const { data, error } = await supabaseAdmin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { full_name: req.body.name || email }
+  });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ ok: true, id: data.user?.id });
 });
 
-app.delete('/api/admin/users/:id', authMiddleware, async (req, res) => {
-  res.status(400).json({ error: 'User management is handled in Logto Console' });
+app.delete('/api/admin/users/:id', authMiddleware, requireAdmin, async (req, res) => {
+  if (!supabaseAdmin) return res.status(500).json({ error: 'SUPABASE_SERVICE_KEY is not configured' });
+  if (req.params.id === req.user.id) return res.status(400).json({ error: 'Cannot delete current user' });
+  const { error } = await supabaseAdmin.auth.admin.deleteUser(req.params.id);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ ok: true });
 });
 
 // --- Product Sync to PostgreSQL ---
