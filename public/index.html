@@ -1687,8 +1687,8 @@ input,textarea,select{font-family:inherit}
       </button>
       <span id="nav-version" class="nav-badge">v1.0</span>
       <button id="login-btn" class="btn btn-primary btn-sm" onclick="showLogin()" data-i18n="login_register">登录 / 注册</button>
-      <button id="system-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()" style="display:none">&#31995;&#32479;&#35774;&#32622;</button>
-      <button id="member-btn" class="btn btn-secondary btn-sm" onclick="goMember()" style="display:none">&#20250;&#21592;&#20013;&#24515;</button>
+      <button id="member-btn" class="btn btn-secondary btn-sm" onclick="goMember()" style="display:none">会员中心</button>
+      <button id="admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()" style="display:none">后台管理</button>
       <button id="logout-btn" class="btn btn-secondary btn-sm" style="display:none" onclick="doLogout()">退出</button>
     </div>
   </div>
@@ -2826,11 +2826,11 @@ function switchPage(page, load=true) {
 
 function updateAuthUI() {
   const loggedIn = !!localStorage.getItem('ag_token');
-  document.getElementById('login-btn').style.display = loggedIn ? 'none' : 'inline-flex';
-  document.getElementById('logout-btn').style.display = loggedIn ? 'inline-flex' : 'none';
   const role = localStorage.getItem('ag_role') || '';
-  document.getElementById('system-btn').style.display = loggedIn && role === 'admin' ? 'inline-flex' : 'none';
-  document.getElementById('member-btn').style.display = loggedIn && role !== 'admin' ? 'inline-flex' : 'none';
+  document.getElementById('login-btn').style.display = loggedIn ? 'none' : 'inline-flex';
+  document.getElementById('member-btn').style.display = loggedIn ? 'inline-flex' : 'none';
+  document.getElementById('admin-btn').style.display = (loggedIn && role === 'admin') ? 'inline-flex' : 'none';
+  document.getElementById('logout-btn').style.display = loggedIn ? 'inline-flex' : 'none';
   document.querySelectorAll('.member-only').forEach(el => {
     el.style.display = loggedIn ? 'inline-flex' : 'none';
   });
