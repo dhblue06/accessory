@@ -6,23 +6,93 @@ const path = require('path');
 const fs = require('fs');
 const https = require('https');
 const axios = require('axios');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const XLSX = require('xlsx');
 const multer = require('multer');
-const { MongoClient } = require('mongodb');
+const { Pool } = require('pg');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const { handleAuthRoutes, withLogto } = require('@logto/express');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://xjm0616_db_user:fOkVE5dAVKu8F5Ty@cluster0.afxj3we.mongodb.net/?appName=Cluster0';
-const DB_NAME = 'accessory_guide';
 const DEFAULT_SETTINGS = { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' };
-const USE_MONGO_FOR_PUBLIC_READS = process.env.USE_MONGO_FOR_PUBLIC_READS === 'true';
-let db;
-let mongoClient;
-let httpServer;
-let connectPromise;
+let pool;
 let bundledDBCache;
+
+// PostgreSQL connection
+const PG_CONNECTION_STRING = process.env.DATABASE_URL || process.env.SUPABASE_URL;
+
+async function connectDB() {
+  if (pool) return pool;
+  if (!PG_CONNECTION_STRING) {
+    console.warn('⚠️  No DATABASE_URL set, using bundled data only');
+    return null;
+  }
+  pool = new Pool({
+    connectionString: PG_CONNECTION_STRING,
+    ssl: PG_CONNECTION_STRING.includes('supabase') ? { rejectUnauthorized: false } : false,
+  });
+  try {
+    await pool.query('SELECT 1');
+    console.log('✅ Connected to PostgreSQL');
+    await migrateSchema();
+    return pool;
+  } catch (err) {
+    console.error('❌ PostgreSQL connection error:', err.message);
+    pool = null;
+    return null;
+  }
+}
+
+async function migrateSchema() {
+  if (!pool) return;
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS app_data (
+        key TEXT PRIMARY KEY,
+        value JSONB NOT NULL DEFAULT '{}'::jsonb,
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS products (
+        sku TEXT PRIMARY KEY,
+        data JSONB NOT NULL,
+        synced_at TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS products_meta (
+        id TEXT PRIMARY KEY DEFAULT 'syncMeta',
+        count INTEGER DEFAULT 0,
+        source TEXT,
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
+    console.log('✅ Schema migrated');
+  } catch (err) {
+    console.error('[migrate] Schema error:', err.message);
+  }
+}
+
+async function readDB() {
+  if (!pool) return getDefaultDBData();
+  try {
+    const { rows } = await pool.query('SELECT value FROM app_data WHERE key = $1', ['main']);
+    if (rows.length > 0) return rows[0].value;
+  } catch (err) {
+    console.error('[readDB] Error:', err.message);
+  }
+  return getDefaultDBData();
+}
+
+async function writeDB(data) {
+  if (!pool) return;
+  try {
+    await pool.query(
+      'INSERT INTO app_data (key, value, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()',
+      ['main', JSON.stringify(data)]
+    );
+  } catch (err) {
+    console.error('[writeDB] Error:', err.message);
+  }
+}
 
 // Multer config for logo upload
 const storage = multer.diskStorage({
@@ -35,7 +105,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 const JWT_SECRET = process.env.JWT_SECRET || 'accessory-guide-secret-2024';
-const USERS_FILE = path.join(__dirname, 'data', 'users.json');
 const XLSX_FILE = path.join(__dirname, 'data.xlsx');
 
 // Ensure data dir exists
@@ -43,32 +112,72 @@ if (!fs.existsSync(path.join(__dirname, 'data'))) {
   fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
 }
 
-// --- MongoDB Connection ---
+// --- PostgreSQL Connection (Supabase) ---
+let httpServer;
+
 async function connectDB() {
-  if (db) return db;
-  if (connectPromise) return connectPromise;
-  if (!MONGO_URI) {
-    throw new Error('MONGO_URI is required. Configure MongoDB Atlas for persistent data.');
+  if (pool) return pool;
+  const PG_CONNECTION_STRING = process.env.DATABASE_URL || process.env.SUPABASE_URL;
+  if (!PG_CONNECTION_STRING) {
+    console.warn('⚠️  No DATABASE_URL set, using bundled data only');
+    return null;
   }
-
-  connectPromise = (async () => {
-    mongoClient = new MongoClient(MONGO_URI, {
-      serverSelectionTimeoutMS: Number(process.env.MONGO_SERVER_SELECTION_TIMEOUT_MS || 2000),
-      connectTimeoutMS: Number(process.env.MONGO_CONNECT_TIMEOUT_MS || 2000),
-      socketTimeoutMS: Number(process.env.MONGO_SOCKET_TIMEOUT_MS || 5000),
-      maxPoolSize: Number(process.env.MONGO_MAX_POOL_SIZE || 5)
-    });
-    await mongoClient.connect();
-    db = mongoClient.db(DB_NAME);
-    console.log('✅ Connected to MongoDB Atlas');
-    return db;
-  })().catch(err => {
-    connectPromise = null;
-    console.error('❌ MongoDB connection error:', err.message);
-    throw err;
+  pool = new Pool({
+    connectionString: PG_CONNECTION_STRING,
+    ssl: PG_CONNECTION_STRING.includes('supabase') ? { rejectUnauthorized: false } : false,
   });
+  try {
+    await pool.query('SELECT 1');
+    console.log('✅ Connected to PostgreSQL (Supabase)');
+    await migrateSchema();
+    return pool;
+  } catch (err) {
+    console.error('❌ PostgreSQL connection error:', err.message);
+    pool = null;
+    return null;
+  }
+}
 
-  return connectPromise;
+async function migrateSchema() {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS app_data (
+        key TEXT PRIMARY KEY,
+        value JSONB NOT NULL DEFAULT '{}'::jsonb,
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
+    console.log('✅ Schema migrated');
+  } catch (err) {
+    console.error('[migrate] Schema error:', err.message);
+  }
+}
+
+async function readDB() {
+  if (!pool) return getDefaultDBData();
+  try {
+    const { rows } = await pool.query('SELECT value FROM app_data WHERE key = $1', ['main']);
+    if (rows.length > 0) return rows[0].value;
+  } catch (err) {
+    console.error('[readDB] Error:', err.message);
+  }
+  return getDefaultDBData();
+}
+
+async function writeDB(data) {
+  if (!pool) return;
+  try {
+    await pool.query(
+      'INSERT INTO app_data (key, value, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()',
+      ['main', JSON.stringify(data)]
+    );
+  } catch (err) {
+    console.error('[writeDB] Error:', err.message);
+  }
+}
+
+async function readPublicDB() {
+  return await readDB();
 }
 
 function getDefaultDBData() {
@@ -91,36 +200,6 @@ function readBundledDBData() {
   }
   bundledDBCache = { ...getDefaultDBData(), ...JSON.parse(fs.readFileSync(bundledPath, 'utf8')) };
   return bundledDBCache;
-}
-
-// Unified readDB/writeDB backed by MongoDB Atlas.
-async function readDB() {
-  const database = await connectDB();
-  const data = await database.collection('appData').findOne({ _id: 'main' });
-  if (data) {
-    delete data._id;
-    return data;
-  }
-  return getDefaultDBData();
-}
-
-async function writeDB(data) {
-  const database = await connectDB();
-  await database.collection('appData').replaceOne(
-    { _id: 'main' },
-    { _id: 'main', ...data },
-    { upsert: true }
-  );
-}
-
-async function readPublicDB() {
-  if (!USE_MONGO_FOR_PUBLIC_READS) return readBundledDBData();
-  try {
-    return await readDB();
-  } catch (err) {
-    console.error('[public-db] MongoDB unavailable, using bundled data:', err.message);
-    return readBundledDBData();
-  }
 }
 
 // Initialize DB connection on startup
@@ -760,18 +839,6 @@ function readFilmFromXlsx() {
     return {};
   }
 }
-async function readUsers() {
-  const database = await connectDB();
-  return await database.collection('users').find({}).toArray();
-}
-async function writeUsers(users) {
-  const database = await connectDB();
-  await database.collection('users').deleteMany({});
-  if (users.length > 0) {
-    await database.collection('users').insertMany(users);
-  }
-}
-
 // Initialize DB from film_data.json if empty
 async function initDB() {
   const db = await readDB();
@@ -788,7 +855,7 @@ async function initDB() {
   }
   if (seededFromBundle) {
     await writeDB(db);
-    console.log('Seeded iPad/Watch data from bundled data into MongoDB');
+    console.log('Seeded iPad/Watch data from bundled data into database');
   }
 
   const filmSrc = path.join(__dirname, '..', 'film_data.json');
@@ -818,19 +885,7 @@ async function initDB() {
       console.log('Migrated iPad data to multi-language format');
     }
   }
-  // Default admin user
-  const users = await readUsers();
-  if (users.length === 0) {
-    const legacyUsers = fs.existsSync(USERS_FILE) ? JSON.parse(fs.readFileSync(USERS_FILE, 'utf8')) : [];
-    if (legacyUsers.length > 0) {
-      await writeUsers(legacyUsers);
-      console.log(`Migrated ${legacyUsers.length} users to MongoDB`);
-    } else {
-      users.push({ id: 1, username: 'admin', password: bcrypt.hashSync('admin123', 10), role: 'admin', createdAt: new Date().toISOString() });
-      await writeUsers(users);
-      console.log('Created default admin: admin / admin123');
-    }
-  }
+  // Logto handles user management - skip legacy user creation
 }
 
 function getDefaultiPadData() {
@@ -991,37 +1046,68 @@ app.use((req, res, next) => {
   next();
 });
 
+// Logto auth setup
+const logtoConfig = {
+  appId: process.env.LOGTO_APP_ID,
+  appSecret: process.env.LOGTO_APP_SECRET,
+  endpoint: process.env.LOGTO_ENDPOINT,
+  baseUrl: process.env.BASE_URL || `http://localhost:${PORT}`,
+};
+const logtoEnabled = !!(process.env.LOGTO_APP_ID && process.env.LOGTO_APP_SECRET && process.env.LOGTO_ENDPOINT);
+
+if (logtoEnabled) {
+  app.use(cookieParser());
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'accessory-guide-session-secret',
+    cookie: {
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === 'production',
+    },
+    resave: false,
+    saveUninitialized: false,
+  }));
+  app.use(handleAuthRoutes(logtoConfig));
+  console.log('🔐 Logto auth enabled');
+} else {
+  console.warn('⚠️  Logto not configured - set LOGTO_APP_ID, LOGTO_APP_SECRET, LOGTO_ENDPOINT');
+}
+
 // Auth middleware
 function authMiddleware(req, res, next) {
-  const token = (req.headers.authorization || '').replace('Bearer ', '');
-  if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  try {
-    req.user = jwt.verify(token, JWT_SECRET);
+  if (!logtoEnabled) {
+    return res.status(503).json({ error: 'Auth not configured', configStatus: 'not_configured' });
+  }
+  withLogto(logtoConfig)(req, res, () => {
+    if (!req.user?.isAuthenticated) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
     next();
-  } catch { res.status(401).json({ error: 'Invalid token' }); }
+  });
 }
 
 function requireAdmin(req, res, next) {
-  if (!req.user || req.user.role !== 'admin') {
-    return res.status(403).json({ error: 'Forbidden' });
+  if (!req.user?.isAuthenticated) {
+    return res.status(401).json({ error: 'Unauthorized' });
   }
   next();
 }
 
 // ============ AUTH ============
-app.post('/api/auth/login', async (req, res) => {
-  const { username, password } = req.body;
-  const users = await readUsers();
-  const user = users.find(u => u.username === username);
-  if (!user || !bcrypt.compareSync(password, user.password)) {
-    return res.status(401).json({ error: '用户名或密码错误' });
-  }
-  const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
-  res.json({ token, user: { id: user.id, username: user.username, role: user.role } });
+app.get('/api/auth/status', (req, res) => {
+  res.json({ logtoConfigured: logtoEnabled });
 });
 
-app.get('/api/auth/me', authMiddleware, (req, res) => {
-  res.json({ user: req.user });
+app.get('/api/auth/me', (req, res) => {
+  if (!logtoEnabled) {
+    return res.json({ user: null, configStatus: 'not_configured' });
+  }
+  withLogto(logtoConfig)(req, res, () => {
+    if (req.user?.isAuthenticated) {
+      res.json({ user: { id: req.user.claims.sub, name: req.user.claims.name, role: 'admin' } });
+    } else {
+      res.status(401).json({ error: 'Not authenticated' });
+    }
+  });
 });
 
 // ============ PUBLIC APIs ============
@@ -1487,60 +1573,55 @@ app.put('/api/admin/amazon-categories', authMiddleware, async (req, res) => {
   res.json({ ok: true });
 });
 
-// Users
+// Users (managed via Logto Console)
 app.get('/api/admin/users', authMiddleware, async (req, res) => {
-  const users = (await readUsers()).map(u => ({ id: u.id, username: u.username, role: u.role, createdAt: u.createdAt }));
-  res.json(users);
+  const { claims } = req.user;
+  res.json([{ id: claims.sub, username: claims.name || claims.sub, role: 'admin', createdAt: new Date().toISOString() }]);
 });
 
 app.post('/api/admin/users', authMiddleware, async (req, res) => {
-  const { username, password, role } = req.body;
-  const users = await readUsers();
-  if (users.find(u => u.username === username)) return res.status(400).json({ error: '用户名已存在' });
-  const user = { id: Date.now(), username, password: bcrypt.hashSync(password, 10), role: role || 'editor', createdAt: new Date().toISOString() };
-  users.push(user);
-  await writeUsers(users);
-  res.json({ id: user.id, username: user.username, role: user.role });
+  res.status(400).json({ error: 'User management is handled in Logto Console' });
 });
 
 app.delete('/api/admin/users/:id', authMiddleware, async (req, res) => {
-  let users = await readUsers();
-  users = users.filter(u => String(u.id) !== req.params.id);
-  await writeUsers(users);
-  res.json({ ok: true });
+  res.status(400).json({ error: 'User management is handled in Logto Console' });
 });
 
-// --- Product Sync to MongoDB ---
+// --- Product Sync to PostgreSQL ---
 const SHEET_ID = process.env.PRODUCT_SHEET_ID || '10C954V-_NJU7dCO9M7Ts1pLudCk8F8BrhCXcsRqT12M';
 const SHEET_NAME = process.env.PRODUCT_SHEET_NAME || 'Sheet1';
 let productSyncInterval = null;
 
-async function syncProductsToMongoDB() {
-  const database = await connectDB();
-  const productsCollection = database.collection('products');
-  const metaCollection = database.collection('productsMeta');
-
+async function syncProductsToDB() {
   console.log('[product-sync] Starting Google Sheet sync...');
   try {
     const products = await fetchProductsFromGoogleSheet();
-    if (products && products.length > 0) {
-      await productsCollection.deleteMany({});
-      await productsCollection.insertMany(products.map(p => ({
-        ...p,
-        _syncedAt: new Date().toISOString()
-      })));
-      await metaCollection.replaceOne(
-        { _id: 'syncMeta' },
-        { _id: 'syncMeta', count: products.length, source: 'google-sheet', updatedAt: new Date().toISOString() },
-        { upsert: true }
-      );
-      console.log(`[product-sync] ✅ Synced ${products.length} products to MongoDB`);
-      return products;
+    if (products && products.length > 0 && pool) {
+      const client = await pool.connect();
+      try {
+        await client.query('DELETE FROM products');
+        for (const p of products) {
+          await client.query(
+            'INSERT INTO products (sku, data, synced_at) VALUES ($1, $2, NOW()) ON CONFLICT (sku) DO UPDATE SET data = $2, synced_at = NOW()',
+            [p.sku, JSON.stringify(p)]
+          );
+        }
+        await client.query(
+          'INSERT INTO products_meta (id, count, source, updated_at) VALUES (\'syncMeta\', $1, $2, NOW()) ON CONFLICT (id) DO UPDATE SET count = $1, source = $2, updated_at = NOW()',
+          [products.length, 'google-sheet']
+        );
+        console.log(`[product-sync] ✅ Synced ${products.length} products`);
+      } finally {
+        client.release();
+      }
+    } else if (!pool) {
+      console.warn('[product-sync] ⚠️  No database, skipping product storage');
     }
+    return products || [];
   } catch (err) {
     console.error('[product-sync] ❌ Sync failed:', err.message);
+    return [];
   }
-  return [];
 }
 
 async function fetchProductsFromGoogleSheet() {
@@ -1719,12 +1800,16 @@ const productService = {
 
   async getAllProducts() {
     if (this._cache) return this._cache;
-    const database = await connectDB();
-    const productsCollection = database.collection('products');
-    const products = await productsCollection.find({}).toArray();
-    const meta = await database.collection('productsMeta').findOne({ _id: 'syncMeta' });
-    this._cache = products.map(({ _syncedAt, ...p }) => p);
-    this._cacheMeta = meta || { count: 0, source: 'empty', updatedAt: null };
+    if (!pool) { this._cache = []; return []; }
+    try {
+      const { rows } = await pool.query('SELECT data FROM products ORDER BY sku');
+      this._cache = rows.map(r => r.data);
+      const meta = await pool.query('SELECT count, source, updated_at FROM products_meta WHERE id = $1', ['syncMeta']);
+      this._cacheMeta = meta.rows[0] || { count: 0, source: 'empty', updatedAt: null };
+    } catch (err) {
+      console.error('[products] DB error:', err.message);
+      this._cache = [];
+    }
     return this._cache;
   },
 
@@ -1761,7 +1846,7 @@ const productService = {
 
   async refresh() {
     this.clearCache();
-    return await syncProductsToMongoDB();
+    return await syncProductsToDB();
   }
 };
 
@@ -1917,16 +2002,20 @@ app.get('/api/product-sync', async (req, res) => {
 // Stats
 app.get('/api/admin/stats', authMiddleware, async (req, res) => {
   const db = await readDB();
-  const database = await connectDB();
-  const productMeta = await database.collection('productsMeta').findOne({ _id: 'syncMeta' });
-  const productCount = productMeta?.count || 0;
+  let productCount = 0;
+  if (pool) {
+    try {
+      const { rows } = await pool.query('SELECT count FROM products_meta WHERE id = $1', ['syncMeta']);
+      if (rows.length > 0) productCount = rows[0].count;
+    } catch {}
+  }
   res.json({
     ipadCount: (db.ipad || []).length,
     watchCount: (db.watch || []).length,
     fgCount: Object.keys((await readPublicDB()).film?.fullGlue || {}).length,
     tdCount: 0,
     privacyCount: 0,
-    userCount: (await readUsers()).length,
+    userCount: 1,
     productCount
   });
 });
@@ -1940,7 +2029,7 @@ app.get('*', (req, res) => {
 async function startServer() {
   await connectDB();
   await initDB();
-  await syncProductsToMongoDB();
+  await syncProductsToDB();
   await startProductSyncScheduler();
   httpServer = app.listen(PORT, () => console.log(`AccessoryGuide running on http://localhost:${PORT}`));
 }

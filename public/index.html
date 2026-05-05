@@ -1637,92 +1637,47 @@ input,textarea,select{font-family:inherit}
 
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="19b44367-903d-40ba-80d9-d786bb17717b"></script>
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-<script async crossorigin="anonymous"
-  data-clerk-publishable-key="pk_test_aWRlYWwtbW9sZS0yNy5jbGVyay5hY2NvdW50cy5kZXYk"
-  src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
-</script>
+<script async src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
 <body>
 
-<div id="clerk-login-page" class="login-wrap" style="display:none">
-  <div id="login-container"></div>
-</div>
+<div id="app-content">
 
-<div id="app-content" style="display:none">
-
-<!-- LOGIN PAGE -->
-<div id="login-page" class="login-wrap" style="display:none">
-  <div class="login-card">
-    <div class="login-logo">
-      <div class="login-logo-icon">AG</div>
-      <h1>TEMCO ACCESORIOS 后台</h1>
-      <p>TEMCO ACCESORIOS Admin</p>
-    </div>
-    <div id="login-error" class="error-msg"></div>
-    <div class="form-group">
-      <label class="form-label">用户名</label>
-      <input id="login-username" class="form-input" type="text" placeholder="admin" autocomplete="username">
-    </div>
-    <div class="form-group">
-      <label class="form-label">密码</label>
-      <input id="login-password" class="form-input" type="password" placeholder="••••••••" autocomplete="current-password">
-    </div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="doLogin()">登 录</button>
-    <p style="text-align:center;margin-top:20px;font-size:12px;color:var(--text3)"><a href="/" onclick="showFront();return false" style="color:var(--accent)">← 返回前台</a></p>
-  </div>
-</div>
-
-<!-- MAIN NAV -->
+<!-- NAV -->
 <nav class="nav" id="main-nav" style="display:none">
   <div class="nav-inner">
     <div class="nav-logo">
-      <img src="/Logo.png" alt="Logo" style="width:36px;height:36px;border-radius:8px;object-fit:contain" />
-      <span>TEMCO ACCESORIOS</span>
+      <img src="/Logo.png" alt="Logo" style="height:28px;width:28px;border-radius:6px">
+      <span>TEMCO</span>
     </div>
     <div class="nav-tabs" id="nav-tabs">
       <a class="nav-tab" data-page="amazon" onclick="switchPage('amazon');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 21V9"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
         <span>Amazon</span>
       </a>
-      <a class="nav-tab" data-page="film" onclick="switchPage('film');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
-        <span>钢化膜通用</span>
-      </a>
-      <a class="nav-tab active" data-page="ipad" onclick="switchPage('ipad');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+      <a class="nav-tab" data-page="ipad" onclick="switchPage('ipad');return false" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg>
         <span>iPad</span>
       </a>
       <a class="nav-tab" data-page="watch" onclick="switchPage('watch');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><path d="M9 2h6l1 4H8zM9 22h6l1-4H8z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/><polyline points="12 7 12 12 15 15"/></svg>
         <span>Watch</span>
       </a>
+      <a class="nav-tab" data-page="film" onclick="switchPage('film');return false" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        <span>Cristal Templado</span>
+      </a>
       <a class="nav-tab" data-page="products" onclick="switchPage('products');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-        <span data-i18n="nav_products">产品素材</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span>Materiales</span>
       </a>
     </div>
     <div class="nav-actions">
-      <!-- Theme Toggle -->
-      <button id="theme-toggle" class="btn btn-secondary btn-sm btn-icon" onclick="toggleTheme()" title="切换主题" style="padding:6px">
+      <button onclick="toggleTheme()" style="background:none;border:none;color:var(--text2);padding:4px;display:flex;align-items:center;cursor:pointer">
         <svg id="theme-icon-dark" viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/></svg>
         <svg id="theme-icon-light" viewBox="0 0 20 20" fill="currentColor" width="18" height="18" style="display:none"><path fill-rule="evenodd" d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" clip-rule="evenodd"/></svg>
       </button>
-      <!-- Desktop language switcher -->
-      <div class="lang-switcher desktop-lang">
-        <button class="pill btn-sm lang-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
-        <button class="pill btn-sm lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
-        <button class="pill btn-sm lang-btn" data-lang="zh" onclick="setLanguage('zh')">中文</button>
-      </div>
-      <!-- Mobile language dropdown -->
-      <select class="mobile-lang-select" onchange="setLanguage(this.value)">
-        <option value="es">ES</option>
-        <option value="en">EN</option>
-        <option value="zh">中文</option>
-      </select>
       <span id="nav-version" class="nav-badge">v1.0</span>
-      <button id="clerk-auth-btn" class="btn btn-primary btn-sm" onclick="openClerkSignIn()">会员登录 / 注册</button>
-      <div id="clerk-user-button" style="display:none"></div>
       <button id="admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()">后台管理</button>
       <button id="logout-btn" class="btn btn-secondary btn-sm" style="display:none" onclick="doLogout()">退出</button>
     </div>
@@ -2192,12 +2147,40 @@ input,textarea,select{font-family:inherit}
 
 </div>
 
+<!-- LOGIN PAGE (full overlay) -->
+<div id="login-page" class="login-wrap" style="display:none">
+  <div class="login-card" style="text-align:center">
+    <div class="login-logo">
+      <div class="login-logo-icon">AG</div>
+      <h1 data-i18n="login_title">TEMCO ACCESORIOS</h1>
+      <p data-i18n="login_admin">后台管理</p>
+    </div>
+    <div id="login-error" class="error-msg" style="display:none"></div>
+    <div id="login-loading" style="display:none;margin-bottom:16px;color:var(--text3)">正在检查登录状态...</div>
+    <div id="login-unconfigured" style="display:none;padding:16px;background:var(--surface);border:1px solid #eab308;border-radius:8px;margin-bottom:16px;text-align:left">
+      <p style="font-size:13px;color:#eab308;font-weight:600;margin-bottom:8px">⚠️ Logto 未配置</p>
+      <p style="font-size:12px;color:var(--text3);line-height:1.5">
+        请在 <code style="background:var(--border);padding:2px 6px;border-radius:4px;font-size:11px">.env</code> 中设置以下环境变量：<br>
+        <code style="display:block;background:var(--border);padding:6px 8px;border-radius:4px;font-size:11px;margin:6px 0;word-break:break-all">
+LOGTO_APP_ID=&lt;your-app-id&gt;<br>
+LOGTO_APP_SECRET=&lt;your-app-secret&gt;<br>
+LOGTO_ENDPOINT=&lt;your-logto-endpoint&gt;
+        </code>
+        然后在 Logto Console 中配置回调 URI：
+        <code style="background:var(--border);padding:2px 6px;border-radius:4px;font-size:11px">/logto/sign-in-callback</code>
+      </p>
+    </div>
+    <button id="logto-login-btn" class="btn btn-primary" style="width:100%;padding:12px;font-size:15px" onclick="window.location.href='/logto/sign-in'">
+      使用 Logto 登录
+    </button>
+    <p style="margin-top:16px;font-size:13px;color:var(--text3)">通过 Logto 身份认证系统登录后台</p>
+  </div>
+</div>
+
 <script>
 // ============ STATE ============
 let token = localStorage.getItem('ag_token') || '';
-let clerkMembershipReady = false;
-let clerkLoadPromise = null;
-let isClerkMember = false;
+let loggedIn = false;
 let currentPage = 'film';
 let filmType = 'fg';
 let filmBrand = '';
@@ -2512,7 +2495,7 @@ function applyTranslations() {
 
   // Admin button
   const adminBtn = document.getElementById('admin-btn');
-  if (adminBtn) adminBtn.textContent = token ? t('admin_settings_mgmt') : t('login_admin');
+  if (adminBtn) adminBtn.textContent = loggedIn ? t('admin_settings_mgmt') : t('login_admin');
 
   // Filter labels
   const brandLabel = document.querySelector('#brand-filters .filter-label');
@@ -2556,165 +2539,16 @@ function applyTranslations() {
 }
 
 // ============ CLERK MEMBERSHIP ============
-function getClerkPublishableKey() {
-  const script = document.querySelector('script[data-clerk-publishable-key]');
-  return script ? script.getAttribute('data-clerk-publishable-key') : '';
-}
-
-function waitForClerk(timeoutMs = 10000) {
-  return new Promise((resolve, reject) => {
-    if (window.Clerk) return resolve(window.Clerk);
-    const started = Date.now();
-    const timer = setInterval(() => {
-      if (window.Clerk) {
-        clearInterval(timer);
-        resolve(window.Clerk);
-      } else if (Date.now() - started > timeoutMs) {
-        clearInterval(timer);
-        reject(new Error('Clerk SDK failed to load'));
-      }
-    }, 50);
-  });
-}
-
-function getClerkFrontendDomain(publishableKey) {
-  try {
-    return atob(publishableKey.split('_')[2]).slice(0, -1);
-  } catch {
-    return '';
-  }
-}
-
-async function loadClerkUiComponents(publishableKey) {
-  if (window.__internal_ClerkUICtor) return;
-
-  const clerkDomain = getClerkFrontendDomain(publishableKey);
-  if (!clerkDomain) throw new Error('Invalid Clerk publishable key');
-
-  await new Promise((resolve, reject) => {
-    const existing = document.querySelector('script[data-clerk-ui-bundle]');
-    if (existing) {
-      existing.addEventListener('load', resolve, { once: true });
-      existing.addEventListener('error', () => reject(new Error('Failed to load @clerk/ui bundle')), { once: true });
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.src = `https://${clerkDomain}/npm/@clerk/ui@1/dist/ui.browser.js`;
-    script.async = true;
-    script.crossOrigin = 'anonymous';
-    script.dataset.clerkUiBundle = 'true';
-    script.onload = resolve;
-    script.onerror = () => reject(new Error('Failed to load @clerk/ui bundle'));
-    document.head.appendChild(script);
-  });
-
-  if (!window.__internal_ClerkUICtor) {
-    throw new Error('Clerk UI bundle loaded without exposing ClerkUI');
-  }
-}
-
-async function loadClerk() {
-  if (clerkLoadPromise) return clerkLoadPromise;
-
-  clerkLoadPromise = (async () => {
-    const publishableKey = getClerkPublishableKey();
-    const clerk = await waitForClerk();
-    await loadClerkUiComponents(publishableKey);
-    await clerk.load({
-      ui: { ClerkUI: window.__internal_ClerkUICtor }
-    });
-    if (!clerk.__temcoListenerAttached && clerk.addListener) {
-      clerk.addListener(({ user }) => {
-        setClerkNavState(!!user);
-        if (currentPage === 'amazon') renderAmazonData();
-      });
-      clerk.__temcoListenerAttached = true;
-    }
-    return clerk;
-  })();
-
-  return clerkLoadPromise;
-}
-
-function setClerkNavState(isSignedIn) {
-  isClerkMember = !!isSignedIn;
-  const authButton = document.getElementById('clerk-auth-btn');
-  const userButton = document.getElementById('clerk-user-button');
-  if (authButton) authButton.style.display = isSignedIn ? 'none' : 'inline-flex';
-  if (userButton) userButton.style.display = isSignedIn ? 'block' : 'none';
-}
-
-async function openClerkSignIn() {
-  try {
-    const clerk = await loadClerk();
-    if (clerk.openSignIn) {
-      clerk.openSignIn();
-      return;
-    }
-  } catch (err) {
-    console.error('Clerk sign-in failed:', err);
-    toast('会员登录组件加载失败，请刷新后重试', 'error');
-    return;
-  }
-
-  document.getElementById('app-content').style.display = 'none';
-  document.getElementById('clerk-login-page').style.display = 'flex';
-  const loginContainer = document.getElementById('login-container');
-  loginContainer.innerHTML = '';
-  if (window.Clerk) window.Clerk.mountSignIn(loginContainer);
-}
-
-async function requireClerkMembership() {
-  const appContent = document.getElementById('app-content');
-  const clerkLoginPage = document.getElementById('clerk-login-page');
-  const loginContainer = document.getElementById('login-container');
-  const publishableKey = getClerkPublishableKey();
-
-  if (!publishableKey || publishableKey === '你的_PUBLISHABLE_KEY' || !publishableKey.startsWith('pk_')) {
-    console.warn('Clerk publishable key is not configured. Replace data-clerk-publishable-key with your pk_... key.');
-    appContent.style.display = 'block';
-    clerkLoginPage.style.display = 'none';
-    setClerkNavState(false);
-    return true;
-  }
-
-  try {
-    const clerk = await loadClerk();
-    if (!clerk.user) {
-      clerkLoginPage.style.display = 'none';
-      appContent.style.display = 'block';
-      setClerkNavState(false);
-      return true;
-    }
-
-    clerkLoginPage.style.display = 'none';
-    appContent.style.display = 'block';
-    const userButton = document.getElementById('clerk-user-button');
-    if (userButton) {
-      userButton.innerHTML = '';
-      clerk.mountUserButton(userButton);
-    }
-    setClerkNavState(true);
-    return true;
-  } catch (err) {
-    console.error('Clerk initialization failed:', err);
-    appContent.style.display = 'block';
-    clerkLoginPage.style.display = 'none';
-    setClerkNavState(false);
-    return true;
-  }
-}
-
 // ============ INIT ============
 async function init() {
-  applyTheme(); // Apply theme before anything renders
-  clerkMembershipReady = await requireClerkMembership();
-  if (!clerkMembershipReady) return;
+  applyTheme();
 
   if (window.location.hash === '#admin') {
-    if (token) { showAdmin(); }
-    else { showLogin(); }
+    try {
+      const r = await fetch('/api/auth/me');
+      if (r.ok) { loggedIn = true; showAdmin(); }
+      else { showLogin(); }
+    } catch { showLogin(); }
   } else {
     showFront();
     loadFilm();
@@ -2758,6 +2592,11 @@ function showLogin() {
   document.getElementById('login-page').style.display = 'flex';
   document.getElementById('main-nav').style.display = 'none';
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Check Logto config status
+  fetch('/api/auth/status').then(r => r.json()).then(s => {
+    document.getElementById('logto-login-btn').style.display = s.logtoConfigured ? 'block' : 'none';
+    document.getElementById('login-unconfigured').style.display = s.logtoConfigured ? 'none' : 'block';
+  }).catch(() => {});
 }
 
 async function showAdmin() {
@@ -2774,8 +2613,10 @@ async function showAdmin() {
 }
 
 function goAdmin() {
-  if (token) { showAdmin(); }
-  else { showLogin(); }
+  fetch('/api/auth/me').then(r => {
+    if (r.ok) { r.json().then(d => { if (d.user) { loggedIn = true; showAdmin(); } else { showLogin(); } }); }
+    else { showLogin(); }
+  }).catch(() => showLogin());
 }
 
 function switchPage(page, load=true) {
@@ -2795,45 +2636,41 @@ function switchPage(page, load=true) {
 }
 
 function updateAuthUI() {
-  const loggedIn = !!token;
   document.getElementById('logout-btn').style.display = loggedIn ? 'inline-flex' : 'none';
-  document.getElementById('admin-btn').style.display = loggedIn ? 'inline-flex' : 'none';
+  document.getElementById('admin-btn').style.display = 'inline-flex';
   document.getElementById('admin-btn').textContent = loggedIn ? '后台管理' : '管理员登录';
   document.querySelectorAll('.member-only').forEach(el => {
     el.style.display = loggedIn ? 'inline-flex' : 'none';
   });
 }
 
-// ============ AUTH ============
-async function doLogin() {
-  const username = document.getElementById('login-username').value.trim();
-  const password = document.getElementById('login-password').value;
-  const errEl = document.getElementById('login-error');
-  errEl.style.display = 'none';
+async function checkAuth() {
   try {
-    const r = await fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,password}) });
-    const data = await r.json();
-    if (!r.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
-    token = data.token;
-    localStorage.setItem('ag_token', token);
-    showAdmin();
-  } catch { errEl.textContent = '网络错误，请重试'; errEl.style.display = 'block'; }
+    const r = await fetch('/api/auth/me');
+    if (r.ok) {
+      const data = await r.json();
+      loggedIn = !!data.user;
+      return true;
+    }
+  } catch {}
+  loggedIn = false;
+  return false;
+}
+
+// ============ AUTH ============
+function doLogin() {
+  window.location.href = '/logto/sign-in';
 }
 
 function doLogout() {
-  token = '';
-  localStorage.removeItem('ag_token');
-  showFront();
-  toast('已退出登录', 'info');
+  window.location.href = '/logto/sign-out';
 }
-
-document.getElementById('login-password').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
 // ============ API HELPERS ============
 async function api(url, opts={}) {
-  const headers = { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer '+token } : {}) };
-  const r = await fetch(url, { ...opts, headers: { ...headers, ...(opts.headers||{}) } });
-  if (r.status === 401) { token=''; localStorage.removeItem('ag_token'); showLogin(); throw new Error('Unauthorized'); }
+  const headers = { 'Content-Type': 'application/json' };
+  const r = await fetch(url, { ...opts, headers: { ...headers, ...(opts.headers||{}) }, credentials: 'include' });
+  if (r.status === 401) { loggedIn = false; showLogin(); throw new Error('Unauthorized'); }
   return r.json();
 }
 
@@ -3100,8 +2937,7 @@ async function loadFilm() {
   // Fetch fresh data if first load or search/brand changed
   if (filmData.length === 0 || q !== filmSearchQ || brand !== filmSearchBrand) {
     if (!canRunFilmQuery(q, brand)) {
-      toast('非会员每日可免费查询 3 次，请登录会员继续使用', 'error');
-      openClerkSignIn();
+      toast('每日可免费查询 3 次', 'info');
       return;
     }
     filmData = await fetch(`/api/film?q=${encodeURIComponent(q)}&brand=${encodeURIComponent(brand)}`).then(r=>r.json());
@@ -3436,7 +3272,7 @@ async function saveSettings() {
   if (logoInput.files && logoInput.files[0]) {
     const formData = new FormData();
     formData.append('logo', logoInput.files[0]);
-    const uploadRes = await fetch('/api/admin/logo', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token }, body: formData });
+    const uploadRes = await fetch('/api/admin/logo', { method: 'POST', credentials: 'include', body: formData });
     if (!uploadRes.ok) { toast('Logo 上传失败', 'error'); return; }
   }
   const body = { siteName: document.getElementById('set-sitename').value, version: document.getElementById('set-version').value, note: document.getElementById('set-note').value };
@@ -3768,7 +3604,6 @@ function saveFilmFreeUsage(usage) {
 }
 
 function canRunFilmQuery(q, brand) {
-  if (isClerkMember) return true;
   const queryKey = (q || brand) ? `${q}|${brand}`.toLowerCase() : '';
   if (!queryKey) return true;
   const usage = getFilmFreeUsage();
@@ -4004,11 +3839,6 @@ function switchAmazonTab(limit, btn) {
 }
 
 function loadMoreAmazon() {
-  if (!isClerkMember) {
-    toast('非会员可查看 Amazon Top20，登录会员可查看更多', 'info');
-    openClerkSignIn();
-    return;
-  }
   amazonDisplayLimit += 20;
   renderAmazonData();
 }
@@ -4025,7 +3855,7 @@ function renderAmazonData() {
   if (filtered.length === 0) {
     el.innerHTML = '<div class="amazon-empty"><div>未找到</div></div>'; return;
   }
-  const effectiveLimit = isClerkMember ? amazonDisplayLimit : 20;
+  const effectiveLimit = amazonDisplayLimit;
   const shown = filtered.slice(0, effectiveLimit);
   const grouped = {};
   shown.forEach(item => {
@@ -4054,10 +3884,8 @@ function renderAmazonData() {
     html += '</div></div>';
   }
   el.innerHTML = html;
-  const loginTip = document.getElementById('amazon-login-tip');
   const loadMoreBtn = document.getElementById('amazon-load-more-btn');
-  if (loginTip) loginTip.style.display = isClerkMember ? 'none' : 'block';
-  if (loadMoreBtn) loadMoreBtn.style.display = isClerkMember && filtered.length > shown.length ? 'inline-flex' : 'none';
+  if (loadMoreBtn) loadMoreBtn.style.display = filtered.length > shown.length ? 'inline-flex' : 'none';
 }
 
 // ============ PRODUCT LIBRARY ============
