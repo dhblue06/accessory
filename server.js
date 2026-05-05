@@ -160,6 +160,7 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
+const uploadMemory = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 const JWT_SECRET = process.env.JWT_SECRET || 'accessory-guide-secret-2024';
 const XLSX_FILE = path.join(__dirname, 'data.xlsx');
 
@@ -1179,16 +1180,16 @@ app.get('/api/auth/me', async (req, res) => {
   try {
     const { data: { user }, error } = await supabase.auth.getUser(token);
     if (error || !user) return res.json({ user: null });
-    let phone = '', store = '';
+    let phone = '', store = '', avatar_url = '';
     try {
       const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
-      const { data: profile } = await supabaseUser.from('profiles').select('phone,store').eq('id', user.id).maybeSingle();
-      if (profile) { phone = profile.phone || ''; store = profile.store || ''; }
+      const { data: profile } = await supabaseUser.from('profiles').select('phone,store,avatar_url').eq('id', user.id).maybeSingle();
+      if (profile) { phone = profile.phone || ''; store = profile.store || ''; avatar_url = profile.avatar_url || ''; }
     } catch {}
     const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
     const isAdmin = adminEmails.includes((user.email || '').toLowerCase());
     res.json({
-      user: { id: user.id, email: user.email, name: user.user_metadata?.full_name || user.email, phone, store, role: isAdmin ? 'admin' : 'member' }
+      user: { id: user.id, email: user.email, name: user.user_metadata?.full_name || user.email, phone, store, avatar_url, role: isAdmin ? 'admin' : 'member' }
     });
   } catch {
     res.json({ user: null });
@@ -1229,6 +1230,27 @@ app.put('/api/member/change-password', async (req, res) => {
     const { error: updateError } = await supabaseUser.auth.updateUser({ password: newPassword });
     if (updateError) return res.status(400).json({ error: updateError.message });
     res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Avatar upload
+app.put('/api/member/avatar', uploadMemory.single('avatar'), async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  if (!token) return res.status(401).json({ error: 'No token' });
+  try {
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+    const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
+    const fileExt = req.file.originalname.split('.').pop() || 'png';
+    const filePath = `${user.id}-${Date.now()}.${fileExt}`;
+    const { error: uploadError } = await supabaseUser.storage.from('avatars').upload(filePath, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
+    if (uploadError) return res.status(400).json({ error: uploadError.message });
+    const { data: { publicUrl } } = supabaseUser.storage.from('avatars').getPublicUrl(filePath);
+    await supabaseUser.from('profiles').upsert({ id: user.id, avatar_url: publicUrl, updated_at: new Date().toISOString() });
+    res.json({ avatarUrl: publicUrl });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

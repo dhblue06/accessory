@@ -2159,8 +2159,13 @@ input,textarea,select{font-family:inherit}
 <div id="member-page" class="login-wrap" style="display:none" onclick="if(event.target===this)closeMember()">
   <div class="login-card" style="text-align:center;position:relative;width:420px;max-width:90vw">
     <button onclick="closeMember()" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:20px;color:var(--text3);cursor:pointer;line-height:1">&times;</button>
-    <div style="margin-bottom:16px">
-      <div id="member-avatar" style="width:64px;height:64px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;margin:0 auto 8px">U</div>
+    <div style="margin-bottom:16px;position:relative">
+      <div id="member-avatar" onclick="document.getElementById('avatar-input').click()" style="width:64px;height:64px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;margin:0 auto 8px;cursor:pointer;overflow:hidden;position:relative">
+        <span id="member-avatar-letter">U</span>
+        <img id="member-avatar-img" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);color:#fff;font-size:10px;padding:2px 0;text-align:center">上传</div>
+      </div>
+      <input id="avatar-input" type="file" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
       <h2 style="font-size:17px;font-weight:600" id="member-name-display">用户</h2>
       <p style="color:var(--text3);font-size:12px" id="member-email-display">user@example.com</p>
     </div>
@@ -2727,12 +2732,41 @@ async function showMember() {
   if (me.user) {
     document.getElementById('member-name-display').textContent = me.user.name || me.user.email;
     document.getElementById('member-email-display').textContent = me.user.email;
-    document.getElementById('member-avatar').textContent = (me.user.name || me.user.email || 'U')[0].toUpperCase();
+    document.getElementById('member-avatar-letter').textContent = (me.user.name || me.user.email || 'U')[0].toUpperCase();
+    document.getElementById('member-avatar-img').style.display = 'none';
+    if (me.user.avatar_url) {
+      document.getElementById('member-avatar-img').src = me.user.avatar_url;
+      document.getElementById('member-avatar-img').style.display = 'block';
+      document.getElementById('member-avatar-letter').style.display = 'none';
+    } else {
+      document.getElementById('member-avatar-letter').style.display = 'block';
+    }
     document.getElementById('mem-name').value = me.user.name || '';
     document.getElementById('mem-phone').value = me.user.phone || '';
     document.getElementById('mem-store').value = me.user.store || '';
   }
   updateAuthUI();
+}
+
+async function uploadAvatar(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const formData = new FormData();
+  formData.append('avatar', file);
+  try {
+    const r = await fetch('/api/member/avatar', {
+      method: 'PUT',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') },
+      body: formData
+    });
+    const data = await r.json();
+    if (!r.ok) { showMemberMsg(data.error || '上传失败', 'error'); return; }
+    document.getElementById('member-avatar-img').src = data.avatarUrl;
+    document.getElementById('member-avatar-img').style.display = 'block';
+    document.getElementById('member-avatar-letter').style.display = 'none';
+    showMemberMsg('头像已更新', 'success');
+  } catch { showMemberMsg('上传失败', 'error'); }
+  input.value = '';
 }
 
 function showMemberMsg(msg, type) {
