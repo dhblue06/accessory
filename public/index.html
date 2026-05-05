@@ -2540,9 +2540,6 @@ function applyTranslations() {
 // ============ INIT ============
 async function init() {
   applyTheme(); // Apply theme before anything renders
-  await loadSettings();
-  await loadTranslations();
-  await loadAmazonCatTranslations();
   if (window.location.hash === '#admin') {
     if (token) { showAdmin(); }
     else { showLogin(); }
@@ -2554,6 +2551,16 @@ async function init() {
   applyTranslations();
   renderIpadInfoCards();
   renderWatchInfoCards();
+
+  Promise.allSettled([
+    loadSettings(),
+    loadTranslations(),
+    loadAmazonCatTranslations()
+  ]).then(() => {
+    applyTranslations();
+    renderIpadInfoCards();
+    renderWatchInfoCards();
+  });
 }
 
 async function loadSettings() {
