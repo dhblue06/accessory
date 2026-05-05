@@ -2157,21 +2157,46 @@ input,textarea,select{font-family:inherit}
 
 <!-- MEMBER PAGE -->
 <div id="member-page" class="page">
-  <div style="max-width:500px;margin:40px auto;padding:0 20px">
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center">
-      <div id="member-avatar" style="width:80px;height:80px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:600;margin:0 auto 16px">U</div>
-      <h2 style="font-size:20px;margin-bottom:4px" id="member-name">用户</h2>
-      <p style="color:var(--text3);font-size:13px;margin-bottom:24px" id="member-email">user@example.com</p>
-      <div style="text-align:left;border-top:1px solid var(--border);padding-top:20px">
-        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
-          <span style="color:var(--text3);font-size:13px">电话</span>
-          <span style="font-size:13px" id="member-phone">-</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;padding:10px 0">
-          <span style="color:var(--text3);font-size:13px">商店 / 公司</span>
-          <span style="font-size:13px" id="member-store">-</span>
-        </div>
+  <div style="max-width:480px;margin:40px auto;padding:0 20px">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px">
+      <div style="text-align:center;margin-bottom:24px">
+        <div id="member-avatar" style="width:72px;height:72px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;margin:0 auto 12px">U</div>
+        <h2 style="font-size:18px;font-weight:600" id="member-name-display">用户</h2>
+        <p style="color:var(--text3);font-size:13px" id="member-email-display">user@example.com</p>
       </div>
+      <form id="member-form" onsubmit="event.preventDefault();saveMember()">
+        <div class="form-group">
+          <label class="form-label">姓名</label>
+          <input id="mem-name" class="form-input" type="text">
+        </div>
+        <div class="form-group">
+          <label class="form-label">邮箱</label>
+          <input id="mem-email" class="form-input" type="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">电话</label>
+          <input id="mem-phone" class="form-input" type="tel">
+        </div>
+        <div class="form-group">
+          <label class="form-label">商店 / 公司</label>
+          <input id="mem-store" class="form-input" type="text">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%">保存修改</button>
+      </form>
+      <hr style="border:none;border-top:1px solid var(--border);margin:24px 0">
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">修改密码</h3>
+      <form id="password-form" onsubmit="event.preventDefault();changePassword()">
+        <div class="form-group">
+          <label class="form-label">当前密码</label>
+          <input id="mem-cur-pwd" class="form-input" type="password">
+        </div>
+        <div class="form-group">
+          <label class="form-label">新密码</label>
+          <input id="mem-new-pwd" class="form-input" type="password" placeholder="至少6位">
+        </div>
+        <button type="submit" class="btn btn-secondary" style="width:100%">修改密码</button>
+      </form>
+      <div id="member-msg" style="margin-top:12px;font-size:13px;text-align:center;display:none"></div>
     </div>
   </div>
 </div>
@@ -2703,15 +2728,64 @@ async function showMember() {
   document.getElementById('member-page').classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   window.location.hash = '#member';
+  document.getElementById('member-msg').style.display = 'none';
   const me = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') } }).then(r => r.json());
   if (me.user) {
-    document.getElementById('member-name').textContent = me.user.name || me.user.email;
-    document.getElementById('member-email').textContent = me.user.email;
+    document.getElementById('member-name-display').textContent = me.user.name || me.user.email;
+    document.getElementById('member-email-display').textContent = me.user.email;
     document.getElementById('member-avatar').textContent = (me.user.name || me.user.email || 'U')[0].toUpperCase();
-    document.getElementById('member-phone').textContent = me.user.phone || '-';
-    document.getElementById('member-store').textContent = me.user.store || '-';
+    document.getElementById('mem-name').value = me.user.name || '';
+    document.getElementById('mem-email').value = me.user.email || '';
+    document.getElementById('mem-phone').value = me.user.phone || '';
+    document.getElementById('mem-store').value = me.user.store || '';
   }
   updateAuthUI();
+}
+
+function showMemberMsg(msg, type) {
+  const el = document.getElementById('member-msg');
+  el.textContent = msg;
+  el.style.color = type === 'success' ? 'var(--accent-green)' : type === 'error' ? 'var(--accent-red)' : 'var(--text3)';
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 4000);
+}
+
+async function saveMember() {
+  const name = document.getElementById('mem-name').value.trim();
+  const email = document.getElementById('mem-email').value.trim();
+  const phone = document.getElementById('mem-phone').value.trim();
+  const store = document.getElementById('mem-store').value.trim();
+  try {
+    const r = await fetch('/api/member/update', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') },
+      body: JSON.stringify({ name, email, phone, store })
+    });
+    const data = await r.json();
+    if (!r.ok) { showMemberMsg(data.error || '保存失败', 'error'); return; }
+    showMemberMsg('保存成功', 'success');
+    document.getElementById('member-name-display').textContent = name || email;
+    document.getElementById('member-avatar').textContent = (name || email || 'U')[0].toUpperCase();
+  } catch { showMemberMsg('网络错误', 'error'); }
+}
+
+async function changePassword() {
+  const currentPassword = document.getElementById('mem-cur-pwd').value;
+  const newPassword = document.getElementById('mem-new-pwd').value;
+  if (!currentPassword || !newPassword) { showMemberMsg('请填写密码', 'error'); return; }
+  if (newPassword.length < 6) { showMemberMsg('新密码至少6位', 'error'); return; }
+  try {
+    const r = await fetch('/api/member/change-password', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') },
+      body: JSON.stringify({ currentPassword, newPassword })
+    });
+    const data = await r.json();
+    if (!r.ok) { showMemberMsg(data.error || '修改失败', 'error'); return; }
+    showMemberMsg('密码已修改', 'success');
+    document.getElementById('mem-cur-pwd').value = '';
+    document.getElementById('mem-new-pwd').value = '';
+  } catch { showMemberMsg('网络错误', 'error'); }
 }
 
 function goAdmin() {
