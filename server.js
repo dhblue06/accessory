@@ -1846,7 +1846,69 @@ async function fetchProductsFromGoogleSheet() {
       console.error('Skip invalid product row:', err.message);
     }
   }
+  const hasImageLinks = products.some(product => product.stats.imageCount > 0);
+  if (hasImageLinks) return products;
+
+  try {
+    const xlsxProducts = await fetchProductsFromGoogleSheetXlsxWithRetry();
+    if (xlsxProducts.length > 0) return xlsxProducts;
+  } catch (err) {
+    console.error('[products] xlsx fallback failed:', err.message);
+  }
   return products;
+}
+
+function worksheetRowToProduct(worksheet, rowIndex) {
+  const row = { c: [] };
+  for (let colIndex = 0; colIndex <= COL.VIDEO_TUT; colIndex++) {
+    const address = XLSX.utils.encode_cell({ r: rowIndex, c: colIndex });
+    row.c[colIndex] = worksheet[address] || null;
+  }
+  return rowToProduct(row);
+}
+
+async function fetchProductsFromGoogleSheetXlsx() {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=xlsx&sheet=${encodeURIComponent(SHEET_NAME)}`;
+  const { data } = await axios.get(url, {
+    responseType: 'arraybuffer',
+    timeout: 90000,
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
+    headers: { 'User-Agent': 'Mozilla/5.0 AccessoryGuide/1.0' }
+  });
+  const workbook = XLSX.read(data, {
+    type: 'buffer',
+    cellFormula: true,
+    cellHTML: true,
+    cellStyles: false
+  });
+  const worksheet = workbook.Sheets[SHEET_NAME] || workbook.Sheets[workbook.SheetNames[0]];
+  if (!worksheet || !worksheet['!ref']) return [];
+
+  const range = XLSX.utils.decode_range(worksheet['!ref']);
+  const products = [];
+  for (let rowIndex = range.s.r; rowIndex <= range.e.r; rowIndex++) {
+    try {
+      const product = worksheetRowToProduct(worksheet, rowIndex);
+      if (product) products.push(product);
+    } catch (err) {
+      console.error('Skip invalid xlsx product row:', err.message);
+    }
+  }
+  return products;
+}
+
+async function fetchProductsFromGoogleSheetXlsxWithRetry() {
+  let lastErr;
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      return await fetchProductsFromGoogleSheetXlsx();
+    } catch (err) {
+      lastErr = err;
+      console.error(`[products] xlsx fetch attempt ${attempt} failed:`, err.message);
+    }
+  }
+  throw lastErr;
 }
 
 function parseGvizResponse(text) {
