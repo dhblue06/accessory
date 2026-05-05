@@ -2170,10 +2170,6 @@ input,textarea,select{font-family:inherit}
           <input id="mem-name" class="form-input" type="text">
         </div>
         <div class="form-group">
-          <label class="form-label">邮箱</label>
-          <input id="mem-email" class="form-input" type="email">
-        </div>
-        <div class="form-group">
           <label class="form-label">电话</label>
           <input id="mem-phone" class="form-input" type="tel">
         </div>
@@ -2735,7 +2731,6 @@ async function showMember() {
     document.getElementById('member-email-display').textContent = me.user.email;
     document.getElementById('member-avatar').textContent = (me.user.name || me.user.email || 'U')[0].toUpperCase();
     document.getElementById('mem-name').value = me.user.name || '';
-    document.getElementById('mem-email').value = me.user.email || '';
     document.getElementById('mem-phone').value = me.user.phone || '';
     document.getElementById('mem-store').value = me.user.store || '';
   }
@@ -2752,20 +2747,19 @@ function showMemberMsg(msg, type) {
 
 async function saveMember() {
   const name = document.getElementById('mem-name').value.trim();
-  const email = document.getElementById('mem-email').value.trim();
   const phone = document.getElementById('mem-phone').value.trim();
   const store = document.getElementById('mem-store').value.trim();
   try {
     const r = await fetch('/api/member/update', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') },
-      body: JSON.stringify({ name, email, phone, store })
+      body: JSON.stringify({ name, phone, store })
     });
     const data = await r.json();
     if (!r.ok) { showMemberMsg(data.error || '保存失败', 'error'); return; }
     showMemberMsg('保存成功', 'success');
-    document.getElementById('member-name-display').textContent = name || email;
-    document.getElementById('member-avatar').textContent = (name || email || 'U')[0].toUpperCase();
+    document.getElementById('member-name-display').textContent = name;
+    document.getElementById('member-avatar').textContent = (name || 'U')[0].toUpperCase();
   } catch { showMemberMsg('网络错误', 'error'); }
 }
 

@@ -1190,8 +1190,6 @@ app.get('/api/auth/me', async (req, res) => {
 });
 
 // ============ MEMBER APIs ============
-const MEMBER_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-const memberAdmin = MEMBER_SERVICE_KEY ? createClient(SUPABASE_URL, MEMBER_SERVICE_KEY) : null;
 
 app.put('/api/member/update', async (req, res) => {
   const token = (req.headers.authorization || '').replace('Bearer ', '');
@@ -1199,15 +1197,17 @@ app.put('/api/member/update', async (req, res) => {
   try {
     const { data: { user }, error } = await supabase.auth.getUser(token);
     if (error || !user) return res.status(401).json({ error: 'Invalid token' });
-    const { name, email, phone, store } = req.body;
-    const updates = {};
-    if (name !== undefined) updates.full_name = name;
-    if (phone !== undefined) updates.phone = phone;
-    if (store !== undefined) updates.store = store;
-    if (memberAdmin) {
-      const { error: updateError } = await memberAdmin.auth.admin.updateUserById(user.id, { user_metadata: { ...user.user_metadata, ...updates } });
-      if (updateError) return res.status(400).json({ error: updateError.message });
-    }
+    const { name, phone, store } = req.body;
+    const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+      auth: { autoRefreshToken: false, persistSession: false }
+    });
+    const metadata = {};
+    if (name !== undefined) metadata.full_name = name;
+    if (phone !== undefined) metadata.phone = phone;
+    if (store !== undefined) metadata.store = store;
+    const { error: updateError } = await supabaseUser.auth.updateUser({ data: metadata });
+    if (updateError) return res.status(400).json({ error: updateError.message });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1218,14 +1218,29 @@ app.put('/api/member/change-password', async (req, res) => {
   const token = (req.headers.authorization || '').replace('Bearer ', '');
   if (!token) return res.status(401).json({ error: 'No token' });
   try {
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-    if (error || !user) return res.status(401).json({ error: 'Invalid token' });
     const { currentPassword, newPassword } = req.body;
-    // Verify current password by attempting sign-in
+    const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+      auth: { autoRefreshToken: false, persistSession: false }
+    });
+    const { data: { user }, error: userError } = await supabaseUser.auth.getUser();
+    if (userError || !user) return res.status(401).json({ error: 'Invalid token' });
+    const tempClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
+    const { error: signInError } = await tempClient.auth.signInWithPassword({ email: user.email, password: currentPassword });
+    if (signInError) return res.status(400).json({ error: '当前密码不正确' });
+    const { error: updateError } = await supabaseUser.auth.updateUser({ password: newPassword });
+    if (updateError) return res.status(400).json({ error: updateError.message });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+    const { currentPassword, newPassword } = req.body;
+    const { data: { user }, error: userError } = await supabaseUser.auth.getUser();
+    if (userError || !user) return res.status(401).json({ error: 'Invalid token' });
     const { error: signInError } = await supabase.auth.signInWithPassword({ email: user.email, password: currentPassword });
     if (signInError) return res.status(400).json({ error: '当前密码不正确' });
-    // Update password
-    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+    const { error: updateError } = await supabaseUser.auth.updateUser({ password: newPassword });
     if (updateError) return res.status(400).json({ error: updateError.message });
     res.json({ success: true });
   } catch (err) {
