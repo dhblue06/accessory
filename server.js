@@ -1513,6 +1513,21 @@ app.delete('/api/admin/users/:id', authMiddleware, async (req, res) => {
 // ============ PRODUCT LIBRARY ============
 const productService = require('./services/products');
 
+productService.setPersistentStore({
+  async read() {
+    if (!db) return null;
+    return await db.collection('productCache').findOne({ _id: 'products' });
+  },
+  async write(payload) {
+    const database = await connectDB();
+    await database.collection('productCache').replaceOne(
+      { _id: 'products' },
+      { _id: 'products', ...payload },
+      { upsert: true }
+    );
+  }
+});
+
 app.get('/api/products', async (req, res) => {
   try {
     const { q, category } = req.query;
@@ -1541,11 +1556,17 @@ app.get('/api/products/_debug', authMiddleware, requireAdmin, async (req, res) =
     res.json({
       count: products.length,
       sample: products[0] || null,
-      allSkus: products.map(p => p.sku)
+      allSkus: products.map(p => p.sku),
+      cache: productService.getCacheMeta()
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+app.get('/api/products/cache/status', async (req, res) => {
+  const cached = productService.getCacheMeta();
+  res.json(cached || { source: 'empty', count: 0, updatedAt: null });
 });
 
 app.get('/api/products/image/:fileId', (req, res) => {
@@ -1617,8 +1638,24 @@ app.get('/api/products/:sku', async (req, res) => {
 app.post('/api/admin/products/refresh', authMiddleware, requireAdmin, async (req, res) => {
   try {
     productService.clearCache();
-    const products = await productService.getAllProducts(true);
-    res.json({ success: true, count: products.length });
+    const products = await productService.syncProductsFromGoogleSheet();
+    res.json({ success: true, count: products.length, cache: productService.getCacheMeta() });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/cron/products/sync', async (req, res) => {
+  const expectedSecret = process.env.CRON_SECRET || '';
+  const providedSecret = req.headers.authorization?.replace('Bearer ', '') || req.query.secret || req.headers['x-cron-secret'];
+  if (expectedSecret && providedSecret !== expectedSecret) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    productService.clearCache();
+    const products = await productService.syncProductsFromGoogleSheet();
+    res.json({ success: true, count: products.length, cache: productService.getCacheMeta() });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

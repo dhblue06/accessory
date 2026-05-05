@@ -1,7 +1,9 @@
 'use strict';
 
 const axios = require('axios');
+const fs = require('fs');
 const NodeCache = require('node-cache');
+const path = require('path');
 const XLSX = require('xlsx');
 
 const SHEET_ID = process.env.PRODUCT_SHEET_ID || '10C954V-_NJU7dCO9M7Ts1pLudCk8F8BrhCXcsRqT12M';
@@ -9,6 +11,47 @@ const SHEET_NAME = process.env.PRODUCT_SHEET_NAME || 'Sheet1';
 
 const cache = new NodeCache({ stdTTL: 300, checkperiod: 60 });
 const CACHE_KEY = 'products';
+const CACHE_META_KEY = 'products_meta';
+const BUNDLED_CACHE_FILE = path.join(__dirname, '..', 'data', 'products-cache.json');
+let persistentStore = null;
+let productsLoadPromise = null;
+let bundledCache = null;
+
+function setPersistentStore(store) {
+  persistentStore = store;
+}
+
+function getCachedProducts() {
+  return cache.get(CACHE_KEY) || null;
+}
+
+function setCachedProducts(products, meta = {}) {
+  cache.set(CACHE_KEY, products);
+  cache.set(CACHE_META_KEY, {
+    count: products.length,
+    updatedAt: new Date().toISOString(),
+    source: meta.source || 'memory',
+    ...meta
+  });
+}
+
+function getCacheMeta() {
+  return cache.get(CACHE_META_KEY) || null;
+}
+
+function readBundledProducts() {
+  if (bundledCache) return bundledCache;
+  if (!fs.existsSync(BUNDLED_CACHE_FILE)) return null;
+  try {
+    const parsed = JSON.parse(fs.readFileSync(BUNDLED_CACHE_FILE, 'utf8'));
+    if (!parsed || !Array.isArray(parsed.products)) return null;
+    bundledCache = parsed;
+    return bundledCache;
+  } catch (err) {
+    console.error('[products] Bundled cache read failed:', err.message);
+    return null;
+  }
+}
 
 function extractDriveFileId(url) {
   if (!url) return null;
@@ -267,36 +310,99 @@ async function fetchFromGoogleSheetXlsxWithRetry() {
   throw lastErr;
 }
 
-async function getAllProducts(forceRefresh = false) {
-  if (!forceRefresh) {
-    const cached = cache.get(CACHE_KEY);
-    if (cached) return cached;
+async function loadProductsFromGoogleSheet() {
+  const products = await fetchFromGoogleSheet();
+  const hasImageLinks = products.some(product => product.stats.imageCount > 0);
+  if (hasImageLinks) {
+    console.log(`[products] Loaded ${products.length} products from Google Sheet gviz`);
+    return { products, source: 'google-sheet-gviz' };
   }
 
   try {
-    const products = await fetchFromGoogleSheet();
-    const hasImageLinks = products.some(product => product.stats.imageCount > 0);
-    if (hasImageLinks) {
-      cache.set(CACHE_KEY, products);
-      console.log(`[products] Loaded ${products.length} products from Google Sheet gviz`);
-      return products;
-    }
+    const xlsxProducts = await fetchFromGoogleSheetXlsxWithRetry();
+    console.log(`[products] Loaded ${xlsxProducts.length} products from Google Sheet xlsx export`);
+    return { products: xlsxProducts, source: 'google-sheet-xlsx' };
+  } catch (xlsxErr) {
+    console.error('[products] xlsx fallback failed, using gviz data:', xlsxErr.message);
+    return { products, source: 'google-sheet-gviz-fallback' };
+  }
+}
 
-    try {
-      const xlsxProducts = await fetchFromGoogleSheetXlsxWithRetry();
-      cache.set(CACHE_KEY, xlsxProducts);
-      console.log(`[products] Loaded ${xlsxProducts.length} products from Google Sheet xlsx export`);
-      return xlsxProducts;
-    } catch (xlsxErr) {
-      cache.set(CACHE_KEY, products);
-      console.error('[products] xlsx fallback failed, using gviz data:', xlsxErr.message);
-      return products;
+async function readPersistentProducts() {
+  if (!persistentStore || !persistentStore.read) return null;
+  try {
+    const stored = await persistentStore.read();
+    if (stored && Array.isArray(stored.products)) {
+      setCachedProducts(stored.products, {
+        source: stored.source || 'persistent-cache',
+        updatedAt: stored.updatedAt || new Date().toISOString()
+      });
+      return stored.products;
     }
   } catch (err) {
-    console.error('[products] Fetch failed:', err.message);
-    const cached = cache.get(CACHE_KEY);
+    console.error('[products] Persistent cache read failed:', err.message);
+  }
+  return null;
+}
+
+async function writePersistentProducts(products, source) {
+  if (!persistentStore || !persistentStore.write) return;
+  try {
+    await persistentStore.write({ products, source, updatedAt: new Date().toISOString() });
+  } catch (err) {
+    console.error('[products] Persistent cache write failed:', err.message);
+  }
+}
+
+async function syncProductsFromGoogleSheet() {
+  const { products, source } = await loadProductsFromGoogleSheet();
+  setCachedProducts(products, { source });
+  await writePersistentProducts(products, source);
+  return products;
+}
+
+async function getAllProducts(forceRefresh = false) {
+  if (!forceRefresh) {
+    const cached = getCachedProducts();
     if (cached) return cached;
+
+    const persistent = await readPersistentProducts();
+    if (persistent) return persistent;
+
+    const bundled = readBundledProducts();
+    if (bundled) {
+      setCachedProducts(bundled.products, {
+        source: bundled.source || 'bundled-cache',
+        updatedAt: bundled.updatedAt || new Date().toISOString()
+      });
+      return bundled.products;
+    }
+  }
+
+  try {
+    if (!forceRefresh && productsLoadPromise) return await productsLoadPromise;
+    productsLoadPromise = syncProductsFromGoogleSheet();
+    return await productsLoadPromise;
+  } catch (err) {
+    console.error('[products] Fetch failed:', err.message);
+    const cached = getCachedProducts();
+    if (cached) return cached;
+
+    const persistent = await readPersistentProducts();
+    if (persistent) return persistent;
+
+    const bundled = readBundledProducts();
+    if (bundled) {
+      setCachedProducts(bundled.products, {
+        source: bundled.source || 'bundled-cache',
+        updatedAt: bundled.updatedAt || new Date().toISOString()
+      });
+      return bundled.products;
+    }
+
     throw err;
+  } finally {
+    productsLoadPromise = null;
   }
 }
 
@@ -334,12 +440,16 @@ async function searchProducts({ q, category }) {
 
 function clearCache() {
   cache.del(CACHE_KEY);
+  cache.del(CACHE_META_KEY);
 }
 
 module.exports = {
+  setPersistentStore,
   getAllProducts,
   getProductBySku,
   getAllCategories,
   searchProducts,
-  clearCache
+  clearCache,
+  getCacheMeta,
+  syncProductsFromGoogleSheet
 };

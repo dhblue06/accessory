@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "crons": [
+    { "path": "/api/cron/products/sync", "schedule": "0 */6 * * *" }
+  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/server.js" },
     { "source": "/(.*)", "destination": "/public/index.html" }

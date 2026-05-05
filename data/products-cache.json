@@ -1,0 +1,427 @@
+{
+  "source": "bundled-google-sheet-snapshot",
+  "updatedAt": "2026-05-05T10:50:04.387Z",
+  "count": 5,
+  "products": [
+    {
+      "sku": "TSN03-N",
+      "name": "Cascos Inalámbricos",
+      "category": "耳机",
+      "mainImage": {
+        "url": "/api/products/image/112Zjlogv0yrBv2DjT9Wqvbxy4W1J3GXY",
+        "downloadUrl": "/api/products/download/112Zjlogv0yrBv2DjT9Wqvbxy4W1J3GXY",
+        "label": "主产品图"
+      },
+      "imageGroups": [
+        {
+          "title": "产品海报",
+          "groupKey": "image2",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/120Jyzw7TnY94YyoQ2zEn9JbcGE-nyAZ0",
+              "downloadUrl": "/api/products/download/120Jyzw7TnY94YyoQ2zEn9JbcGE-nyAZ0",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/14qrpQGYYB0KPNmJeWGrxIFmZjEWeq8Rx",
+              "downloadUrl": "/api/products/download/14qrpQGYYB0KPNmJeWGrxIFmZjEWeq8Rx",
+              "label": "中文版"
+            }
+          ]
+        },
+        {
+          "title": "颜色展示图",
+          "groupKey": "image3",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/1HWyOekCPQwKLLi77LXH5JmZRa8cHwBi9",
+              "downloadUrl": "/api/products/download/1HWyOekCPQwKLLi77LXH5JmZRa8cHwBi9",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/1xnP8kFIEl3IAnZYF13TucIoyJdBH8_M5",
+              "downloadUrl": "/api/products/download/1xnP8kFIEl3IAnZYF13TucIoyJdBH8_M5",
+              "label": "中文版"
+            }
+          ]
+        },
+        {
+          "title": "使用场景图",
+          "groupKey": "image4",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/1SAR4HhYbHgh2tEUUarh8BN9Rdeqq4_OR",
+              "downloadUrl": "/api/products/download/1SAR4HhYbHgh2tEUUarh8BN9Rdeqq4_OR",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/1YJrbibD8JD49F2eCJM5v-NHgEQaKcFN3",
+              "downloadUrl": "/api/products/download/1YJrbibD8JD49F2eCJM5v-NHgEQaKcFN3",
+              "label": "中文版"
+            }
+          ]
+        }
+      ],
+      "videos": [
+        {
+          "type": "ad",
+          "title": "广告视频",
+          "url": "https://drive.google.com/file/d/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9/view?usp=sharing",
+          "embedUrl": "https://drive.google.com/file/d/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9/preview",
+          "downloadUrl": "/api/products/download/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9"
+        }
+      ],
+      "descriptions": {
+        "es": "Presentamos los TEMCO TSN03-N, auriculares de alta fidelidad diseñados para ofrecerte una experiencia de sonido envolvente que elimina las interferencias externas y te sitúa en el centro de tu música o películas favoritas. Su tecnología estéreo avanzada garantiza una calidad de estudio sin distorsión, con un sonido panorámico 360° que transforma cada escucha en una experiencia inmersiva. Con una batería de 400mAh, ofrecen hasta 40 horas de reproducción continua sin necesidad de recargar, para que puedas disfrutar de tu música durante días sin interrupciones. Equipados con conectividad inalámbrica de largo alcance hasta 30 metros y entrada Jack 3.5mm, se adaptan a cualquier dispositivo con total versatilidad, e incluyen control integrado de volumen y llamadas para que no tengas que sacar el móvil en ningún momento. Sus almohadillas ultra suaves están diseñadas para largas sesiones de uso sin fatiga, con un peso de solo 434g que combina ligereza y robustez a partes iguales. Disponibles en cuatro colores, negro, plata, dorado y morado, son el complemento perfecto para cualquier outfit. Descubre todos los modelos en temco.es",
+        "zh": "老板们，高颜值爆款耳机来啦！ 🎧 大量现货 TEMCO TSN03-N 全景立体声耳机到库。\n\n🎧 全景环绕音： 搭载高保真立体声技术，低失真、零干扰。全景音效让你仿佛置身音乐会现场，沉浸感瞬间拉满。\n\n🔋 40小时超长续航： 内置 400mAh 大容量电池，支持连续播放 40小时。出差、旅行告别电量焦虑，好音乐不断电。\n\n📶 远距离稳连接： 30米超长传输距离，信号稳定不掉线。支持 Jack 3.5mm 音频线连接，通话/音量调节一键触控。\n\n🎨 潮流四色： 黑色，银色，金色，紫色。磨砂质感配合极简设计，是耳机更是穿搭单品。\n\n⚖️ 轻量化佩戴： 整机轻巧结实，蛋白皮耳罩柔软透气，长久佩戴无压迫感。\n\n如果您在找一款音质稳定、外观吸睛、利润空间可观的数码配件，非它莫属！ 🤝"
+      },
+      "stats": {
+        "imageCount": 7,
+        "videoCount": 1,
+        "docCount": 2
+      }
+    },
+    {
+      "sku": "TSN03-P",
+      "name": "Cascos Inalámbricos",
+      "category": "耳机",
+      "mainImage": {
+        "url": "/api/products/image/1LfiswQ5yReoECOELiylf-AM4nIrdXTkP",
+        "downloadUrl": "/api/products/download/1LfiswQ5yReoECOELiylf-AM4nIrdXTkP",
+        "label": "主产品图"
+      },
+      "imageGroups": [
+        {
+          "title": "产品海报",
+          "groupKey": "image2",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/120Jyzw7TnY94YyoQ2zEn9JbcGE-nyAZ0",
+              "downloadUrl": "/api/products/download/120Jyzw7TnY94YyoQ2zEn9JbcGE-nyAZ0",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/14qrpQGYYB0KPNmJeWGrxIFmZjEWeq8Rx",
+              "downloadUrl": "/api/products/download/14qrpQGYYB0KPNmJeWGrxIFmZjEWeq8Rx",
+              "label": "中文版"
+            }
+          ]
+        },
+        {
+          "title": "颜色展示图",
+          "groupKey": "image3",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/1HWyOekCPQwKLLi77LXH5JmZRa8cHwBi9",
+              "downloadUrl": "/api/products/download/1HWyOekCPQwKLLi77LXH5JmZRa8cHwBi9",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/1xnP8kFIEl3IAnZYF13TucIoyJdBH8_M5",
+              "downloadUrl": "/api/products/download/1xnP8kFIEl3IAnZYF13TucIoyJdBH8_M5",
+              "label": "中文版"
+            }
+          ]
+        },
+        {
+          "title": "使用场景图",
+          "groupKey": "image4",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/1SAR4HhYbHgh2tEUUarh8BN9Rdeqq4_OR",
+              "downloadUrl": "/api/products/download/1SAR4HhYbHgh2tEUUarh8BN9Rdeqq4_OR",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/1YJrbibD8JD49F2eCJM5v-NHgEQaKcFN3",
+              "downloadUrl": "/api/products/download/1YJrbibD8JD49F2eCJM5v-NHgEQaKcFN3",
+              "label": "中文版"
+            }
+          ]
+        }
+      ],
+      "videos": [
+        {
+          "type": "ad",
+          "title": "广告视频",
+          "url": "https://drive.google.com/file/d/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9/view?usp=sharing",
+          "embedUrl": "https://drive.google.com/file/d/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9/preview",
+          "downloadUrl": "/api/products/download/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9"
+        }
+      ],
+      "descriptions": {
+        "es": "Presentamos los TEMCO TSN03-P, auriculares de alta fidelidad diseñados para ofrecerte una experiencia de sonido envolvente que elimina las interferencias externas y te sitúa en el centro de tu música o películas favoritas. Su tecnología estéreo avanzada garantiza una calidad de estudio sin distorsión, con un sonido panorámico 360° que transforma cada escucha en una experiencia inmersiva. Con una batería de 400mAh, ofrecen hasta 40 horas de reproducción continua sin necesidad de recargar, para que puedas disfrutar de tu música durante días sin interrupciones. Equipados con conectividad inalámbrica de largo alcance hasta 30 metros y entrada Jack 3.5mm, se adaptan a cualquier dispositivo con total versatilidad, e incluyen control integrado de volumen y llamadas para que no tengas que sacar el móvil en ningún momento. Sus almohadillas ultra suaves están diseñadas para largas sesiones de uso sin fatiga, con un peso de solo 434g que combina ligereza y robustez a partes iguales. Disponibles en cuatro colores, negro, plata, dorado y morado, son el complemento perfecto para cualquier outfit. Descubre todos los modelos en temco.es",
+        "zh": "老板们，高颜值爆款耳机来啦！ 🎧 大量现货 TEMCO TSN03-P 全景立体声耳机到库。\n\n🎧 全景环绕音： 搭载高保真立体声技术，低失真、零干扰。全景音效让你仿佛置身音乐会现场，沉浸感瞬间拉满。\n\n🔋 40小时超长续航： 内置 400mAh 大容量电池，支持连续播放 40小时。出差、旅行告别电量焦虑，好音乐不断电。\n\n📶 远距离稳连接： 30米超长传输距离，信号稳定不掉线。支持 Jack 3.5mm 音频线连接，通话/音量调节一键触控。\n\n🎨 潮流四色： 黑色，银色，金色，紫色。磨砂质感配合极简设计，是耳机更是穿搭单品。\n\n⚖️ 轻量化佩戴： 整机轻巧结实，蛋白皮耳罩柔软透气，长久佩戴无压迫感。\n\n如果您在找一款音质稳定、外观吸睛、利润空间可观的数码配件，非它莫属！ 🤝"
+      },
+      "stats": {
+        "imageCount": 7,
+        "videoCount": 1,
+        "docCount": 2
+      }
+    },
+    {
+      "sku": "TSN03-D",
+      "name": "Cascos Inalámbricos",
+      "category": "耳机",
+      "mainImage": {
+        "url": "/api/products/image/1NghTly0JcvCcxHMJWj-NrGy9fe11r7UP",
+        "downloadUrl": "/api/products/download/1NghTly0JcvCcxHMJWj-NrGy9fe11r7UP",
+        "label": "主产品图"
+      },
+      "imageGroups": [
+        {
+          "title": "产品海报",
+          "groupKey": "image2",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/120Jyzw7TnY94YyoQ2zEn9JbcGE-nyAZ0",
+              "downloadUrl": "/api/products/download/120Jyzw7TnY94YyoQ2zEn9JbcGE-nyAZ0",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/14qrpQGYYB0KPNmJeWGrxIFmZjEWeq8Rx",
+              "downloadUrl": "/api/products/download/14qrpQGYYB0KPNmJeWGrxIFmZjEWeq8Rx",
+              "label": "中文版"
+            }
+          ]
+        },
+        {
+          "title": "颜色展示图",
+          "groupKey": "image3",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/1HWyOekCPQwKLLi77LXH5JmZRa8cHwBi9",
+              "downloadUrl": "/api/products/download/1HWyOekCPQwKLLi77LXH5JmZRa8cHwBi9",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/1xnP8kFIEl3IAnZYF13TucIoyJdBH8_M5",
+              "downloadUrl": "/api/products/download/1xnP8kFIEl3IAnZYF13TucIoyJdBH8_M5",
+              "label": "中文版"
+            }
+          ]
+        },
+        {
+          "title": "使用场景图",
+          "groupKey": "image4",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/1SAR4HhYbHgh2tEUUarh8BN9Rdeqq4_OR",
+              "downloadUrl": "/api/products/download/1SAR4HhYbHgh2tEUUarh8BN9Rdeqq4_OR",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/1YJrbibD8JD49F2eCJM5v-NHgEQaKcFN3",
+              "downloadUrl": "/api/products/download/1YJrbibD8JD49F2eCJM5v-NHgEQaKcFN3",
+              "label": "中文版"
+            }
+          ]
+        }
+      ],
+      "videos": [
+        {
+          "type": "ad",
+          "title": "广告视频",
+          "url": "https://drive.google.com/file/d/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9/view?usp=sharing",
+          "embedUrl": "https://drive.google.com/file/d/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9/preview",
+          "downloadUrl": "/api/products/download/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9"
+        }
+      ],
+      "descriptions": {
+        "es": "Presentamos los TEMCO TSN03-D, auriculares de alta fidelidad diseñados para ofrecerte una experiencia de sonido envolvente que elimina las interferencias externas y te sitúa en el centro de tu música o películas favoritas. Su tecnología estéreo avanzada garantiza una calidad de estudio sin distorsión, con un sonido panorámico 360° que transforma cada escucha en una experiencia inmersiva. Con una batería de 400mAh, ofrecen hasta 40 horas de reproducción continua sin necesidad de recargar, para que puedas disfrutar de tu música durante días sin interrupciones. Equipados con conectividad inalámbrica de largo alcance hasta 30 metros y entrada Jack 3.5mm, se adaptan a cualquier dispositivo con total versatilidad, e incluyen control integrado de volumen y llamadas para que no tengas que sacar el móvil en ningún momento. Sus almohadillas ultra suaves están diseñadas para largas sesiones de uso sin fatiga, con un peso de solo 434g que combina ligereza y robustez a partes iguales. Disponibles en cuatro colores, negro, plata, dorado y morado, son el complemento perfecto para cualquier outfit. Descubre todos los modelos en temco.es",
+        "zh": "老板们，高颜值爆款耳机来啦！ 🎧 大量现货 TEMCO TSN03-D 全景立体声耳机到库。\n\n🎧 全景环绕音： 搭载高保真立体声技术，低失真、零干扰。全景音效让你仿佛置身音乐会现场，沉浸感瞬间拉满。\n\n🔋 40小时超长续航： 内置 400mAh 大容量电池，支持连续播放 40小时。出差、旅行告别电量焦虑，好音乐不断电。\n\n📶 远距离稳连接： 30米超长传输距离，信号稳定不掉线。支持 Jack 3.5mm 音频线连接，通话/音量调节一键触控。\n\n🎨 潮流四色： 黑色，银色，金色，紫色。磨砂质感配合极简设计，是耳机更是穿搭单品。\n\n⚖️ 轻量化佩戴： 整机轻巧结实，蛋白皮耳罩柔软透气，长久佩戴无压迫感。\n\n如果您在找一款音质稳定、外观吸睛、利润空间可观的数码配件，非它莫属！ 🤝"
+      },
+      "stats": {
+        "imageCount": 7,
+        "videoCount": 1,
+        "docCount": 2
+      }
+    },
+    {
+      "sku": "TSN03-L",
+      "name": "Cascos Inalámbricos",
+      "category": "耳机",
+      "mainImage": {
+        "url": "/api/products/image/1elUNmIWYVJRabDqMZrgDdaUDlUB572MQ",
+        "downloadUrl": "/api/products/download/1elUNmIWYVJRabDqMZrgDdaUDlUB572MQ",
+        "label": "主产品图"
+      },
+      "imageGroups": [
+        {
+          "title": "产品海报",
+          "groupKey": "image2",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/120Jyzw7TnY94YyoQ2zEn9JbcGE-nyAZ0",
+              "downloadUrl": "/api/products/download/120Jyzw7TnY94YyoQ2zEn9JbcGE-nyAZ0",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/14qrpQGYYB0KPNmJeWGrxIFmZjEWeq8Rx",
+              "downloadUrl": "/api/products/download/14qrpQGYYB0KPNmJeWGrxIFmZjEWeq8Rx",
+              "label": "中文版"
+            }
+          ]
+        },
+        {
+          "title": "颜色展示图",
+          "groupKey": "image3",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/1HWyOekCPQwKLLi77LXH5JmZRa8cHwBi9",
+              "downloadUrl": "/api/products/download/1HWyOekCPQwKLLi77LXH5JmZRa8cHwBi9",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/1xnP8kFIEl3IAnZYF13TucIoyJdBH8_M5",
+              "downloadUrl": "/api/products/download/1xnP8kFIEl3IAnZYF13TucIoyJdBH8_M5",
+              "label": "中文版"
+            }
+          ]
+        },
+        {
+          "title": "使用场景图",
+          "groupKey": "image4",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/1SAR4HhYbHgh2tEUUarh8BN9Rdeqq4_OR",
+              "downloadUrl": "/api/products/download/1SAR4HhYbHgh2tEUUarh8BN9Rdeqq4_OR",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/1YJrbibD8JD49F2eCJM5v-NHgEQaKcFN3",
+              "downloadUrl": "/api/products/download/1YJrbibD8JD49F2eCJM5v-NHgEQaKcFN3",
+              "label": "中文版"
+            }
+          ]
+        }
+      ],
+      "videos": [
+        {
+          "type": "ad",
+          "title": "广告视频",
+          "url": "https://drive.google.com/file/d/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9/view?usp=sharing",
+          "embedUrl": "https://drive.google.com/file/d/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9/preview",
+          "downloadUrl": "/api/products/download/15aJVrRxjKFc-1Of9C8h00Ui1pjae76X9"
+        }
+      ],
+      "descriptions": {
+        "es": "Presentamos los TEMCO TSN03-L, auriculares de alta fidelidad diseñados para ofrecerte una experiencia de sonido envolvente que elimina las interferencias externas y te sitúa en el centro de tu música o películas favoritas. Su tecnología estéreo avanzada garantiza una calidad de estudio sin distorsión, con un sonido panorámico 360° que transforma cada escucha en una experiencia inmersiva. Con una batería de 400mAh, ofrecen hasta 40 horas de reproducción continua sin necesidad de recargar, para que puedas disfrutar de tu música durante días sin interrupciones. Equipados con conectividad inalámbrica de largo alcance hasta 30 metros y entrada Jack 3.5mm, se adaptan a cualquier dispositivo con total versatilidad, e incluyen control integrado de volumen y llamadas para que no tengas que sacar el móvil en ningún momento. Sus almohadillas ultra suaves están diseñadas para largas sesiones de uso sin fatiga, con un peso de solo 434g que combina ligereza y robustez a partes iguales. Disponibles en cuatro colores, negro, plata, dorado y morado, son el complemento perfecto para cualquier outfit. Descubre todos los modelos en temco.es",
+        "zh": "老板们，高颜值爆款耳机来啦！ 🎧 大量现货 TEMCO TSN03-L 全景立体声耳机到库。\n\n🎧 全景环绕音： 搭载高保真立体声技术，低失真、零干扰。全景音效让你仿佛置身音乐会现场，沉浸感瞬间拉满。\n\n🔋 40小时超长续航： 内置 400mAh 大容量电池，支持连续播放 40小时。出差、旅行告别电量焦虑，好音乐不断电。\n\n📶 远距离稳连接： 30米超长传输距离，信号稳定不掉线。支持 Jack 3.5mm 音频线连接，通话/音量调节一键触控。\n\n🎨 潮流四色： 黑色，银色，金色，紫色。磨砂质感配合极简设计，是耳机更是穿搭单品。\n\n⚖️ 轻量化佩戴： 整机轻巧结实，蛋白皮耳罩柔软透气，长久佩戴无压迫感。\n\n如果您在找一款音质稳定、外观吸睛、利润空间可观的数码配件，非它莫属！ 🤝"
+      },
+      "stats": {
+        "imageCount": 7,
+        "videoCount": 1,
+        "docCount": 2
+      }
+    },
+    {
+      "sku": "LY01",
+      "name": "Soporte Universal Móvil Bicicleta Negro",
+      "category": "手机支架",
+      "mainImage": {
+        "url": "/api/products/image/1kAs0VByjU3Z4yPhnqUaPBGwxCOGupXGj",
+        "downloadUrl": "/api/products/download/1kAs0VByjU3Z4yPhnqUaPBGwxCOGupXGj",
+        "label": "主产品图"
+      },
+      "imageGroups": [
+        {
+          "title": "产品海报",
+          "groupKey": "image2",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/1C31uYSS0fV30CZQvkr9E-wlfZp8ItRN6",
+              "downloadUrl": "/api/products/download/1C31uYSS0fV30CZQvkr9E-wlfZp8ItRN6",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/1Ux4woUSUkF74hHdG5d_XKl4REI3MCH7O",
+              "downloadUrl": "/api/products/download/1Ux4woUSUkF74hHdG5d_XKl4REI3MCH7O",
+              "label": "中文版"
+            }
+          ]
+        },
+        {
+          "title": "颜色展示图",
+          "groupKey": "image3",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/1eK-b7rPbuG-7uYrp5eT4yuGJiS3muWXA",
+              "downloadUrl": "/api/products/download/1eK-b7rPbuG-7uYrp5eT4yuGJiS3muWXA",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/1NAd-9ZrTfX-EcYn0nmRCLNE4xupI64eB",
+              "downloadUrl": "/api/products/download/1NAd-9ZrTfX-EcYn0nmRCLNE4xupI64eB",
+              "label": "中文版"
+            }
+          ]
+        },
+        {
+          "title": "使用场景图",
+          "groupKey": "image4",
+          "items": [
+            {
+              "lang": "es",
+              "url": "/api/products/image/1Hnts2Ln69Eq7QNd8VUoafV7Un6vIfJWW",
+              "downloadUrl": "/api/products/download/1Hnts2Ln69Eq7QNd8VUoafV7Un6vIfJWW",
+              "label": "西语版"
+            },
+            {
+              "lang": "zh",
+              "url": "/api/products/image/1KXq9BaIEqHzeI9SNz3fx4r8ZmTvyjE6n",
+              "downloadUrl": "/api/products/download/1KXq9BaIEqHzeI9SNz3fx4r8ZmTvyjE6n",
+              "label": "中文版"
+            }
+          ]
+        }
+      ],
+      "videos": [
+        {
+          "type": "ad",
+          "title": "广告视频",
+          "url": "https://drive.google.com/file/d/10W0OkXCG91wH38Ft-ppW-S5e382KW9sS/view?usp=drive_link",
+          "embedUrl": "https://drive.google.com/file/d/10W0OkXCG91wH38Ft-ppW-S5e382KW9sS/preview",
+          "downloadUrl": "/api/products/download/10W0OkXCG91wH38Ft-ppW-S5e382KW9sS"
+        }
+      ],
+      "descriptions": {
+        "es": "Presentamos el TEMCO LY01, el soporte para smartphone diseñado para que puedas consultar tu ruta sin soltar el manillar. Su recubrimiento de silicona antideslizante absorbe las vibraciones del camino y protege los bordes de tu teléfono de cualquier micro-arañazo. Con una rotación de 360°, puedes alternar entre modo horizontal y vertical en un segundo, ideal para cambiar entre mapas y navegación según lo necesites. Compatible con smartphones de hasta 6 pulgadas, su sistema de cierre aprovecha cada milímetro para mantener tu teléfono firmemente sujeto en todo momento. Con solo 153g, se instala en cualquier manillar sin añadir peso innecesario, ofreciendo la resistencia de un accesorio de alta gama. Simplemente fija el soporte en el manillar, desliza tu teléfono hasta escuchar el clic de seguridad y ajusta el ángulo que necesites. Su tamaño compacto se adapta tanto a bicicletas como a patinetes y se puede retirar fácilmente cuando no está en uso. Disponible en temco.es",
+        "zh": "老板们，夏季骑行季来啦！🚴‍♂️ 大量现货 TEMCO LY01 手机支架到库。\n🛡️ Protección Total: 独特的硅胶包裹，不仅防震，更承诺绝对不刮伤手机。\n🔄 Rotación 360°: 万向球阻尼感极佳，横竖屏秒切，高端感拉满。\n🛠️ Instalación en 30s: 客户自己就能装，无需占用你额外的店面服务时间。\n如果您在找一款品质稳定、利润空间可观的配件，非它莫属。🤝"
+      },
+      "stats": {
+        "imageCount": 7,
+        "videoCount": 1,
+        "docCount": 2
+      }
+    }
+  ]
+}
