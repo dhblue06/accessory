@@ -2155,45 +2155,44 @@ input,textarea,select{font-family:inherit}
   </div>
 </div>
 
-<!-- MEMBER PAGE -->
-<div id="member-page" class="page">
-  <div style="max-width:480px;margin:40px auto;padding:0 20px">
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px">
-      <div style="text-align:center;margin-bottom:24px">
-        <div id="member-avatar" style="width:72px;height:72px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;margin:0 auto 12px">U</div>
-        <h2 style="font-size:18px;font-weight:600" id="member-name-display">用户</h2>
-        <p style="color:var(--text3);font-size:13px" id="member-email-display">user@example.com</p>
-      </div>
-      <form id="member-form" onsubmit="event.preventDefault();saveMember()">
-        <div class="form-group">
-          <label class="form-label">姓名</label>
-          <input id="mem-name" class="form-input" type="text">
-        </div>
-        <div class="form-group">
-          <label class="form-label">电话</label>
-          <input id="mem-phone" class="form-input" type="tel">
-        </div>
-        <div class="form-group">
-          <label class="form-label">商店 / 公司</label>
-          <input id="mem-store" class="form-input" type="text">
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%">保存修改</button>
-      </form>
-      <hr style="border:none;border-top:1px solid var(--border);margin:24px 0">
-      <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">修改密码</h3>
-      <form id="password-form" onsubmit="event.preventDefault();changePassword()">
-        <div class="form-group">
-          <label class="form-label">当前密码</label>
-          <input id="mem-cur-pwd" class="form-input" type="password">
-        </div>
-        <div class="form-group">
-          <label class="form-label">新密码</label>
-          <input id="mem-new-pwd" class="form-input" type="password" placeholder="至少6位">
-        </div>
-        <button type="submit" class="btn btn-secondary" style="width:100%">修改密码</button>
-      </form>
-      <div id="member-msg" style="margin-top:12px;font-size:13px;text-align:center;display:none"></div>
+<!-- MEMBER PAGE (modal overlay) -->
+<div id="member-page" class="login-wrap" style="display:none" onclick="if(event.target===this)closeMember()">
+  <div class="login-card" style="text-align:center;position:relative;width:420px;max-width:90vw">
+    <button onclick="closeMember()" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:20px;color:var(--text3);cursor:pointer;line-height:1">&times;</button>
+    <div style="margin-bottom:16px">
+      <div id="member-avatar" style="width:64px;height:64px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;margin:0 auto 8px">U</div>
+      <h2 style="font-size:17px;font-weight:600" id="member-name-display">用户</h2>
+      <p style="color:var(--text3);font-size:12px" id="member-email-display">user@example.com</p>
     </div>
+    <form id="member-form" onsubmit="event.preventDefault();saveMember()">
+      <div class="form-group" style="text-align:left">
+        <label class="form-label">姓名</label>
+        <input id="mem-name" class="form-input" type="text">
+      </div>
+      <div class="form-group" style="text-align:left">
+        <label class="form-label">电话</label>
+        <input id="mem-phone" class="form-input" type="tel">
+      </div>
+      <div class="form-group" style="text-align:left">
+        <label class="form-label">商店 / 公司</label>
+        <input id="mem-store" class="form-input" type="text">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">保存修改</button>
+    </form>
+    <hr style="border:none;border-top:1px solid var(--border);margin:20px 0">
+    <h3 style="font-size:13px;font-weight:600;margin-bottom:12px;text-align:left">修改密码</h3>
+    <form id="password-form" onsubmit="event.preventDefault();changePassword()">
+      <div class="form-group" style="text-align:left">
+        <label class="form-label">当前密码</label>
+        <input id="mem-cur-pwd" class="form-input" type="password">
+      </div>
+      <div class="form-group" style="text-align:left">
+        <label class="form-label">新密码</label>
+        <input id="mem-new-pwd" class="form-input" type="password" placeholder="至少6位">
+      </div>
+      <button type="submit" class="btn btn-secondary" style="width:100%">修改密码</button>
+    </form>
+    <div id="member-msg" style="margin-top:12px;font-size:13px;text-align:center;display:none"></div>
   </div>
 </div>
 
@@ -2717,9 +2716,13 @@ async function showAdmin() {
   updateAuthUI();
 }
 
+function closeMember() {
+  document.getElementById('member-page').style.display = 'none';
+}
+
 async function showMember() {
   closeLogin();
-  document.getElementById('main-nav').style.display = 'block';
+  document.getElementById('member-page').style.display = 'flex';
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('member-page').classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
