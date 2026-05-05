@@ -1991,6 +1991,9 @@ input,textarea,select{font-family:inherit}
             <button class="btn btn-secondary" onclick="switchPanel('film-mgmt',document.querySelector('[data-panel=film-mgmt]'))" data-i18n="admin_film_mgmt">管理膜数据</button>
             <button class="btn btn-secondary" onclick="switchPanel('users-mgmt',document.querySelector('[data-panel=users-mgmt]'))" data-i18n="admin_users_mgmt">管理用户</button>
             <button id="sync-products-btn" class="btn btn-primary" onclick="syncProducts()" data-i18n="admin_sync_products">同步产品素材</button>
+            <button class="btn btn-primary" onclick="syncAmazon()" style="background:var(--accent-2)">同步 Amazon 数据</button>
+            <button class="btn btn-primary" onclick="syncFilm()" style="background:var(--accent-2)">同步膜数据</button>
+            <button class="btn btn-secondary" onclick="syncAll()">同步全部数据</button>
           </div>
         </div>
         <!-- Film Search Stats -->
@@ -2142,6 +2145,50 @@ input,textarea,select{font-family:inherit}
   </div>
 </div>
 
+<!-- MEMBER PAGE -->
+<div id="member-page" class="page">
+  <div style="max-width:700px;margin:40px auto;padding:0 20px">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px">
+      <div style="width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600" id="member-avatar">U</div>
+      <div>
+        <h2 style="font-size:20px;margin-bottom:4px" id="member-name">用户</h2>
+        <p style="color:var(--text3);font-size:13px" id="member-email">user@example.com</p>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px">
+      <h3 style="font-size:15px;margin-bottom:16px">📊 数据概览</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px">
+        <div style="background:var(--surface2);border-radius:var(--radius);padding:16px;text-align:center">
+          <div style="font-size:24px;font-weight:700;color:var(--accent)" id="mem-ipad-count">-</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">iPad 型号</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius);padding:16px;text-align:center">
+          <div style="font-size:24px;font-weight:700;color:var(--accent)" id="mem-watch-count">-</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">Watch 型号</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius);padding:16px;text-align:center">
+          <div style="font-size:24px;font-weight:700;color:var(--accent)" id="mem-film-count">-</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">膜型号</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius);padding:16px;text-align:center">
+          <div style="font-size:24px;font-weight:700;color:var(--accent)" id="mem-product-count">-</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">产品素材</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px">
+      <h3 style="font-size:15px;margin-bottom:12px">🔗 快捷导航</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">
+        <a href="#" onclick="switchPage('ipad');return false" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text)">iPad 兼容性</a>
+        <a href="#" onclick="switchPage('watch');return false" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text)">Watch 兼容性</a>
+        <a href="#" onclick="switchPage('film');return false" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text)">钢化膜查询</a>
+        <a href="#" onclick="switchPage('amazon');return false" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text)">Amazon 榜单</a>
+        <a href="#" onclick="switchPage('products');return false" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;color:var(--text)">产品素材库</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -2153,34 +2200,47 @@ input,textarea,select{font-family:inherit}
     <div class="login-logo">
       <div class="login-logo-icon">AG</div>
       <h1 data-i18n="login_title">TEMCO ACCESORIOS</h1>
-      <p data-i18n="login_admin">后台管理</p>
+    </div>
+    <div style="display:flex;gap:0;margin-bottom:20px;border-bottom:1px solid var(--border)">
+      <button id="login-tab-btn" class="btn" style="flex:1;border:none;background:none;padding:8px 0;font-size:14px;font-weight:600;color:var(--accent);border-bottom:2px solid var(--accent);border-radius:0" onclick="switchAuthTab('login')">登录</button>
+      <button id="register-tab-btn" class="btn" style="flex:1;border:none;background:none;padding:8px 0;font-size:14px;color:var(--text3);border-bottom:2px solid transparent;border-radius:0" onclick="switchAuthTab('register')">注册</button>
     </div>
     <div id="login-error" class="error-msg" style="display:none"></div>
-    <div id="login-loading" style="display:none;margin-bottom:16px;color:var(--text3)">正在检查登录状态...</div>
-    <div id="login-unconfigured" style="display:none;padding:16px;background:var(--surface);border:1px solid #eab308;border-radius:8px;margin-bottom:16px;text-align:left">
-      <p style="font-size:13px;color:#eab308;font-weight:600;margin-bottom:8px">⚠️ Logto 未配置</p>
-      <p style="font-size:12px;color:var(--text3);line-height:1.5">
-        请在 <code style="background:var(--border);padding:2px 6px;border-radius:4px;font-size:11px">.env</code> 中设置以下环境变量：<br>
-        <code style="display:block;background:var(--border);padding:6px 8px;border-radius:4px;font-size:11px;margin:6px 0;word-break:break-all">
-LOGTO_APP_ID=&lt;your-app-id&gt;<br>
-LOGTO_APP_SECRET=&lt;your-app-secret&gt;<br>
-LOGTO_ENDPOINT=&lt;your-logto-endpoint&gt;
-        </code>
-        然后在 Logto Console 中配置回调 URI：
-        <code style="background:var(--border);padding:2px 6px;border-radius:4px;font-size:11px">/logto/sign-in-callback</code>
-      </p>
-    </div>
-    <button id="logto-login-btn" class="btn btn-primary" style="width:100%;padding:12px;font-size:15px" onclick="window.location.href='/logto/sign-in'">
-      使用 Logto 登录
-    </button>
-    <p style="margin-top:16px;font-size:13px;color:var(--text3)">通过 Logto 身份认证系统登录后台</p>
+    <!-- Login Form -->
+    <form id="login-form" onsubmit="event.preventDefault();doLogin()">
+      <div class="form-group">
+        <label class="form-label">邮箱</label>
+        <input id="login-email" class="form-input" type="email" placeholder="admin@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="login_password">密码</label>
+        <input id="login-password" class="form-input" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%" data-i18n="login_btn">登录</button>
+    </form>
+    <!-- Register Form -->
+    <form id="register-form" style="display:none" onsubmit="event.preventDefault();doRegister()">
+      <div class="form-group">
+        <label class="form-label">姓名</label>
+        <input id="reg-name" class="form-input" type="text" placeholder="Your Name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">邮箱</label>
+        <input id="reg-email" class="form-input" type="email" placeholder="admin@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">密码</label>
+        <input id="reg-password" class="form-input" type="password" placeholder="至少6位">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">注册</button>
+    </form>
   </div>
 </div>
 
 <script>
 // ============ STATE ============
 let token = localStorage.getItem('ag_token') || '';
-let loggedIn = false;
+let loggedIn = !!token;
 let currentPage = 'film';
 let filmType = 'fg';
 let filmBrand = '';
@@ -2538,17 +2598,22 @@ function applyTranslations() {
   if (statEls[5]) statEls[5].textContent = t('stat_users');
 }
 
-// ============ CLERK MEMBERSHIP ============
 // ============ INIT ============
 async function init() {
   applyTheme();
 
-  if (window.location.hash === '#admin') {
-    try {
-      const r = await fetch('/api/auth/me');
-      if (r.ok) { loggedIn = true; showAdmin(); }
-      else { showLogin(); }
-    } catch { showLogin(); }
+  if (window.location.hash === '#admin' || window.location.hash === '#member') {
+    const token = localStorage.getItem('ag_token');
+    const role = localStorage.getItem('ag_role');
+    if (token && role === 'admin') { loggedIn = true; showAdmin(); }
+    else if (token && role === 'member') { loggedIn = true; showMember(); }
+    else if (token) {
+      try {
+        const r = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer '+token } });
+        if (r.ok) { const d = await r.json(); if (d.user) { localStorage.setItem('ag_role', d.user.role); loggedIn = true; d.user.role === 'admin' ? showAdmin() : showMember(); } else showLogin(); }
+        else { localStorage.removeItem('ag_token'); showLogin(); }
+      } catch { showLogin(); }
+    } else { showLogin(); }
   } else {
     showFront();
     loadFilm();
@@ -2592,11 +2657,6 @@ function showLogin() {
   document.getElementById('login-page').style.display = 'flex';
   document.getElementById('main-nav').style.display = 'none';
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  // Check Logto config status
-  fetch('/api/auth/status').then(r => r.json()).then(s => {
-    document.getElementById('logto-login-btn').style.display = s.logtoConfigured ? 'block' : 'none';
-    document.getElementById('login-unconfigured').style.display = s.logtoConfigured ? 'none' : 'block';
-  }).catch(() => {});
 }
 
 async function showAdmin() {
@@ -2606,17 +2666,66 @@ async function showAdmin() {
   document.getElementById('admin-page').classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   window.location.hash = '#admin';
-  await loadTranslations(); // Ensure translations are loaded before rendering admin
+  await loadTranslations();
   applyTranslations();
   loadAdminDashboard();
   updateAuthUI();
 }
 
+async function showMember() {
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('main-nav').style.display = 'block';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('member-page').classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  window.location.hash = '#member';
+  // Load member data
+  const me = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') } }).then(r => r.json());
+  if (me.user) {
+    document.getElementById('member-name').textContent = me.user.name || me.user.email;
+    document.getElementById('member-email').textContent = me.user.email;
+    document.getElementById('member-avatar').textContent = (me.user.name || me.user.email || 'U')[0].toUpperCase();
+  }
+  // Load stats
+  try {
+    const stats = await fetch('/api/admin/stats', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') } }).then(r => r.json());
+    document.getElementById('mem-ipad-count').textContent = stats.ipadCount || 0;
+    document.getElementById('mem-watch-count').textContent = stats.watchCount || 0;
+    document.getElementById('mem-film-count').textContent = stats.fgCount || 0;
+    document.getElementById('mem-product-count').textContent = stats.productCount || 0;
+  } catch {}
+  updateAuthUI();
+}
+
 function goAdmin() {
-  fetch('/api/auth/me').then(r => {
-    if (r.ok) { r.json().then(d => { if (d.user) { loggedIn = true; showAdmin(); } else { showLogin(); } }); }
-    else { showLogin(); }
-  }).catch(() => showLogin());
+  const token = localStorage.getItem('ag_token');
+  const role = localStorage.getItem('ag_role');
+  if (token && role) {
+    if (role === 'admin') showAdmin();
+    else showMember();
+  } else if (token) {
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer '+token } }).then(r => {
+      if (r.ok) { r.json().then(d => {
+        if (d.user) {
+          localStorage.setItem('ag_role', d.user.role);
+          loggedIn = true;
+          if (d.user.role === 'admin') showAdmin();
+          else showMember();
+        } else { showLogin(); }
+      }); }
+      else { showLogin(); }
+    }).catch(() => showLogin());
+  } else { showLogin(); }
+}
+
+function goAdmin() {
+  const token = localStorage.getItem('ag_token');
+  if (token) {
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer '+token } }).then(r => {
+      if (r.ok) { r.json().then(d => { if (d.user) { loggedIn = true; showAdmin(); } else { showLogin(); } }); }
+      else { showLogin(); }
+    }).catch(() => showLogin());
+  } else { showLogin(); }
 }
 
 function switchPage(page, load=true) {
@@ -2636,41 +2745,116 @@ function switchPage(page, load=true) {
 }
 
 function updateAuthUI() {
+  const loggedIn = !!localStorage.getItem('ag_token');
   document.getElementById('logout-btn').style.display = loggedIn ? 'inline-flex' : 'none';
   document.getElementById('admin-btn').style.display = 'inline-flex';
-  document.getElementById('admin-btn').textContent = loggedIn ? '后台管理' : '管理员登录';
+  const role = localStorage.getItem('ag_role') || '';
+  document.getElementById('admin-btn').textContent = loggedIn ? (role === 'admin' ? '后台管理' : '会员中心') : '管理员登录';
   document.querySelectorAll('.member-only').forEach(el => {
     el.style.display = loggedIn ? 'inline-flex' : 'none';
   });
 }
 
 async function checkAuth() {
+  const token = localStorage.getItem('ag_token');
+  if (!token) { loggedIn = false; return false; }
   try {
-    const r = await fetch('/api/auth/me');
-    if (r.ok) {
-      const data = await r.json();
-      loggedIn = !!data.user;
-      return true;
-    }
+    const r = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+    if (r.ok) { const d = await r.json(); loggedIn = !!d.user; if (d.user) localStorage.setItem('ag_role', d.user.role); return loggedIn; }
   } catch {}
   loggedIn = false;
   return false;
 }
 
 // ============ AUTH ============
-function doLogin() {
-  window.location.href = '/logto/sign-in';
+const SUPABASE_URL = 'https://tgxabfhwcggkqfqhhlde.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_nEbL17lus2weRuSiynNrmA_xk_c4Z2B';
+
+function switchAuthTab(tab) {
+  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+  const loginBtn = document.getElementById('login-tab-btn');
+  const regBtn = document.getElementById('register-tab-btn');
+  loginBtn.style.color = tab === 'login' ? 'var(--accent)' : 'var(--text3)';
+  loginBtn.style.borderBottom = tab === 'login' ? '2px solid var(--accent)' : '2px solid transparent';
+  regBtn.style.color = tab === 'register' ? 'var(--accent)' : 'var(--text3)';
+  regBtn.style.borderBottom = tab === 'register' ? '2px solid var(--accent)' : '2px solid transparent';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+async function doRegister() {
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const name = document.getElementById('reg-name').value.trim();
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  if (!email || !password || !name) { errEl.textContent = '请填写所有字段'; errEl.style.display = 'block'; return; }
+  if (password.length < 6) { errEl.textContent = '密码至少6位'; errEl.style.display = 'block'; return; }
+  try {
+    const r = await fetch(SUPABASE_URL + '/auth/v1/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ email, password, data: { full_name: name } })
+    });
+    const data = await r.json();
+    if (!r.ok) { errEl.textContent = data.msg || data.error_description || '注册失败'; errEl.style.display = 'block'; return; }
+    if (data.access_token) {
+      localStorage.setItem('ag_token', data.access_token);
+      localStorage.setItem('ag_refresh_token', data.refresh_token);
+      // Check role
+      const me = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + data.access_token } }).then(r => r.json());
+      localStorage.setItem('ag_role', me.user?.role || 'member');
+      loggedIn = true;
+      if (me.user?.role === 'admin') showAdmin();
+      else showMember();
+    } else {
+      errEl.textContent = '注册成功！请查看邮箱确认。';
+      errEl.style.color = 'var(--accent)';
+      errEl.style.display = 'block';
+    }
+  } catch { errEl.textContent = '网络错误，请重试'; errEl.style.display = 'block'; }
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  try {
+    const r = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await r.json();
+    if (!r.ok) { errEl.textContent = data.msg || data.error_description || '登录失败'; errEl.style.display = 'block'; return; }
+    localStorage.setItem('ag_token', data.access_token);
+    localStorage.setItem('ag_refresh_token', data.refresh_token);
+    // Fetch role and navigate
+    const me = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + data.access_token } }).then(r => r.json());
+    localStorage.setItem('ag_role', me.user?.role || 'member');
+    loggedIn = true;
+    if (me.user?.role === 'admin') showAdmin();
+    else showMember();
+  } catch { errEl.textContent = '网络错误，请重试'; errEl.style.display = 'block'; }
 }
 
 function doLogout() {
-  window.location.href = '/logto/sign-out';
+  localStorage.removeItem('ag_token');
+  localStorage.removeItem('ag_refresh_token');
+  loggedIn = false;
+  showFront();
+  toast('已退出登录', 'info');
 }
+
+document.getElementById('login-password').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
 // ============ API HELPERS ============
 async function api(url, opts={}) {
-  const headers = { 'Content-Type': 'application/json' };
-  const r = await fetch(url, { ...opts, headers: { ...headers, ...(opts.headers||{}) }, credentials: 'include' });
-  if (r.status === 401) { loggedIn = false; showLogin(); throw new Error('Unauthorized'); }
+  const token = localStorage.getItem('ag_token');
+  const headers = { 'Content-Type': 'application/json', ...(token ? { 'Authorization': 'Bearer '+token } : {}) };
+  const r = await fetch(url, { ...opts, headers: { ...headers, ...(opts.headers||{}) } });
+  if (r.status === 401) { localStorage.removeItem('ag_token'); loggedIn = false; showLogin(); throw new Error('Unauthorized'); }
   return r.json();
 }
 
@@ -3107,10 +3291,41 @@ async function loadAdminDashboard() {
 async function syncProducts() {
   const btn = document.getElementById('sync-products-btn');
   const originalText = btn ? btn.textContent : '';
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = t('admin_syncing_products');
-  }
+  if (btn) { btn.disabled = true; btn.textContent = '同步中...'; }
+  try {
+    const result = await api('/api/admin/products/refresh', { method: 'POST' });
+    allProducts = [];
+    toast('产品素材同步成功，共 ' + (result.count || 0) + ' 个', 'success');
+    if (currentPage === 'products') loadProductsPage();
+    if (currentPage === 'product-detail' && currentProduct) openProductDetail(currentProduct.sku);
+  } catch (err) {
+    toast('同步失败: ' + err.message, 'error');
+  } finally { if (btn) { btn.disabled = false; btn.textContent = originalText; } }
+}
+
+async function syncAmazon() {
+  try {
+    await api('/api/admin/sync/amazon', { method: 'GET' });
+    toast('Amazon 数据同步成功', 'success');
+    if (currentPage === 'amazon') fetchAmazonData();
+  } catch (err) { toast('Amazon 同步失败: ' + err.message, 'error'); }
+}
+
+async function syncFilm() {
+  try {
+    await api('/api/admin/sync/film', { method: 'GET' });
+    toast('膜数据同步成功', 'success');
+  } catch (err) { toast('膜数据同步失败: ' + err.message, 'error'); }
+}
+
+async function syncAll() {
+  try {
+    await api('/api/admin/sync/all', { method: 'GET' });
+    toast('全部数据同步成功', 'success');
+    if (currentPage === 'amazon') fetchAmazonData();
+    if (currentPage === 'products') loadProductsPage();
+  } catch (err) { toast('同步失败: ' + err.message, 'error'); }
+}
   try {
     const result = await api('/api/admin/products/refresh', { method: 'POST' });
     allProducts = [];
@@ -3272,7 +3487,7 @@ async function saveSettings() {
   if (logoInput.files && logoInput.files[0]) {
     const formData = new FormData();
     formData.append('logo', logoInput.files[0]);
-    const uploadRes = await fetch('/api/admin/logo', { method: 'POST', credentials: 'include', body: formData });
+    const uploadRes = await fetch('/api/admin/logo', { method: 'POST', headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') }, body: formData });
     if (!uploadRes.ok) { toast('Logo 上传失败', 'error'); return; }
   }
   const body = { siteName: document.getElementById('set-sitename').value, version: document.getElementById('set-version').value, note: document.getElementById('set-note').value };
@@ -3729,43 +3944,20 @@ async function saveAmazonCatTranslations() {
 async function fetchAmazonData() {
   const el = document.getElementById('amazon-results');
   el.innerHTML = '<div class="amazon-loading"><div class="amazon-loading-spinner"></div><div id="amazon-loading-text">正在加载...</div></div>';
-  // Update loading text with translation
   const loadingTextEl = document.getElementById('amazon-loading-text');
   if (loadingTextEl) loadingTextEl.textContent = t('loading_data') || '正在加载...';
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${AMAZON_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(AMAZON_SHEET_NAME)}`;
-    const res = await fetch(url);
-    const text = await res.text();
-    const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)?.[1];
-    if (!jsonStr) throw new Error('数据格式错误');
-    const json = JSON.parse(jsonStr);
-    const rows = json.table?.rows || [];
-
-    // Extract latest update date (skip header row which has "Updated At" as value)
-    let latestDate = '';
-    rows.forEach(row => {
-      const c = row.c || [];
-      const updatedAt = c[9]?.v || '';
-      // Skip header row and invalid dates
-      if (updatedAt && updatedAt !== 'Updated At' && updatedAt.match(/^\d{4}-\d{2}-\d{2}/) && updatedAt > latestDate) {
-        latestDate = updatedAt;
-      }
-    });
-
+    const res = await fetch('/api/amazon');
+    const json = await res.json();
+    const rows = json.data || [];
+    amazonAllData = rows;
     // Display update date
     const updatedEl = document.getElementById('amazon-updated');
-    if (updatedEl && latestDate) {
-      const dateParts = latestDate.split(' ')[0]; // Get YYYY-MM-DD
-      updatedEl.dataset.date = dateParts; // Store for language switch
+    if (updatedEl && json.latestDate) {
+      updatedEl.dataset.date = json.latestDate;
       const label = t('amazon_updated') || 'Datos actualizados:';
-      updatedEl.textContent = label + ' ' + dateParts;
+      updatedEl.textContent = label + ' ' + json.latestDate;
     }
-
-    amazonAllData = rows.map(row => {
-      const c = row.c || [];
-      const rawCat = c[0]?.v || '';
-      return { category: translateCategory(rawCat), categoryRaw: rawCat, type: c[1]?.v||'', rank: parseInt(c[2]?.v)||0, title: c[3]?.v||'', price: c[4]?.v||'', rating: c[5]?.v||'', reviews: c[6]?.v||'', imageUrl: c[7]?.v||'', productUrl: c[8]?.v||'' };
-    }).filter(r => r.title && r.title !== 'Title');
     renderAmazonCategoryFilters();
     renderAmazonData();
   } catch(e) {

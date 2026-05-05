@@ -9,39 +9,44 @@ const axios = require('axios');
 const XLSX = require('xlsx');
 const multer = require('multer');
 const { Pool } = require('pg');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const { handleAuthRoutes, withLogto } = require('@logto/express');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DEFAULT_SETTINGS = { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' };
 let pool;
 let bundledDBCache;
+let dbConnectPromise = null;
 
 // PostgreSQL connection
 const PG_CONNECTION_STRING = process.env.DATABASE_URL || process.env.SUPABASE_URL;
 
 async function connectDB() {
   if (pool) return pool;
+  if (dbConnectPromise) return dbConnectPromise;
   if (!PG_CONNECTION_STRING) {
     console.warn('⚠️  No DATABASE_URL set, using bundled data only');
     return null;
   }
-  pool = new Pool({
-    connectionString: PG_CONNECTION_STRING,
-    ssl: PG_CONNECTION_STRING.includes('supabase') ? { rejectUnauthorized: false } : false,
-  });
-  try {
-    await pool.query('SELECT 1');
-    console.log('✅ Connected to PostgreSQL');
-    await migrateSchema();
-    return pool;
-  } catch (err) {
-    console.error('❌ PostgreSQL connection error:', err.message);
-    pool = null;
-    return null;
-  }
+  dbConnectPromise = (async () => {
+    pool = new Pool({
+      connectionString: PG_CONNECTION_STRING,
+      ssl: PG_CONNECTION_STRING.includes('supabase') ? { rejectUnauthorized: false } : false,
+    });
+    try {
+      await pool.query('SELECT 1');
+      console.log('✅ Connected to PostgreSQL');
+      await migrateSchema();
+      return pool;
+    } catch (err) {
+      console.error('❌ PostgreSQL connection error:', err.message);
+      await pool.end().catch(() => {});
+      pool = null;
+      dbConnectPromise = null;
+      return null;
+    }
+  })();
+  return dbConnectPromise;
 }
 
 async function migrateSchema() {
@@ -1046,68 +1051,55 @@ app.use((req, res, next) => {
   next();
 });
 
-// Logto auth setup
-const logtoConfig = {
-  appId: process.env.LOGTO_APP_ID,
-  appSecret: process.env.LOGTO_APP_SECRET,
-  endpoint: process.env.LOGTO_ENDPOINT,
-  baseUrl: process.env.BASE_URL || `http://localhost:${PORT}`,
-};
-const logtoEnabled = !!(process.env.LOGTO_APP_ID && process.env.LOGTO_APP_SECRET && process.env.LOGTO_ENDPOINT);
-
-if (logtoEnabled) {
-  app.use(cookieParser());
-  app.use(session({
-    secret: process.env.SESSION_SECRET || 'accessory-guide-session-secret',
-    cookie: {
-      maxAge: 14 * 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === 'production',
-    },
-    resave: false,
-    saveUninitialized: false,
-  }));
-  app.use(handleAuthRoutes(logtoConfig));
-  console.log('🔐 Logto auth enabled');
-} else {
-  console.warn('⚠️  Logto not configured - set LOGTO_APP_ID, LOGTO_APP_SECRET, LOGTO_ENDPOINT');
-}
+// Supabase Auth setup
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tgxabfhwcggkqfqhhlde.supabase.co';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_nEbL17lus2weRuSiynNrmA_xk_c4Z2B';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseAdmin = process.env.SUPABASE_SERVICE_KEY ? createClient(SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY) : null;
 
 // Auth middleware
-function authMiddleware(req, res, next) {
-  if (!logtoEnabled) {
-    return res.status(503).json({ error: 'Auth not configured', configStatus: 'not_configured' });
-  }
-  withLogto(logtoConfig)(req, res, () => {
-    if (!req.user?.isAuthenticated) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+async function authMiddleware(req, res, next) {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  if (!token) return res.status(401).json({ error: 'No token' });
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    if (error || !user) return res.status(401).json({ error: 'Invalid token' });
+    req.user = user;
     next();
-  });
+  } catch {
+    res.status(401).json({ error: 'Invalid token' });
+  }
 }
 
 function requireAdmin(req, res, next) {
-  if (!req.user?.isAuthenticated) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
+  if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
   next();
 }
 
 // ============ AUTH ============
 app.get('/api/auth/status', (req, res) => {
-  res.json({ logtoConfigured: logtoEnabled });
+  res.json({ supabaseConfigured: true });
 });
 
-app.get('/api/auth/me', (req, res) => {
-  if (!logtoEnabled) {
-    return res.json({ user: null, configStatus: 'not_configured' });
+app.get('/api/auth/me', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  if (!token) return res.json({ user: null });
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    if (error || !user) return res.json({ user: null });
+    const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
+    const isAdmin = adminEmails.includes((user.email || '').toLowerCase());
+    res.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.user_metadata?.full_name || user.email,
+        role: isAdmin ? 'admin' : 'member'
+      }
+    });
+  } catch {
+    res.json({ user: null });
   }
-  withLogto(logtoConfig)(req, res, () => {
-    if (req.user?.isAuthenticated) {
-      res.json({ user: { id: req.user.claims.sub, name: req.user.claims.name, role: 'admin' } });
-    } else {
-      res.status(401).json({ error: 'Not authenticated' });
-    }
-  });
 });
 
 // ============ PUBLIC APIs ============
@@ -1624,6 +1616,101 @@ async function syncProductsToDB() {
   }
 }
 
+// --- Amazon & Film Data Sync to Supabase ---
+const AMAZON_SHEET_ID = process.env.AMAZON_SHEET_ID || '10C954V-_NJU7dCO9M7Ts1pLudCk8F8BrhCXcsRqT12M';
+const AMAZON_SHEET_NAME = process.env.AMAZON_SHEET_NAME || 'latest';
+
+async function syncAmazonToDB() {
+  if (!pool) { console.warn('[amazon-sync] ⚠️  No database'); return; }
+  console.log('[amazon-sync] Fetching from Google Sheet...');
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${AMAZON_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(AMAZON_SHEET_NAME)}`;
+    const { data } = await axios.get(url, { timeout: 30000 });
+    const match = data.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if (!match) throw new Error('Invalid gviz response');
+    const json = JSON.parse(match[1]);
+    const rows = (json.table?.rows || []).map(row => {
+      const c = row.c || [];
+      return { category: c[0]?.v||'', type: c[1]?.v||'', rank: parseInt(c[2]?.v)||0, title: c[3]?.v||'', price: c[4]?.v||'', rating: c[5]?.v||'', reviews: c[6]?.v||'', imageUrl: c[7]?.v||'', productUrl: c[8]?.v||'', updatedAt: c[9]?.v||'' };
+    }).filter(r => r.title && r.title !== 'Title');
+    await pool.query('INSERT INTO app_data (key, value, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()', ['amazon', JSON.stringify(rows)]);
+    console.log(`[amazon-sync] ✅ Synced ${rows.length} items`);
+  } catch (err) {
+    console.error('[amazon-sync] ❌ Failed:', err.message);
+  }
+}
+
+async function syncFilmToDB() {
+  if (!pool) return;
+  const filmData = readFilmFromXlsx();
+  if (Object.keys(filmData).length > 0) {
+    await pool.query('INSERT INTO app_data (key, value, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()', ['film', JSON.stringify(filmData)]);
+    console.log(`[film-sync] ✅ Synced ${Object.keys(filmData).length} film groups`);
+  }
+}
+
+app.get('/api/admin/sync/amazon', authMiddleware, requireAdmin, async (req, res) => {
+  await syncAmazonToDB();
+  res.json({ ok: true });
+});
+
+app.get('/api/admin/sync/film', authMiddleware, requireAdmin, async (req, res) => {
+  await syncFilmToDB();
+  res.json({ ok: true });
+});
+
+app.get('/api/admin/sync/all', authMiddleware, requireAdmin, async (req, res) => {
+  await Promise.all([syncProductsToDB(), syncAmazonToDB(), syncFilmToDB()]);
+  res.json({ ok: true });
+});
+
+// Public cached API: Amazon
+app.get('/api/amazon', async (req, res) => {
+  if (!pool) {
+    const url = `https://docs.google.com/spreadsheets/d/${AMAZON_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(AMAZON_SHEET_NAME)}`;
+    try {
+      const { data } = await axios.get(url, { timeout: 15000 });
+      const match = data.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+      if (match) {
+        const json = JSON.parse(match[1]);
+        const rows = (json.table?.rows || []).map(row => {
+          const c = row.c || [];
+          return { category: c[0]?.v||'', type: c[1]?.v||'', rank: parseInt(c[2]?.v)||0, title: c[3]?.v||'', price: c[4]?.v||'', rating: c[5]?.v||'', reviews: c[6]?.v||'', imageUrl: c[7]?.v||'', productUrl: c[8]?.v||'', updatedAt: c[9]?.v||'' };
+        }).filter(r => r.title && r.title !== 'Title');
+        return res.json({ data: rows, source: 'google-sheet' });
+      }
+    } catch {}
+    return res.json({ data: [], source: 'empty' });
+  }
+  try {
+    const { rows } = await pool.query('SELECT value, updated_at FROM app_data WHERE key = $1', ['amazon']);
+    if (rows.length > 0) {
+      const latestDate = (rows[0].value || []).reduce((max, r) => r.updatedAt && r.updatedAt > max ? r.updatedAt : max, '');
+      return res.json({ data: rows[0].value, source: 'cache', updatedAt: rows[0].updated_at, latestDate: latestDate.split(' ')[0] || '' });
+    }
+    res.json({ data: [], source: 'empty' });
+  } catch {
+    res.json({ data: [], source: 'empty' });
+  }
+});
+
+// Public cached API: Film
+app.get('/api/film-cached', async (req, res) => {
+  if (!pool) {
+    const filmData = readFilmFromXlsx();
+    return res.json(filmData);
+  }
+  try {
+    const { rows } = await pool.query('SELECT value FROM app_data WHERE key = $1', ['film']);
+    if (rows.length > 0) return res.json(rows[0].value);
+  } catch {}
+  const filmData = readFilmFromXlsx();
+  if (Object.keys(filmData).length > 0 && pool) {
+    await pool.query('INSERT INTO app_data (key, value, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()', ['film', JSON.stringify(filmData)]);
+  }
+  res.json(filmData);
+});
+
 async function fetchProductsFromGoogleSheet() {
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
   const { data } = await axios.get(url, { timeout: 30000 });
@@ -1783,14 +1870,14 @@ function rowToProduct(row) {
   return product;
 }
 
-async function startProductSyncScheduler() {
-  const SYNC_INTERVAL_MS = parseInt(process.env.PRODUCT_SYNC_INTERVAL_MS || '3600000', 10);
+async function startDataSyncScheduler() {
+  const SYNC_INTERVAL_MS = parseInt(process.env.DATA_SYNC_INTERVAL_MS || '3600000', 10);
   if (productSyncInterval) clearInterval(productSyncInterval);
   productSyncInterval = setInterval(async () => {
-    console.log('[product-sync] Scheduled sync triggered');
-    await syncProductsToMongoDB();
+    console.log('[data-sync] Scheduled sync triggered');
+    await Promise.all([syncProductsToDB(), syncAmazonToDB(), syncFilmToDB()]);
   }, SYNC_INTERVAL_MS);
-  console.log(`[product-sync] Scheduler started, interval: ${SYNC_INTERVAL_MS}ms`);
+  console.log(`[data-sync] Scheduler started, interval: ${SYNC_INTERVAL_MS}ms`);
 }
 
 // ============ PRODUCT LIBRARY (MongoDB only) ============
@@ -2029,8 +2116,8 @@ app.get('*', (req, res) => {
 async function startServer() {
   await connectDB();
   await initDB();
-  await syncProductsToDB();
-  await startProductSyncScheduler();
+  await Promise.all([syncProductsToDB(), syncAmazonToDB(), syncFilmToDB()]);
+  await startDataSyncScheduler();
   httpServer = app.listen(PORT, () => console.log(`AccessoryGuide running on http://localhost:${PORT}`));
 }
 
