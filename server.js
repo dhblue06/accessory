@@ -371,9 +371,20 @@ const DEFAULT_TRANSLATIONS = {
     logout: '退出',
     save_changes: '保存修改',
     change_password: '修改密码',
+    old_password: '旧密码',
     new_password: '新密码',
     current_password: '当前密码',
+    confirm_new_password: '确认新密码',
+    confirm_new_password_placeholder: '再次输入新密码',
+    update_password: '更新密码',
+    enter_old_password: '请填写旧密码',
+    enter_new_password: '请填写新密码',
+    password_min_6: '新密码至少6位',
+    passwords_do_not_match: '两次输入的新密码不一致',
+    old_password_incorrect: '旧密码不正确',
+    password_update_failed: '修改失败',
     password_updated: '密码已修改',
+    network_error: '网络错误',
     save_success: '保存成功',
     avatar_updated: '头像已更新',
     empty_ipad: '未找到匹配的 iPad 型号',
@@ -568,9 +579,20 @@ const DEFAULT_TRANSLATIONS = {
     logout: 'Sign Out',
     save_changes: 'Save Changes',
     change_password: 'Change Password',
+    old_password: 'Old Password',
     new_password: 'New Password',
     current_password: 'Current Password',
+    confirm_new_password: 'Confirm New Password',
+    confirm_new_password_placeholder: 'Enter the new password again',
+    update_password: 'Update Password',
+    enter_old_password: 'Please enter your old password',
+    enter_new_password: 'Please enter a new password',
+    password_min_6: 'New password must be at least 6 characters',
+    passwords_do_not_match: 'The two new passwords do not match',
+    old_password_incorrect: 'Old password is incorrect',
+    password_update_failed: 'Password update failed',
     password_updated: 'Password updated',
+    network_error: 'Network error',
     save_success: 'Saved successfully',
     avatar_updated: 'Avatar updated',
     empty_ipad: 'No matching iPad models found',
@@ -765,9 +787,20 @@ const DEFAULT_TRANSLATIONS = {
     logout: 'Cerrar sesión',
     save_changes: 'Guardar cambios',
     change_password: 'Cambiar contraseña',
+    old_password: 'Contraseña anterior',
     new_password: 'Nueva contraseña',
     current_password: 'Contraseña actual',
+    confirm_new_password: 'Confirmar nueva contraseña',
+    confirm_new_password_placeholder: 'Introduce la nueva contraseña otra vez',
+    update_password: 'Actualizar contraseña',
+    enter_old_password: 'Introduce la contraseña anterior',
+    enter_new_password: 'Introduce una nueva contraseña',
+    password_min_6: 'La nueva contraseña debe tener al menos 6 caracteres',
+    passwords_do_not_match: 'Las dos contraseñas nuevas no coinciden',
+    old_password_incorrect: 'La contraseña anterior no es correcta',
+    password_update_failed: 'No se pudo actualizar la contraseña',
     password_updated: 'Contraseña actualizada',
+    network_error: 'Error de red',
     save_success: 'Guardado correctamente',
     avatar_updated: 'Avatar actualizado',
     empty_ipad: 'No se encontraron modelos de iPad',
@@ -1251,8 +1284,8 @@ app.put('/api/member/change-password', async (req, res) => {
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
     const { oldPassword, newPassword } = req.body;
-    if (!oldPassword) return res.status(400).json({ error: '请填写旧密码' });
-    if (!newPassword || newPassword.length < 6) return res.status(400).json({ error: '密码至少6位' });
+    if (!oldPassword) return res.status(400).json({ error: '请填写旧密码', code: 'enter_old_password' });
+    if (!newPassword || newPassword.length < 6) return res.status(400).json({ error: '密码至少6位', code: 'password_min_6' });
     if (!user.email) return res.status(400).json({ error: '当前账号缺少邮箱，无法验证旧密码' });
 
     const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
@@ -1260,7 +1293,7 @@ app.put('/api/member/change-password', async (req, res) => {
       email: user.email,
       password: oldPassword
     });
-    if (signInError || !signInData.session) return res.status(400).json({ error: '旧密码不正确' });
+    if (signInError || !signInData.session) return res.status(400).json({ error: '旧密码不正确', code: 'old_password_incorrect' });
 
     const { error: updateError } = await userClient.auth.updateUser({ password: newPassword });
     if (updateError) return res.status(400).json({ error: updateError.message });

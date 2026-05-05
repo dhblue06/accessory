@@ -1717,7 +1717,7 @@ input,textarea,select{font-family:inherit}
       <span id="nav-version" class="nav-badge">v1.0</span>
       <button id="login-btn" class="btn btn-primary btn-sm" onclick="showLogin()" data-i18n="login_register">登录 / 注册</button>
       <button id="member-btn" class="btn btn-secondary btn-sm" onclick="goMember()" style="display:none" data-i18n="member_center">会员中心</button>
-      <button id="admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()" style="display:none">后台管理</button>
+      <button id="admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()" style="display:none" data-i18n="admin_title">后台管理</button>
       <button id="logout-btn" class="btn btn-secondary btn-sm" style="display:none" onclick="doLogout()" data-i18n="logout">退出</button>
       <button id="hamburger-btn" class="hamburger-btn" onclick="toggleMobileMenu()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
@@ -1752,7 +1752,7 @@ input,textarea,select{font-family:inherit}
       </button>
       <button id="mobile-login-btn" class="btn btn-primary btn-sm mobile-action-primary" onclick="showLogin();closeMobileMenu()" data-i18n="login_register" style="width:100%">&#30331;&#24405; / &#27880;&#20876;</button>
       <button id="mobile-member-btn" class="btn btn-primary btn-sm mobile-action-primary" onclick="goMember();closeMobileMenu()" style="display:none;width:100%" data-i18n="member_center">&#20250;&#21592;&#20013;&#24515;</button>
-      <button id="mobile-admin-btn" class="btn btn-secondary btn-sm mobile-action-secondary" onclick="goAdmin();closeMobileMenu()" style="display:none;width:100%">&#21518;&#21488;&#31649;&#29702;</button>
+      <button id="mobile-admin-btn" class="btn btn-secondary btn-sm mobile-action-secondary" onclick="goAdmin();closeMobileMenu()" style="display:none;width:100%" data-i18n="admin_title">&#21518;&#21488;&#31649;&#29702;</button>
       <button id="mobile-logout-btn" class="btn btn-secondary btn-sm mobile-action-danger" onclick="doLogout();closeMobileMenu()" style="display:none;width:100%" data-i18n="logout">&#36864;&#20986;</button>
     </div>
   </div>
@@ -2135,7 +2135,7 @@ input,textarea,select{font-family:inherit}
 
       <!-- TRANSLATIONS -->
       <div id="panel-trans-mgmt" class="admin-panel">
-        <div class="admin-header"><h2 class="admin-title">多语言管理</h2></div>
+        <div class="admin-header"><h2 class="admin-title" data-i18n="tab_translations">多语言管理</h2></div>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px">
           <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">中文 (简体)</h3>
           <div id="trans-zh" style="max-height:400px;overflow-y:auto"></div>
@@ -2249,20 +2249,20 @@ input,textarea,select{font-family:inherit}
       <button type="submit" class="btn btn-primary" style="width:100%" data-i18n="save_changes">保存修改</button>
     </form>
     <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border);text-align:left">
-      <h3 style="font-size:15px;font-weight:600;margin-bottom:12px;color:var(--text)">修改密码</h3>
+      <h3 style="font-size:15px;font-weight:600;margin-bottom:12px;color:var(--text)" data-i18n="change_password">修改密码</h3>
       <div class="form-group">
-        <label class="form-label">旧密码</label>
+        <label class="form-label" data-i18n="old_password">旧密码</label>
         <input id="mem-old-pwd" class="form-input" type="password" autocomplete="current-password">
       </div>
       <div class="form-group">
-        <label class="form-label">新密码</label>
-        <input id="mem-new-pwd" class="form-input" type="password" placeholder="至少 6 个字符" autocomplete="new-password">
+        <label class="form-label" data-i18n="new_password">新密码</label>
+        <input id="mem-new-pwd" class="form-input" type="password" data-i18n-placeholder="password_placeholder" placeholder="至少 6 个字符" autocomplete="new-password">
       </div>
       <div class="form-group">
-        <label class="form-label">确认新密码</label>
-        <input id="mem-confirm-pwd" class="form-input" type="password" placeholder="再次输入新密码" autocomplete="new-password">
+        <label class="form-label" data-i18n="confirm_new_password">确认新密码</label>
+        <input id="mem-confirm-pwd" class="form-input" type="password" data-i18n-placeholder="confirm_new_password_placeholder" placeholder="再次输入新密码" autocomplete="new-password">
       </div>
-      <button type="button" class="btn btn-secondary" style="width:100%" onclick="changePassword()">更新密码</button>
+      <button type="button" class="btn btn-secondary" style="width:100%" onclick="changePassword()" data-i18n="update_password">更新密码</button>
     </div>
     <div id="member-msg" style="margin-top:12px;font-size:13px;text-align:center;display:none"></div>
   </div>
@@ -2882,10 +2882,10 @@ async function changePassword() {
   const oldPassword = document.getElementById('mem-old-pwd').value;
   const newPassword = document.getElementById('mem-new-pwd').value;
   const confirmPassword = document.getElementById('mem-confirm-pwd').value;
-  if (!oldPassword) { showMemberMsg('请填写旧密码', 'error'); return; }
-  if (!newPassword) { showMemberMsg('请填写新密码', 'error'); return; }
-  if (newPassword.length < 6) { showMemberMsg('新密码至少6位', 'error'); return; }
-  if (newPassword !== confirmPassword) { showMemberMsg('两次输入的新密码不一致', 'error'); return; }
+  if (!oldPassword) { showMemberMsg(t('enter_old_password'), 'error'); return; }
+  if (!newPassword) { showMemberMsg(t('enter_new_password'), 'error'); return; }
+  if (newPassword.length < 6) { showMemberMsg(t('password_min_6'), 'error'); return; }
+  if (newPassword !== confirmPassword) { showMemberMsg(t('passwords_do_not_match'), 'error'); return; }
   try {
     const r = await fetch('/api/member/change-password', {
       method: 'PUT',
@@ -2893,12 +2893,12 @@ async function changePassword() {
       body: JSON.stringify({ oldPassword, newPassword })
     });
     const data = await r.json();
-    if (!r.ok) { showMemberMsg(data.error || '修改失败', 'error'); return; }
-    showMemberMsg('密码已修改', 'success');
+    if (!r.ok) { showMemberMsg(data.code ? t(data.code) : (data.error || t('password_update_failed')), 'error'); return; }
+    showMemberMsg(t('password_updated'), 'success');
     document.getElementById('mem-old-pwd').value = '';
     document.getElementById('mem-new-pwd').value = '';
     document.getElementById('mem-confirm-pwd').value = '';
-  } catch { showMemberMsg('网络错误', 'error'); }
+  } catch { showMemberMsg(t('network_error'), 'error'); }
 }
 
 function goAdmin() {
