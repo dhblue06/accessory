@@ -2899,9 +2899,16 @@ document.getElementById('login-password').addEventListener('keydown', e => { if(
 async function api(url, opts={}) {
   const token = localStorage.getItem('ag_token');
   const headers = { 'Content-Type': 'application/json', ...(token ? { 'Authorization': 'Bearer '+token } : {}) };
-  const r = await fetch(url, { ...opts, headers: { ...headers, ...(opts.headers||{}) } });
+  let r;
+  try {
+    r = await fetch(url, { ...opts, headers: { ...headers, ...(opts.headers||{}) } });
+  } catch (err) {
+    throw new Error('无法连接后端接口，请检查 Vercel 部署状态或稍后重试');
+  }
   if (r.status === 401) { localStorage.removeItem('ag_token'); loggedIn = false; showLogin(); throw new Error('Unauthorized'); }
-  return r.json();
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || data.message || `HTTP ${r.status}`);
+  return data;
 }
 
 // ============ FRONT — iPAD ============
