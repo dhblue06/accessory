@@ -3635,11 +3635,47 @@ async function loadAdminUsers() {
   const users = await api('/api/admin/users');
   const tbody = document.getElementById('users-admin-tbody');
   tbody.innerHTML = users.map(u => `<tr>
-    <td><strong>${u.username}</strong></td>
+    <td><strong>${u.name || u.username}</strong><br><span style="font-size:11px;color:var(--text3)">${u.email}</span></td>
     <td><span class="${u.role==='admin'?'badge-admin':'badge-user'}" style="padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600">${u.role}</span></td>
     <td style="color:var(--text3);font-size:12px">${new Date(u.createdAt).toLocaleDateString('zh-CN')}</td>
-    <td>${u.username!=='admin'?`<button class="btn btn-danger btn-sm" onclick="deleteItem('users','${u.id}')">${t('btn_delete')}</button>`:'<span style="color:var(--text3);font-size:12px">'+t('system_account')+'</span>'}</td>
+    <td style="display:flex;gap:4px">
+      <button class="btn btn-secondary btn-sm" onclick='editUser(${JSON.stringify(u).replace(/'/g,"&#39;")})'>编辑</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteItem('users','${u.id}')">${t('btn_delete')}</button>
+    </td>
   </tr>`).join('');
+}
+
+function editUser(u) {
+  document.getElementById('modal-title').textContent = '编辑用户';
+  document.getElementById('modal-body').innerHTML = `
+    <input type="hidden" id="edit-user-id" value="${u.id}">
+    <div class="form-group"><label class="form-label">姓名</label><input id="edit-name" class="form-input" value="${u.name || ''}"></div>
+    <div class="form-group"><label class="form-label">邮箱</label><input id="edit-email" class="form-input" value="${u.email || ''}" disabled style="opacity:0.7"></div>
+    <div class="form-group"><label class="form-label">电话</label><input id="edit-phone" class="form-input" value="${u.phone || ''}"></div>
+    <div class="form-group"><label class="form-label">商店/公司</label><input id="edit-store" class="form-input" value="${u.store || ''}"></div>
+    <div class="form-group"><label class="form-label">角色</label>
+      <select id="edit-role" class="form-input">
+        <option value="member" ${u.role==='member'?'selected':''}>Member</option>
+        <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+      </select>
+    </div>
+  `;
+  document.getElementById('modal-save').onclick = saveEditUser;
+  document.getElementById('modal').style.display = 'flex';
+}
+
+async function saveEditUser() {
+  const id = document.getElementById('edit-user-id').value;
+  const name = document.getElementById('edit-name').value.trim();
+  const phone = document.getElementById('edit-phone').value.trim();
+  const store = document.getElementById('edit-store').value.trim();
+  const role = document.getElementById('edit-role').value;
+  try {
+    await api('/api/admin/users/' + id, { method: 'PUT', body: JSON.stringify({ name, phone, store, role }) });
+    toast('用户已更新', 'success');
+    closeModal();
+    loadAdminUsers();
+  } catch(e) { toast('更新失败: '+e.message, 'error'); }
 }
 
 async function loadSettings() {

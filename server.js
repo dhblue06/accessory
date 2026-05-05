@@ -1751,15 +1751,44 @@ app.get('/api/admin/users', authMiddleware, requireAdmin, async (req, res) => {
   if (!supabaseAdmin) return res.status(500).json({ error: 'SUPABASE_SERVICE_KEY is not configured' });
   const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
   if (error) return res.status(500).json({ error: error.message });
+  // Fetch roles from profiles table
+  let profileRoles = {};
+  try {
+    const { data: profiles } = await supabaseAdmin.from('profiles').select('id,role,phone,store');
+    if (profiles) profiles.forEach(p => { profileRoles[p.id] = { role: p.role || 'member', phone: p.phone || '', store: p.store || '' }; });
+  } catch {}
   const users = (data.users || []).map(user => ({
     id: user.id,
     username: user.email || user.phone || user.id,
     email: user.email || '',
     name: user.user_metadata?.full_name || user.email || user.id,
-    role: isAdminEmail(user.email) ? 'admin' : 'member',
+    phone: profileRoles[user.id]?.phone || '',
+    store: profileRoles[user.id]?.store || '',
+    role: profileRoles[user.id]?.role || 'member',
     createdAt: user.created_at
   }));
   res.json(users);
+});
+
+app.put('/api/admin/users/:id', authMiddleware, requireAdmin, async (req, res) => {
+  if (!supabaseAdmin) return res.status(500).json({ error: 'SUPABASE_SERVICE_KEY is not configured' });
+  const { name, phone, store, role } = req.body;
+  if (role && !['admin', 'member'].includes(role)) return res.status(400).json({ error: 'Invalid role' });
+  // Update auth metadata
+  const metadata = {};
+  if (name !== undefined) metadata.full_name = name;
+  if (Object.keys(metadata).length > 0) {
+    await supabaseAdmin.auth.admin.updateUserById(req.params.id, { user_metadata: metadata }).catch(() => {});
+  }
+  // Update profiles table
+  const profileUpdate = {};
+  if (name !== undefined) profileUpdate.full_name = name;
+  if (phone !== undefined) profileUpdate.phone = phone;
+  if (store !== undefined) profileUpdate.store = store;
+  if (role !== undefined) profileUpdate.role = role;
+  profileUpdate.updated_at = new Date().toISOString();
+  await supabaseAdmin.from('profiles').upsert({ id: req.params.id, ...profileUpdate }).catch(() => {});
+  res.json({ ok: true });
 });
 
 app.post('/api/admin/users', authMiddleware, requireAdmin, async (req, res) => {
