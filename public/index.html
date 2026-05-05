@@ -2803,7 +2803,7 @@ async function changePassword() {
     const r = await fetch('/api/member/change-password', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') },
-      body: JSON.stringify({ newPassword })
+      body: JSON.stringify({ newPassword, refreshToken: localStorage.getItem('ag_refresh_token') })
     });
     const data = await r.json();
     if (!r.ok) { showMemberMsg(data.error || '修改失败', 'error'); return; }

@@ -1225,10 +1225,11 @@ app.put('/api/member/change-password', async (req, res) => {
   try {
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
-    const { newPassword } = req.body;
+    const { newPassword, refreshToken } = req.body;
     if (!newPassword || newPassword.length < 6) return res.status(400).json({ error: '密码至少6位' });
-    if (!supabaseAdmin) return res.status(503).json({ error: 'Service key not configured' });
-    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, { password: newPassword });
+    const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
+    await userClient.auth.setSession({ access_token: token, refresh_token: refreshToken || '' });
+    const { error: updateError } = await userClient.auth.updateUser({ password: newPassword });
     if (updateError) return res.status(400).json({ error: updateError.message });
     res.json({ success: true });
   } catch (err) {
