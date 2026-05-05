@@ -2196,6 +2196,7 @@ input,textarea,select{font-family:inherit}
 // ============ STATE ============
 let token = localStorage.getItem('ag_token') || '';
 let clerkMembershipReady = false;
+let clerkLoadPromise = null;
 let currentPage = 'film';
 let filmType = 'fg';
 let filmBrand = '';
@@ -2574,6 +2575,59 @@ function waitForClerk(timeoutMs = 10000) {
   });
 }
 
+function getClerkFrontendDomain(publishableKey) {
+  try {
+    return atob(publishableKey.split('_')[2]).slice(0, -1);
+  } catch {
+    return '';
+  }
+}
+
+async function loadClerkUiComponents(publishableKey) {
+  if (window.__internal_ClerkUICtor) return;
+
+  const clerkDomain = getClerkFrontendDomain(publishableKey);
+  if (!clerkDomain) throw new Error('Invalid Clerk publishable key');
+
+  await new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-clerk-ui-bundle]');
+    if (existing) {
+      existing.addEventListener('load', resolve, { once: true });
+      existing.addEventListener('error', () => reject(new Error('Failed to load @clerk/ui bundle')), { once: true });
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = `https://${clerkDomain}/npm/@clerk/ui@1/dist/ui.browser.js`;
+    script.async = true;
+    script.crossOrigin = 'anonymous';
+    script.dataset.clerkUiBundle = 'true';
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('Failed to load @clerk/ui bundle'));
+    document.head.appendChild(script);
+  });
+
+  if (!window.__internal_ClerkUICtor) {
+    throw new Error('Clerk UI bundle loaded without exposing ClerkUI');
+  }
+}
+
+async function loadClerk() {
+  if (clerkLoadPromise) return clerkLoadPromise;
+
+  clerkLoadPromise = (async () => {
+    const publishableKey = getClerkPublishableKey();
+    const clerk = await waitForClerk();
+    await loadClerkUiComponents(publishableKey);
+    await clerk.load({
+      ui: { ClerkUI: window.__internal_ClerkUICtor }
+    });
+    return clerk;
+  })();
+
+  return clerkLoadPromise;
+}
+
 function setClerkNavState(isSignedIn) {
   const authButton = document.getElementById('clerk-auth-btn');
   const userButton = document.getElementById('clerk-user-button');
@@ -2583,14 +2637,15 @@ function setClerkNavState(isSignedIn) {
 
 async function openClerkSignIn() {
   try {
-    const clerk = await waitForClerk();
-    await clerk.load();
+    const clerk = await loadClerk();
     if (clerk.openSignIn) {
       clerk.openSignIn();
       return;
     }
   } catch (err) {
     console.error('Clerk sign-in failed:', err);
+    toast('会员登录组件加载失败，请刷新后重试', 'error');
+    return;
   }
 
   document.getElementById('app-content').style.display = 'none';
@@ -2615,8 +2670,7 @@ async function requireClerkMembership() {
   }
 
   try {
-    const clerk = await waitForClerk();
-    await clerk.load();
+    const clerk = await loadClerk();
     if (!clerk.user) {
       appContent.style.display = 'none';
       clerkLoginPage.style.display = 'flex';
