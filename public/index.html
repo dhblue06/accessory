@@ -1697,7 +1697,7 @@ input,textarea,select{font-family:inherit}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><path d="M9 2h6l1 4H8zM9 22h6l1-4H8z"/></svg>
         <span>Watch</span>
       </a>
-      <a class="nav-tab member-only" data-page="products" onclick="switchPage('products');return false" href="#">
+      <a class="nav-tab" data-page="products" onclick="switchPage('products');return false" href="#">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
         <span data-i18n="nav_products">产品素材</span>
       </a>
@@ -1773,7 +1773,7 @@ input,textarea,select{font-family:inherit}
         style="display:none;margin-bottom:12px;color:var(--accent-red)">
         登录后可查看完整100条
       </div>
-      <button class="btn btn-secondary" onclick="loadMoreAmazon()"
+      <button id="amazon-load-more-btn" class="btn btn-secondary" onclick="loadMoreAmazon()"
         data-i18n="btn_load_more">加载更多</button>
     </div>
   </div>
@@ -2197,6 +2197,7 @@ input,textarea,select{font-family:inherit}
 let token = localStorage.getItem('ag_token') || '';
 let clerkMembershipReady = false;
 let clerkLoadPromise = null;
+let isClerkMember = false;
 let currentPage = 'film';
 let filmType = 'fg';
 let filmBrand = '';
@@ -2248,6 +2249,7 @@ let filmSearchQ = '';
 let filmSearchBrand = '';
 let filmIsLoading = false;
 let filmAllLoaded = false;
+const FILM_FREE_QUERY_LIMIT = 3;
 
 // iPad lazy load
 let ipadData = [];
@@ -2622,6 +2624,13 @@ async function loadClerk() {
     await clerk.load({
       ui: { ClerkUI: window.__internal_ClerkUICtor }
     });
+    if (!clerk.__temcoListenerAttached && clerk.addListener) {
+      clerk.addListener(({ user }) => {
+        setClerkNavState(!!user);
+        if (currentPage === 'amazon') renderAmazonData();
+      });
+      clerk.__temcoListenerAttached = true;
+    }
     return clerk;
   })();
 
@@ -2629,6 +2638,7 @@ async function loadClerk() {
 }
 
 function setClerkNavState(isSignedIn) {
+  isClerkMember = !!isSignedIn;
   const authButton = document.getElementById('clerk-auth-btn');
   const userButton = document.getElementById('clerk-user-button');
   if (authButton) authButton.style.display = isSignedIn ? 'none' : 'inline-flex';
@@ -2672,12 +2682,10 @@ async function requireClerkMembership() {
   try {
     const clerk = await loadClerk();
     if (!clerk.user) {
-      appContent.style.display = 'none';
-      clerkLoginPage.style.display = 'flex';
-      loginContainer.innerHTML = '';
-      clerk.mountSignIn(loginContainer);
+      clerkLoginPage.style.display = 'none';
+      appContent.style.display = 'block';
       setClerkNavState(false);
-      return false;
+      return true;
     }
 
     clerkLoginPage.style.display = 'none';
@@ -2771,10 +2779,6 @@ function goAdmin() {
 }
 
 function switchPage(page, load=true) {
-  if (page === 'products' && !token) {
-    showLogin();
-    return;
-  }
   currentPage = page;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(page+'-page').classList.add('active');
@@ -3095,6 +3099,11 @@ async function loadFilm() {
 
   // Fetch fresh data if first load or search/brand changed
   if (filmData.length === 0 || q !== filmSearchQ || brand !== filmSearchBrand) {
+    if (!canRunFilmQuery(q, brand)) {
+      toast('非会员每日可免费查询 3 次，请登录会员继续使用', 'error');
+      openClerkSignIn();
+      return;
+    }
     filmData = await fetch(`/api/film?q=${encodeURIComponent(q)}&brand=${encodeURIComponent(brand)}`).then(r=>r.json());
     filmSearchQ = q;
     filmSearchBrand = brand;
@@ -3737,6 +3746,39 @@ function emptyState(msg) {
   return `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><p>${msg}</p></div>`;
 }
 
+function todayKey() {
+  const d = new Date();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}-${month}-${day}`;
+}
+
+function getFilmFreeUsage() {
+  const key = 'ag_film_free_usage';
+  const today = todayKey();
+  try {
+    const saved = JSON.parse(localStorage.getItem(key) || '{}');
+    if (saved.date === today && Array.isArray(saved.queries)) return saved;
+  } catch {}
+  return { date: today, queries: [] };
+}
+
+function saveFilmFreeUsage(usage) {
+  localStorage.setItem('ag_film_free_usage', JSON.stringify(usage));
+}
+
+function canRunFilmQuery(q, brand) {
+  if (isClerkMember) return true;
+  const queryKey = (q || brand) ? `${q}|${brand}`.toLowerCase() : '';
+  if (!queryKey) return true;
+  const usage = getFilmFreeUsage();
+  if (usage.queries.includes(queryKey)) return true;
+  if (usage.queries.length >= FILM_FREE_QUERY_LIMIT) return false;
+  usage.queries.push(queryKey);
+  saveFilmFreeUsage(usage);
+  return true;
+}
+
 function toast(msg, type='info') {
   const el = document.getElementById('toast');
   const item = document.createElement('div');
@@ -3962,6 +4004,11 @@ function switchAmazonTab(limit, btn) {
 }
 
 function loadMoreAmazon() {
+  if (!isClerkMember) {
+    toast('非会员可查看 Amazon Top20，登录会员可查看更多', 'info');
+    openClerkSignIn();
+    return;
+  }
   amazonDisplayLimit += 20;
   renderAmazonData();
 }
@@ -3978,7 +4025,8 @@ function renderAmazonData() {
   if (filtered.length === 0) {
     el.innerHTML = '<div class="amazon-empty"><div>未找到</div></div>'; return;
   }
-  const shown = filtered.slice(0, amazonDisplayLimit);
+  const effectiveLimit = isClerkMember ? amazonDisplayLimit : 20;
+  const shown = filtered.slice(0, effectiveLimit);
   const grouped = {};
   shown.forEach(item => {
     const key = normalizeCategory(item.categoryRaw);
@@ -4006,6 +4054,10 @@ function renderAmazonData() {
     html += '</div></div>';
   }
   el.innerHTML = html;
+  const loginTip = document.getElementById('amazon-login-tip');
+  const loadMoreBtn = document.getElementById('amazon-load-more-btn');
+  if (loginTip) loginTip.style.display = isClerkMember ? 'none' : 'block';
+  if (loadMoreBtn) loadMoreBtn.style.display = isClerkMember && filtered.length > shown.length ? 'inline-flex' : 'none';
 }
 
 // ============ PRODUCT LIBRARY ============
@@ -4014,10 +4066,6 @@ let productSearchQuery = '';
 let productCategoryFilter = '';
 
 async function loadProductsPage() {
-  if (!token) {
-    showLogin();
-    return;
-  }
   document.getElementById('products-loading').style.display = 'block';
   document.getElementById('products-grid').style.display = 'none';
   document.getElementById('products-empty').style.display = 'none';

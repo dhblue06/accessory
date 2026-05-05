@@ -1513,7 +1513,7 @@ app.delete('/api/admin/users/:id', authMiddleware, async (req, res) => {
 // ============ PRODUCT LIBRARY ============
 const productService = require('./services/products');
 
-app.get('/api/products', authMiddleware, async (req, res) => {
+app.get('/api/products', async (req, res) => {
   try {
     const { q, category } = req.query;
     const products = await productService.searchProducts({ q, category });
@@ -1527,7 +1527,7 @@ app.get('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
-app.get('/api/products/categories', authMiddleware, async (req, res) => {
+app.get('/api/products/categories', async (req, res) => {
   try {
     res.json(await productService.getAllCategories());
   } catch (err) {
@@ -1604,7 +1604,7 @@ app.get('/api/products/download/:fileId', async (req, res) => {
   }
 });
 
-app.get('/api/products/:sku', authMiddleware, async (req, res) => {
+app.get('/api/products/:sku', async (req, res) => {
   try {
     const product = await productService.getProductBySku(req.params.sku);
     if (!product) return res.status(404).json({ error: 'Not found' });
