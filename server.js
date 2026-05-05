@@ -1,11 +1,13 @@
 'use strict';
-const express = require('./node_modules/express');
+require('dotenv').config();
+
+const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
 const axios = require('axios');
-const bcrypt = require('./node_modules/bcryptjs');
-const jwt = require('./node_modules/jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const XLSX = require('xlsx');
 const multer = require('multer');
 const { MongoClient } = require('mongodb');
@@ -17,6 +19,7 @@ const DB_NAME = 'accessory_guide';
 let db;
 let mongoClient;
 let httpServer;
+let connectPromise;
 
 // Multer config for logo upload
 const storage = multer.diskStorage({
@@ -39,66 +42,60 @@ if (!fs.existsSync(path.join(__dirname, 'data'))) {
 
 // --- MongoDB Connection ---
 async function connectDB() {
-  try {
+  if (db) return db;
+  if (connectPromise) return connectPromise;
+  if (!MONGO_URI) {
+    throw new Error('MONGO_URI is required. Configure MongoDB Atlas for persistent data.');
+  }
+
+  connectPromise = (async () => {
     mongoClient = new MongoClient(MONGO_URI);
     await mongoClient.connect();
     db = mongoClient.db(DB_NAME);
     console.log('✅ Connected to MongoDB Atlas');
     return db;
-  } catch (err) {
+  })().catch(err => {
+    connectPromise = null;
     console.error('❌ MongoDB connection error:', err.message);
-    // Fallback to local file
-    console.log('⚠️ Falling back to local db.json');
-    return null;
-  }
+    throw err;
+  });
+
+  return connectPromise;
 }
 
-// --- DB helpers (MongoDB with local fallback) ---
-const DB_FILE = path.join(__dirname, 'data', 'db.json');
-
-function readDBLocal() {
-  if (!fs.existsSync(DB_FILE)) return { ipad: [], watch: [], film: { fullGlue: {}, twoPointFiveD: [], privacy: [] }, settings: { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' }, translations: {}, filmSearchStats: [] };
-  return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+function getDefaultDBData() {
+  return {
+    ipad: [],
+    watch: [],
+    film: { fullGlue: {}, twoPointFiveD: [], privacy: [] },
+    settings: { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' },
+    translations: {},
+    filmSearchStats: []
+  };
 }
 
-function writeDBLocal(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf8');
-}
-
-// Unified readDB/writeDB that uses MongoDB if connected
+// Unified readDB/writeDB backed by MongoDB Atlas.
 async function readDB() {
-  if (db) {
-    try {
-      const data = await db.collection('appData').findOne({ _id: 'main' });
-      if (data) {
-        delete data._id;
-        return data;
-      }
-    } catch (err) {
-      console.error('MongoDB read error, falling back:', err.message);
-    }
+  const database = await connectDB();
+  const data = await database.collection('appData').findOne({ _id: 'main' });
+  if (data) {
+    delete data._id;
+    return data;
   }
-  return readDBLocal();
+  return getDefaultDBData();
 }
 
 async function writeDB(data) {
-  if (db) {
-    try {
-      await db.collection('appData').replaceOne(
-        { _id: 'main' },
-        { _id: 'main', ...data },
-        { upsert: true }
-      );
-      return;
-    } catch (err) {
-      console.error('MongoDB write error, falling back:', err.message);
-    }
-  }
-  writeDBLocal(data);
+  const database = await connectDB();
+  await database.collection('appData').replaceOne(
+    { _id: 'main' },
+    { _id: 'main', ...data },
+    { upsert: true }
+  );
 }
 
 // Initialize DB connection on startup
-connectDB();
+connectDB().catch(() => {});
 
 // --- Default translations ---
 const DEFAULT_TRANSLATIONS = {
@@ -734,12 +731,16 @@ function readFilmFromXlsx() {
     return {};
   }
 }
-function readUsers() {
-  if (!fs.existsSync(USERS_FILE)) return [];
-  return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+async function readUsers() {
+  const database = await connectDB();
+  return await database.collection('users').find({}).toArray();
 }
-function writeUsers(users) {
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+async function writeUsers(users) {
+  const database = await connectDB();
+  await database.collection('users').deleteMany({});
+  if (users.length > 0) {
+    await database.collection('users').insertMany(users);
+  }
 }
 
 // Initialize DB from film_data.json if empty
@@ -773,11 +774,17 @@ async function initDB() {
     }
   }
   // Default admin user
-  const users = readUsers();
+  const users = await readUsers();
   if (users.length === 0) {
-    users.push({ id: 1, username: 'admin', password: bcrypt.hashSync('admin123', 10), role: 'admin', createdAt: new Date().toISOString() });
-    writeUsers(users);
-    console.log('Created default admin: admin / admin123');
+    const legacyUsers = fs.existsSync(USERS_FILE) ? JSON.parse(fs.readFileSync(USERS_FILE, 'utf8')) : [];
+    if (legacyUsers.length > 0) {
+      await writeUsers(legacyUsers);
+      console.log(`Migrated ${legacyUsers.length} users to MongoDB`);
+    } else {
+      users.push({ id: 1, username: 'admin', password: bcrypt.hashSync('admin123', 10), role: 'admin', createdAt: new Date().toISOString() });
+      await writeUsers(users);
+      console.log('Created default admin: admin / admin123');
+    }
   }
 }
 
@@ -957,9 +964,9 @@ function requireAdmin(req, res, next) {
 }
 
 // ============ AUTH ============
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   const { username, password } = req.body;
-  const users = readUsers();
+  const users = await readUsers();
   const user = users.find(u => u.username === username);
   if (!user || !bcrypt.compareSync(password, user.password)) {
     return res.status(401).json({ error: '用户名或密码错误' });
@@ -1428,25 +1435,25 @@ app.put('/api/admin/amazon-categories', authMiddleware, async (req, res) => {
 });
 
 // Users
-app.get('/api/admin/users', authMiddleware, (req, res) => {
-  const users = readUsers().map(u => ({ id: u.id, username: u.username, role: u.role, createdAt: u.createdAt }));
+app.get('/api/admin/users', authMiddleware, async (req, res) => {
+  const users = (await readUsers()).map(u => ({ id: u.id, username: u.username, role: u.role, createdAt: u.createdAt }));
   res.json(users);
 });
 
-app.post('/api/admin/users', authMiddleware, (req, res) => {
+app.post('/api/admin/users', authMiddleware, async (req, res) => {
   const { username, password, role } = req.body;
-  const users = readUsers();
+  const users = await readUsers();
   if (users.find(u => u.username === username)) return res.status(400).json({ error: '用户名已存在' });
   const user = { id: Date.now(), username, password: bcrypt.hashSync(password, 10), role: role || 'editor', createdAt: new Date().toISOString() };
   users.push(user);
-  writeUsers(users);
+  await writeUsers(users);
   res.json({ id: user.id, username: user.username, role: user.role });
 });
 
-app.delete('/api/admin/users/:id', authMiddleware, (req, res) => {
-  let users = readUsers();
+app.delete('/api/admin/users/:id', authMiddleware, async (req, res) => {
+  let users = await readUsers();
   users = users.filter(u => String(u.id) !== req.params.id);
-  writeUsers(users);
+  await writeUsers(users);
   res.json({ ok: true });
 });
 
@@ -1574,7 +1581,7 @@ app.get('/api/admin/stats', authMiddleware, async (req, res) => {
     fgCount: Object.keys(filmData).length,
     tdCount: 0,
     privacyCount: 0,
-    userCount: readUsers().length
+    userCount: (await readUsers()).length
   });
 });
 
@@ -1585,9 +1592,14 @@ app.get('*', (req, res) => {
 
 // Make initDB async and start server
 async function startServer() {
-  await connectDB(); // Ensure MongoDB is connected (or fallback)
+  await connectDB(); // Ensure MongoDB Atlas is connected
   await initDB();
   httpServer = app.listen(PORT, () => console.log(`AccessoryGuide running on http://localhost:${PORT}`));
 }
 
-startServer();
+if (process.env.VERCEL) {
+  initDB().catch(err => console.error('Initialization failed:', err.message));
+  module.exports = app;
+} else {
+  startServer();
+}
