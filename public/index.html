@@ -3656,11 +3656,7 @@ function isModeMatch(type, mode) {
 
 async function loadAmazonCatTranslations() {
   try {
-    const res = await fetch('/api/amazon-categories');
-    if (res.ok) {
-      const data = await res.json();
-      amazonCategoryTrans = data;
-    }
+    amazonCategoryTrans = await fetchJsonWithTimeout('/api/amazon-categories');
   } catch(e) { console.log('Using default Amazon translations'); }
 }
 

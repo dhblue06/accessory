@@ -1439,8 +1439,13 @@ app.put('/api/admin/translations', authMiddleware, async (req, res) => {
 
 // Amazon category translations
 app.get('/api/amazon-categories', async (req, res) => {
-  const db = await readDB();
-  res.json(db.amazonCategories || {});
+  try {
+    const db = await readDB();
+    res.json(db.amazonCategories || {});
+  } catch (err) {
+    console.error('[amazon-categories] MongoDB unavailable, using defaults:', err.message);
+    res.json({});
+  }
 });
 
 app.put('/api/admin/amazon-categories', authMiddleware, async (req, res) => {
