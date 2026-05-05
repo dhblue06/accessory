@@ -18,14 +18,21 @@ let pool;
 let bundledDBCache;
 let dbConnectPromise = null;
 
-// PostgreSQL connection
-const PG_CONNECTION_STRING = process.env.DATABASE_URL || process.env.SUPABASE_URL;
+// PostgreSQL connection. SUPABASE_URL is the HTTPS API URL, not a database URL.
+const PG_CONNECTION_STRING = process.env.DATABASE_URL
+  || process.env.POSTGRES_URL
+  || process.env.POSTGRES_PRISMA_URL
+  || process.env.SUPABASE_DB_URL;
 
 async function connectDB() {
   if (pool) return pool;
   if (dbConnectPromise) return dbConnectPromise;
   if (!PG_CONNECTION_STRING) {
     console.warn('⚠️  No DATABASE_URL set, using bundled data only');
+    return null;
+  }
+  if (!/^postgres(ql)?:\/\//.test(PG_CONNECTION_STRING)) {
+    console.error('DATABASE_URL must be a PostgreSQL connection string, not SUPABASE_URL');
     return null;
   }
   dbConnectPromise = (async () => {
@@ -1719,12 +1726,16 @@ async function syncAmazonToDB() {
 }
 
 async function syncFilmToDB() {
+  await connectDB();
+  if (!pool) throw new Error('Database is not connected; check DATABASE_URL');
+  await ensureProductSchema();
   if (!pool) return;
   const filmData = readFilmFromXlsx();
   if (Object.keys(filmData).length > 0) {
     await pool.query('INSERT INTO app_data (key, value, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()', ['film', JSON.stringify(filmData)]);
     console.log(`[film-sync] ✅ Synced ${Object.keys(filmData).length} film groups`);
   }
+  return Object.keys(filmData).length;
 }
 
 app.get('/api/admin/sync/amazon', authMiddleware, requireAdmin, async (req, res) => {
@@ -1737,8 +1748,12 @@ app.get('/api/admin/sync/amazon', authMiddleware, requireAdmin, async (req, res)
 });
 
 app.get('/api/admin/sync/film', authMiddleware, requireAdmin, async (req, res) => {
-  await syncFilmToDB();
-  res.json({ ok: true });
+  try {
+    const count = await syncFilmToDB();
+    res.json({ ok: true, count });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.get('/api/admin/sync/all', authMiddleware, requireAdmin, async (req, res) => {
@@ -1750,6 +1765,19 @@ app.get('/api/admin/sync/all', authMiddleware, requireAdmin, async (req, res) =>
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+app.get('/api/admin/env-status', authMiddleware, requireAdmin, async (req, res) => {
+  res.json({
+    hasDatabaseUrl: Boolean(PG_CONNECTION_STRING),
+    databaseUrlType: PG_CONNECTION_STRING ? (PG_CONNECTION_STRING.startsWith('postgres') ? 'postgres' : 'invalid') : 'missing',
+    hasSupabaseUrl: Boolean(process.env.SUPABASE_URL),
+    hasSupabaseAnonKey: Boolean(process.env.SUPABASE_ANON_KEY),
+    hasSupabaseServiceKey: Boolean(process.env.SUPABASE_SERVICE_KEY),
+    hasProductSheetId: Boolean(process.env.PRODUCT_SHEET_ID),
+    hasAmazonSheetId: Boolean(process.env.AMAZON_SHEET_ID),
+    amazonSheetName: process.env.AMAZON_SHEET_NAME || 'latest'
+  });
 });
 
 // Public cached API: Amazon
