@@ -1182,9 +1182,10 @@ app.get('/api/auth/me', async (req, res) => {
     if (error || !user) return res.json({ user: null });
     let phone = '', store = '', avatar_url = '';
     try {
-      const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
-      const { data: profile } = await supabaseUser.from('profiles').select('phone,store,avatar_url').eq('id', user.id).maybeSingle();
-      if (profile) { phone = profile.phone || ''; store = profile.store || ''; avatar_url = profile.avatar_url || ''; }
+      if (supabaseAdmin) {
+        const { data: profile } = await supabaseAdmin.from('profiles').select('phone,store,avatar_url').eq('id', user.id).maybeSingle();
+        if (profile) { phone = profile.phone || ''; store = profile.store || ''; avatar_url = profile.avatar_url || ''; }
+      }
     } catch {}
     const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
     const isAdmin = adminEmails.includes((user.email || '').toLowerCase());
@@ -1205,12 +1206,12 @@ app.put('/api/member/update', async (req, res) => {
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
     const { name, phone, store } = req.body;
-    const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
-    const updates = { id: user.id, updated_at: new Date().toISOString() };
+    if (!supabaseAdmin) return res.status(503).json({ error: 'Service key not configured' });
+    const updates = { updated_at: new Date().toISOString() };
     if (name !== undefined) updates.full_name = name;
     if (phone !== undefined) updates.phone = phone;
     if (store !== undefined) updates.store = store;
-    const { error } = await supabaseUser.from('profiles').upsert(updates);
+    const { error } = await supabaseAdmin.from('profiles').upsert({ id: user.id, ...updates });
     if (error) return res.status(400).json({ error: error.message });
     res.json({ success: true });
   } catch (err) {
@@ -1226,8 +1227,8 @@ app.put('/api/member/change-password', async (req, res) => {
     if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
     const { newPassword } = req.body;
     if (!newPassword || newPassword.length < 6) return res.status(400).json({ error: '密码至少6位' });
-    const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
-    const { error: updateError } = await supabaseUser.auth.updateUser({ password: newPassword });
+    if (!supabaseAdmin) return res.status(503).json({ error: 'Service key not configured' });
+    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, { password: newPassword });
     if (updateError) return res.status(400).json({ error: updateError.message });
     res.json({ success: true });
   } catch (err) {
@@ -1243,13 +1244,13 @@ app.put('/api/member/avatar', uploadMemory.single('avatar'), async (req, res) =>
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-    const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
+    if (!supabaseAdmin) return res.status(503).json({ error: 'Service key not configured' });
     const fileExt = req.file.originalname.split('.').pop() || 'png';
     const filePath = `${user.id}-${Date.now()}.${fileExt}`;
-    const { error: uploadError } = await supabaseUser.storage.from('avatars').upload(filePath, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
+    const { error: uploadError } = await supabaseAdmin.storage.from('avatars').upload(filePath, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
     if (uploadError) return res.status(400).json({ error: uploadError.message });
-    const { data: { publicUrl } } = supabaseUser.storage.from('avatars').getPublicUrl(filePath);
-    await supabaseUser.from('profiles').upsert({ id: user.id, avatar_url: publicUrl, updated_at: new Date().toISOString() });
+    const { data: { publicUrl } } = supabaseAdmin.storage.from('avatars').getPublicUrl(filePath);
+    await supabaseAdmin.from('profiles').upsert({ id: user.id, avatar_url: publicUrl, updated_at: new Date().toISOString() });
     res.json({ avatarUrl: publicUrl });
   } catch (err) {
     res.status(500).json({ error: err.message });
