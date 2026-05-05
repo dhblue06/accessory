@@ -2723,11 +2723,10 @@ function closeMember() {
 async function showMember() {
   closeLogin();
   document.getElementById('member-page').style.display = 'flex';
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('member-page').classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('main-nav').style.display = 'block';
   window.location.hash = '#member';
   document.getElementById('member-msg').style.display = 'none';
+  updateAuthUI();
   const me = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') } }).then(r => r.json());
   if (me.user) {
     document.getElementById('member-name-display').textContent = me.user.name || me.user.email;
