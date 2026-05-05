@@ -8,8 +8,10 @@ const https = require('https');
 const axios = require('axios');
 const XLSX = require('xlsx');
 const multer = require('multer');
-const { Pool } = require('pg');
-const { createClient } = require('@supabase/supabase-js');
+let Pool;
+let createClient;
+try { Pool = require('pg').Pool; } catch { console.warn('⚠️ pg not available'); }
+try { createClient = require('@supabase/supabase-js').createClient; } catch { console.warn('⚠️ @supabase/supabase-js not available'); }
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,8 +29,9 @@ const PG_CONNECTION_STRING = process.env.DATABASE_URL
 async function connectDB() {
   if (pool) return pool;
   if (dbConnectPromise) return dbConnectPromise;
-  if (!PG_CONNECTION_STRING) {
-    console.warn('⚠️  No DATABASE_URL set, using bundled data only');
+  if (!PG_CONNECTION_STRING || !Pool) {
+    if (!Pool) console.warn('⚠️  pg module not available');
+    else console.warn('⚠️  No DATABASE_URL set, using bundled data only');
     return null;
   }
   if (!/^postgres(ql)?:\/\//.test(PG_CONNECTION_STRING)) {
@@ -1129,7 +1132,8 @@ app.use((req, res, next) => {
 // Supabase Auth setup
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tgxabfhwcggkqfqhhlde.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_nEbL17lus2weRuSiynNrmA_xk_c4Z2B';
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = createClient ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const supabaseAnonKey = SUPABASE_ANON_KEY;
 const supabaseAdmin = process.env.SUPABASE_SERVICE_KEY ? createClient(SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY) : null;
 
 function isAdminEmail(email) {
@@ -1139,6 +1143,7 @@ function isAdminEmail(email) {
 
 // Auth middleware
 async function authMiddleware(req, res, next) {
+  if (!supabase) return res.status(503).json({ error: 'Auth unavailable' });
   const token = (req.headers.authorization || '').replace('Bearer ', '');
   if (!token) return res.status(401).json({ error: 'No token' });
   try {
@@ -1168,6 +1173,7 @@ app.get('/api/auth/status', (req, res) => {
 });
 
 app.get('/api/auth/me', async (req, res) => {
+  if (!supabase) return res.json({ user: null, error: 'Auth unavailable' });
   const token = (req.headers.authorization || '').replace('Bearer ', '');
   if (!token) return res.json({ user: null });
   try {
@@ -1192,6 +1198,7 @@ app.get('/api/auth/me', async (req, res) => {
 // ============ MEMBER APIs ============
 
 app.put('/api/member/update', async (req, res) => {
+  if (!supabase || !createClient) return res.status(503).json({ error: 'Auth unavailable' });
   const token = (req.headers.authorization || '').replace('Bearer ', '');
   if (!token) return res.status(401).json({ error: 'No token' });
   try {
@@ -1215,6 +1222,7 @@ app.put('/api/member/update', async (req, res) => {
 });
 
 app.put('/api/member/change-password', async (req, res) => {
+  if (!supabase || !createClient) return res.status(503).json({ error: 'Auth unavailable' });
   const token = (req.headers.authorization || '').replace('Bearer ', '');
   if (!token) return res.status(401).json({ error: 'No token' });
   try {
@@ -1227,18 +1235,6 @@ app.put('/api/member/change-password', async (req, res) => {
     if (userError || !user) return res.status(401).json({ error: 'Invalid token' });
     const tempClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
     const { error: signInError } = await tempClient.auth.signInWithPassword({ email: user.email, password: currentPassword });
-    if (signInError) return res.status(400).json({ error: '当前密码不正确' });
-    const { error: updateError } = await supabaseUser.auth.updateUser({ password: newPassword });
-    if (updateError) return res.status(400).json({ error: updateError.message });
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-    const { currentPassword, newPassword } = req.body;
-    const { data: { user }, error: userError } = await supabaseUser.auth.getUser();
-    if (userError || !user) return res.status(401).json({ error: 'Invalid token' });
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email: user.email, password: currentPassword });
     if (signInError) return res.status(400).json({ error: '当前密码不正确' });
     const { error: updateError } = await supabaseUser.auth.updateUser({ password: newPassword });
     if (updateError) return res.status(400).json({ error: updateError.message });
