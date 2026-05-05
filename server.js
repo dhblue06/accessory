@@ -1182,7 +1182,7 @@ app.get('/api/auth/me', async (req, res) => {
     let phone = '', store = '';
     try {
       const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
-      const { data: profile } = await supabaseUser.from('profiles').select('phone,store').eq('id', user.id).single();
+      const { data: profile } = await supabaseUser.from('profiles').select('phone,store').eq('id', user.id).maybeSingle();
       if (profile) { phone = profile.phone || ''; store = profile.store || ''; }
     } catch {}
     const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
@@ -1223,10 +1223,8 @@ app.put('/api/member/change-password', async (req, res) => {
   try {
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
-    const { currentPassword, newPassword } = req.body;
-    const tempClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
-    const { error: signInError } = await tempClient.auth.signInWithPassword({ email: user.email, password: currentPassword });
-    if (signInError) return res.status(400).json({ error: '当前密码不正确' });
+    const { newPassword } = req.body;
+    if (!newPassword || newPassword.length < 6) return res.status(400).json({ error: '密码至少6位' });
     const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
     const { error: updateError } = await supabaseUser.auth.updateUser({ password: newPassword });
     if (updateError) return res.status(400).json({ error: updateError.message });

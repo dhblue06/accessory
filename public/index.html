@@ -2183,10 +2183,6 @@ input,textarea,select{font-family:inherit}
     <h3 style="font-size:13px;font-weight:600;margin-bottom:12px;text-align:left">修改密码</h3>
     <form id="password-form" onsubmit="event.preventDefault();changePassword()">
       <div class="form-group" style="text-align:left">
-        <label class="form-label">当前密码</label>
-        <input id="mem-cur-pwd" class="form-input" type="password">
-      </div>
-      <div class="form-group" style="text-align:left">
         <label class="form-label">新密码</label>
         <input id="mem-new-pwd" class="form-input" type="password" placeholder="至少6位">
       </div>
@@ -2766,20 +2762,18 @@ async function saveMember() {
 }
 
 async function changePassword() {
-  const currentPassword = document.getElementById('mem-cur-pwd').value;
   const newPassword = document.getElementById('mem-new-pwd').value;
-  if (!currentPassword || !newPassword) { showMemberMsg('请填写密码', 'error'); return; }
+  if (!newPassword) { showMemberMsg('请填写新密码', 'error'); return; }
   if (newPassword.length < 6) { showMemberMsg('新密码至少6位', 'error'); return; }
   try {
     const r = await fetch('/api/member/change-password', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') },
-      body: JSON.stringify({ currentPassword, newPassword })
+      body: JSON.stringify({ newPassword })
     });
     const data = await r.json();
     if (!r.ok) { showMemberMsg(data.error || '修改失败', 'error'); return; }
     showMemberMsg('密码已修改', 'success');
-    document.getElementById('mem-cur-pwd').value = '';
     document.getElementById('mem-new-pwd').value = '';
   } catch { showMemberMsg('网络错误', 'error'); }
 }
