@@ -1638,8 +1638,18 @@ input,textarea,select{font-family:inherit}
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="19b44367-903d-40ba-80d9-d786bb17717b"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script async crossorigin="anonymous"
+  data-clerk-publishable-key="你的_PUBLISHABLE_KEY"
+  src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
+</script>
 </head>
 <body>
+
+<div id="clerk-login-page" class="login-wrap" style="display:none">
+  <div id="login-container"></div>
+</div>
+
+<div id="app-content" style="display:none">
 
 <!-- LOGIN PAGE -->
 <div id="login-page" class="login-wrap" style="display:none">
@@ -1711,6 +1721,7 @@ input,textarea,select{font-family:inherit}
         <option value="zh">中文</option>
       </select>
       <span id="nav-version" class="nav-badge">v1.0</span>
+      <div id="clerk-user-button"></div>
       <button id="admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()">后台管理</button>
       <button id="logout-btn" class="btn btn-secondary btn-sm" style="display:none" onclick="doLogout()">退出</button>
     </div>
@@ -2178,9 +2189,12 @@ input,textarea,select{font-family:inherit}
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+</div>
+
 <script>
 // ============ STATE ============
 let token = localStorage.getItem('ag_token') || '';
+let clerkMembershipReady = false;
 let currentPage = 'film';
 let filmType = 'fg';
 let filmBrand = '';
@@ -2537,9 +2551,74 @@ function applyTranslations() {
   if (statEls[5]) statEls[5].textContent = t('stat_users');
 }
 
+// ============ CLERK MEMBERSHIP ============
+function getClerkPublishableKey() {
+  const script = document.querySelector('script[data-clerk-publishable-key]');
+  return script ? script.getAttribute('data-clerk-publishable-key') : '';
+}
+
+function waitForClerk(timeoutMs = 10000) {
+  return new Promise((resolve, reject) => {
+    if (window.Clerk) return resolve(window.Clerk);
+    const started = Date.now();
+    const timer = setInterval(() => {
+      if (window.Clerk) {
+        clearInterval(timer);
+        resolve(window.Clerk);
+      } else if (Date.now() - started > timeoutMs) {
+        clearInterval(timer);
+        reject(new Error('Clerk SDK failed to load'));
+      }
+    }, 50);
+  });
+}
+
+async function requireClerkMembership() {
+  const appContent = document.getElementById('app-content');
+  const clerkLoginPage = document.getElementById('clerk-login-page');
+  const loginContainer = document.getElementById('login-container');
+  const publishableKey = getClerkPublishableKey();
+
+  if (!publishableKey || publishableKey === '你的_PUBLISHABLE_KEY' || !publishableKey.startsWith('pk_')) {
+    console.warn('Clerk publishable key is not configured. Replace data-clerk-publishable-key with your pk_... key.');
+    appContent.style.display = 'block';
+    clerkLoginPage.style.display = 'none';
+    return true;
+  }
+
+  try {
+    const clerk = await waitForClerk();
+    await clerk.load();
+    if (!clerk.user) {
+      appContent.style.display = 'none';
+      clerkLoginPage.style.display = 'flex';
+      loginContainer.innerHTML = '';
+      clerk.mountSignIn(loginContainer);
+      return false;
+    }
+
+    clerkLoginPage.style.display = 'none';
+    appContent.style.display = 'block';
+    const userButton = document.getElementById('clerk-user-button');
+    if (userButton) {
+      userButton.innerHTML = '';
+      clerk.mountUserButton(userButton);
+    }
+    return true;
+  } catch (err) {
+    console.error('Clerk initialization failed:', err);
+    appContent.style.display = 'block';
+    clerkLoginPage.style.display = 'none';
+    return true;
+  }
+}
+
 // ============ INIT ============
 async function init() {
   applyTheme(); // Apply theme before anything renders
+  clerkMembershipReady = await requireClerkMembership();
+  if (!clerkMembershipReady) return;
+
   if (window.location.hash === '#admin') {
     if (token) { showAdmin(); }
     else { showLogin(); }
