@@ -68,12 +68,53 @@ async function migrateSchema() {
         count INTEGER DEFAULT 0,
         source TEXT,
         updated_at TIMESTAMPTZ DEFAULT NOW()
-      );
+      )
+    `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        sku TEXT PRIMARY KEY,
+        data JSONB NOT NULL,
+        synced_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS products_meta (
+        id TEXT PRIMARY KEY DEFAULT 'syncMeta',
+        count INTEGER DEFAULT 0,
+        source TEXT,
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      )
     `);
     console.log('✅ Schema migrated');
   } catch (err) {
     console.error('[migrate] Schema error:', err.message);
   }
+}
+
+async function ensureProductSchema() {
+  if (!pool) return;
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS app_data (
+      key TEXT PRIMARY KEY,
+      value JSONB NOT NULL DEFAULT '{}'::jsonb,
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS products (
+      sku TEXT PRIMARY KEY,
+      data JSONB NOT NULL,
+      synced_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS products_meta (
+      id TEXT PRIMARY KEY DEFAULT 'syncMeta',
+      count INTEGER DEFAULT 0,
+      source TEXT,
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
 }
 
 async function readDB() {
@@ -206,9 +247,6 @@ function readBundledDBData() {
   bundledDBCache = { ...getDefaultDBData(), ...JSON.parse(fs.readFileSync(bundledPath, 'utf8')) };
   return bundledDBCache;
 }
-
-// Initialize DB connection on startup
-connectDB().catch(() => {});
 
 // --- Default translations ---
 const DEFAULT_TRANSLATIONS = {
@@ -1617,6 +1655,9 @@ let productSyncInterval = null;
 async function syncProductsToDB() {
   console.log('[product-sync] Starting Google Sheet sync...');
   try {
+    await connectDB();
+    if (!pool) throw new Error('Database is not connected; check DATABASE_URL');
+    await ensureProductSchema();
     const products = await fetchProductsFromGoogleSheet();
     if (products && products.length > 0 && pool) {
       const client = await pool.connect();
@@ -1642,7 +1683,7 @@ async function syncProductsToDB() {
     return products || [];
   } catch (err) {
     console.error('[product-sync] ❌ Sync failed:', err.message);
-    return [];
+    throw err;
   }
 }
 
@@ -1651,6 +1692,9 @@ const AMAZON_SHEET_ID = process.env.AMAZON_SHEET_ID || '10C954V-_NJU7dCO9M7Ts1pL
 const AMAZON_SHEET_NAME = process.env.AMAZON_SHEET_NAME || 'latest';
 
 async function syncAmazonToDB() {
+  await connectDB();
+  if (!pool) throw new Error('Database is not connected; check DATABASE_URL');
+  await ensureProductSchema();
   if (!pool) { console.warn('[amazon-sync] ⚠️  No database'); return; }
   console.log('[amazon-sync] Fetching from Google Sheet...');
   try {
@@ -1661,12 +1705,16 @@ async function syncAmazonToDB() {
     const json = JSON.parse(match[1]);
     const rows = (json.table?.rows || []).map(row => {
       const c = row.c || [];
-      return { category: c[0]?.v||'', type: c[1]?.v||'', rank: parseInt(c[2]?.v)||0, title: c[3]?.v||'', price: c[4]?.v||'', rating: c[5]?.v||'', reviews: c[6]?.v||'', imageUrl: c[7]?.v||'', productUrl: c[8]?.v||'', updatedAt: c[9]?.v||'' };
-    }).filter(r => r.title && r.title !== 'Title');
+      const categoryRaw = c[0]?.v || '';
+      return { categoryRaw, category: categoryRaw, type: c[1]?.v||'', rank: parseInt(c[2]?.v)||0, title: c[3]?.v||'', price: c[4]?.v||'', rating: c[5]?.v||'', reviews: c[6]?.v||'', imageUrl: c[7]?.v||'', productUrl: c[8]?.v||'', updatedAt: c[9]?.v||'' };
+    }).filter(r => r.title && r.title !== 'Title' && r.rank > 0);
+    if (rows.length === 0) throw new Error('No valid Amazon rows found; check AMAZON_SHEET_ID and AMAZON_SHEET_NAME');
     await pool.query('INSERT INTO app_data (key, value, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()', ['amazon', JSON.stringify(rows)]);
     console.log(`[amazon-sync] ✅ Synced ${rows.length} items`);
+    return rows.length;
   } catch (err) {
     console.error('[amazon-sync] ❌ Failed:', err.message);
+    throw err;
   }
 }
 
@@ -1680,8 +1728,12 @@ async function syncFilmToDB() {
 }
 
 app.get('/api/admin/sync/amazon', authMiddleware, requireAdmin, async (req, res) => {
-  await syncAmazonToDB();
-  res.json({ ok: true });
+  try {
+    const count = await syncAmazonToDB();
+    res.json({ ok: true, count });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.get('/api/admin/sync/film', authMiddleware, requireAdmin, async (req, res) => {
@@ -1690,12 +1742,20 @@ app.get('/api/admin/sync/film', authMiddleware, requireAdmin, async (req, res) =
 });
 
 app.get('/api/admin/sync/all', authMiddleware, requireAdmin, async (req, res) => {
-  await Promise.all([syncProductsToDB(), syncAmazonToDB(), syncFilmToDB()]);
-  res.json({ ok: true });
+  try {
+    await syncProductsToDB();
+    await syncAmazonToDB();
+    await syncFilmToDB();
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Public cached API: Amazon
 app.get('/api/amazon', async (req, res) => {
+  await connectDB();
+  await ensureProductSchema();
   if (!pool) {
     const url = `https://docs.google.com/spreadsheets/d/${AMAZON_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(AMAZON_SHEET_NAME)}`;
     try {
@@ -1705,7 +1765,8 @@ app.get('/api/amazon', async (req, res) => {
         const json = JSON.parse(match[1]);
         const rows = (json.table?.rows || []).map(row => {
           const c = row.c || [];
-          return { category: c[0]?.v||'', type: c[1]?.v||'', rank: parseInt(c[2]?.v)||0, title: c[3]?.v||'', price: c[4]?.v||'', rating: c[5]?.v||'', reviews: c[6]?.v||'', imageUrl: c[7]?.v||'', productUrl: c[8]?.v||'', updatedAt: c[9]?.v||'' };
+          const categoryRaw = c[0]?.v || '';
+          return { categoryRaw, category: categoryRaw, type: c[1]?.v||'', rank: parseInt(c[2]?.v)||0, title: c[3]?.v||'', price: c[4]?.v||'', rating: c[5]?.v||'', reviews: c[6]?.v||'', imageUrl: c[7]?.v||'', productUrl: c[8]?.v||'', updatedAt: c[9]?.v||'' };
         }).filter(r => r.title && r.title !== 'Title');
         return res.json({ data: rows, source: 'google-sheet' });
       }
@@ -1715,8 +1776,9 @@ app.get('/api/amazon', async (req, res) => {
   try {
     const { rows } = await pool.query('SELECT value, updated_at FROM app_data WHERE key = $1', ['amazon']);
     if (rows.length > 0) {
-      const latestDate = (rows[0].value || []).reduce((max, r) => r.updatedAt && r.updatedAt > max ? r.updatedAt : max, '');
-      return res.json({ data: rows[0].value, source: 'cache', updatedAt: rows[0].updated_at, latestDate: latestDate.split(' ')[0] || '' });
+      const data = (rows[0].value || []).map(r => ({ ...r, categoryRaw: r.categoryRaw || r.category || '' }));
+      const latestDate = data.reduce((max, r) => r.updatedAt && r.updatedAt > max ? r.updatedAt : max, '');
+      return res.json({ data, source: 'cache', updatedAt: rows[0].updated_at, latestDate: latestDate.split(' ')[0] || '' });
     }
     res.json({ data: [], source: 'empty' });
   } catch {
@@ -1905,7 +1967,13 @@ async function startDataSyncScheduler() {
   if (productSyncInterval) clearInterval(productSyncInterval);
   productSyncInterval = setInterval(async () => {
     console.log('[data-sync] Scheduled sync triggered');
-    await Promise.all([syncProductsToDB(), syncAmazonToDB(), syncFilmToDB()]);
+    try {
+      await syncProductsToDB();
+      await syncAmazonToDB();
+      await syncFilmToDB();
+    } catch (err) {
+      console.error('[data-sync] Scheduled sync failed:', err.message);
+    }
   }, SYNC_INTERVAL_MS);
   console.log(`[data-sync] Scheduler started, interval: ${SYNC_INTERVAL_MS}ms`);
 }
@@ -1917,6 +1985,8 @@ const productService = {
 
   async getAllProducts() {
     if (this._cache) return this._cache;
+    await connectDB();
+    await ensureProductSchema();
     if (!pool) { this._cache = []; return []; }
     try {
       const { rows } = await pool.query('SELECT data FROM products ORDER BY sku');
@@ -1963,7 +2033,10 @@ const productService = {
 
   async refresh() {
     this.clearCache();
-    return await syncProductsToDB();
+    const products = await syncProductsToDB();
+    this._cache = products;
+    this._cacheMeta = { count: products.length, source: 'google-sheet', updated_at: new Date().toISOString() };
+    return products;
   }
 };
 
@@ -2146,7 +2219,13 @@ app.get('*', (req, res) => {
 async function startServer() {
   await connectDB();
   await initDB();
-  await Promise.all([syncProductsToDB(), syncAmazonToDB(), syncFilmToDB()]);
+  try {
+    await syncProductsToDB();
+    await syncAmazonToDB();
+    await syncFilmToDB();
+  } catch (err) {
+    console.error('[startup-sync] Initial sync failed:', err.message);
+  }
   await startDataSyncScheduler();
   httpServer = app.listen(PORT, () => console.log(`AccessoryGuide running on http://localhost:${PORT}`));
 }
