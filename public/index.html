@@ -141,6 +141,8 @@ input,textarea,select{font-family:inherit}
 .nav-tab svg{width:14px;height:14px;opacity:0.7}
 .nav-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
 .nav-badge{font-size:11px;padding:3px 8px;border-radius:var(--radius-sm);background:var(--surface2);color:var(--text3);font-family:'JetBrains Mono',monospace;font-weight:500}
+.hamburger-btn{display:none}
+.mobile-menu{display:none}
 
 /* ===== LAYOUT ===== */
 .page{display:none;max-width:1200px;margin:0 auto;padding:28px 24px}
@@ -452,6 +454,16 @@ input,textarea,select{font-family:inherit}
   
   /* Mobile: admin buttons */
   #admin-btn span{display:none}
+  /* Mobile: hamburger menu */
+  .hamburger-btn{display:flex!important;background:none;border:none;color:var(--text2);padding:8px;cursor:pointer;align-items:center}
+  .nav-actions .btn-sm:not(.hamburger-btn), .nav-actions .nav-badge, .nav-actions .desktop-lang{display:none!important}
+  .mobile-menu{position:fixed;top:52px;left:0;right:0;bottom:0;z-index:999;background:var(--bg);overflow-y:auto;padding:16px 20px}
+  .mobile-menu-inner{max-width:400px;margin:0 auto}
+  .mobile-nav-tabs{display:flex;flex-direction:column;gap:2px;margin-bottom:20px}
+  .mobile-nav-tab{display:block;padding:12px 14px;border-radius:var(--radius);font-size:14px;font-weight:500;color:var(--text)}
+  .mobile-nav-tab:active{background:var(--surface2)}
+  .mobile-menu-actions{display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:1px solid var(--border)}
+  .mobile-lang-select{display:flex!important;gap:8px}
   
   /* Mobile: info cards */
   #ipad-page>div:nth-child(2)>div,
@@ -1690,9 +1702,40 @@ input,textarea,select{font-family:inherit}
       <button id="member-btn" class="btn btn-secondary btn-sm" onclick="goMember()" style="display:none" data-i18n="member_center">会员中心</button>
       <button id="admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()" style="display:none">后台管理</button>
       <button id="logout-btn" class="btn btn-secondary btn-sm" style="display:none" onclick="doLogout()" data-i18n="logout">退出</button>
+      <button id="hamburger-btn" class="hamburger-btn" onclick="toggleMobileMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
     </div>
   </div>
 </nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="mobile-menu" style="display:none">
+  <div class="mobile-menu-inner">
+    <div class="mobile-nav-tabs">
+      <a class="mobile-nav-tab" data-page="amazon" onclick="switchPage('amazon');closeMobileMenu();return false" href="#">Amazon</a>
+      <a class="mobile-nav-tab" data-page="ipad" onclick="switchPage('ipad');closeMobileMenu();return false" href="#">iPad</a>
+      <a class="mobile-nav-tab" data-page="watch" onclick="switchPage('watch');closeMobileMenu();return false" href="#">Watch</a>
+      <a class="mobile-nav-tab" data-page="film" onclick="switchPage('film');closeMobileMenu();return false" href="#">Cristal Templado</a>
+      <a class="mobile-nav-tab" data-page="products" onclick="switchPage('products');closeMobileMenu();return false" href="#">Materiales</a>
+    </div>
+    <div class="mobile-menu-actions">
+      <div class="mobile-lang-select">
+        <button class="lang-btn btn" data-lang="es" onclick="setLanguage('es');closeMobileMenu()" style="padding:4px 8px;font-size:11px;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer">ES</button>
+        <button class="lang-btn btn" data-lang="en" onclick="setLanguage('en');closeMobileMenu()" style="padding:4px 8px;font-size:11px;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer">EN</button>
+        <button class="lang-btn btn" data-lang="zh" onclick="setLanguage('zh');closeMobileMenu()" style="padding:4px 8px;font-size:11px;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer">中文</button>
+      </div>
+      <button onclick="toggleTheme();closeMobileMenu()" style="background:none;border:none;color:var(--text2);padding:8px;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px">
+        <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/></svg>
+        主题
+      </button>
+      <button id="mobile-login-btn" class="btn btn-primary btn-sm" onclick="showLogin();closeMobileMenu()" data-i18n="login_register" style="width:100%">登录 / 注册</button>
+      <button id="mobile-member-btn" class="btn btn-secondary btn-sm" onclick="goMember();closeMobileMenu()" style="display:none;width:100%" data-i18n="member_center">会员中心</button>
+      <button id="mobile-admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin();closeMobileMenu()" style="display:none;width:100%">后台管理</button>
+      <button id="mobile-logout-btn" class="btn btn-secondary btn-sm" onclick="doLogout();closeMobileMenu()" style="display:none;width:100%" data-i18n="logout">退出</button>
+    </div>
+  </div>
+</div>
 
 <!-- AMAZON PAGE -->
 <div id="amazon-page" class="page" style="padding:0!important">
@@ -2701,6 +2744,15 @@ function closeLogin() {
   document.getElementById('login-page').style.display = 'none';
 }
 
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+}
+
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').style.display = 'none';
+}
+
 async function showAdmin() {
   closeLogin();
   document.getElementById('main-nav').style.display = 'block';
@@ -2862,6 +2914,10 @@ function updateAuthUI() {
   document.getElementById('member-btn').style.display = loggedIn ? 'inline-flex' : 'none';
   document.getElementById('admin-btn').style.display = (loggedIn && role === 'admin') ? 'inline-flex' : 'none';
   document.getElementById('logout-btn').style.display = loggedIn ? 'inline-flex' : 'none';
+  document.getElementById('mobile-login-btn').style.display = loggedIn ? 'none' : 'block';
+  document.getElementById('mobile-member-btn').style.display = loggedIn ? 'block' : 'none';
+  document.getElementById('mobile-admin-btn').style.display = (loggedIn && role === 'admin') ? 'block' : 'none';
+  document.getElementById('mobile-logout-btn').style.display = loggedIn ? 'block' : 'none';
   document.querySelectorAll('.member-only').forEach(el => { el.style.display = loggedIn ? 'inline-flex' : 'none'; });
   // Refresh role from server if logged in
   if (loggedIn) {
