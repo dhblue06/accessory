@@ -1195,6 +1195,13 @@ function isAdminEmail(email) {
   return adminEmails.includes(email.toLowerCase());
 }
 
+function requireAdmin(req, res, next) {
+  if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
+  if (isAdminEmail(req.user.email)) return next();
+  if (req.user.app_metadata?.role === 'admin' || req.user.raw_app_meta_data?.role === 'admin') return next();
+  return res.status(403).json({ error: 'Admin only' });
+}
+
 // ============ AUTH ============
 app.get('/api/auth/status', (req, res) => {
   res.json({ supabaseConfigured: true });
@@ -1215,7 +1222,9 @@ app.get('/api/auth/me', async (req, res) => {
       }
     } catch {}
     const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
-    const isAdmin = adminEmails.includes((user.email || '').toLowerCase());
+    const isAdminByEmail = adminEmails.includes((user.email || '').toLowerCase());
+    const isAdminByMeta = user.app_metadata?.role === 'admin' || user.raw_app_meta_data?.role === 'admin';
+    const isAdmin = isAdminByEmail || isAdminByMeta;
     res.json({
       user: { id: user.id, email: user.email, name: user.user_metadata?.full_name || user.email, phone, store, avatar_url, role: isAdmin ? 'admin' : 'member' }
     });
