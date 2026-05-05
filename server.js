@@ -1250,10 +1250,18 @@ app.put('/api/member/change-password', async (req, res) => {
   try {
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) return res.status(401).json({ error: 'Invalid token' });
-    const { newPassword, refreshToken } = req.body;
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword) return res.status(400).json({ error: '请填写旧密码' });
     if (!newPassword || newPassword.length < 6) return res.status(400).json({ error: '密码至少6位' });
+    if (!user.email) return res.status(400).json({ error: '当前账号缺少邮箱，无法验证旧密码' });
+
     const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
-    await userClient.auth.setSession({ access_token: token, refresh_token: refreshToken || '' });
+    const { data: signInData, error: signInError } = await userClient.auth.signInWithPassword({
+      email: user.email,
+      password: oldPassword
+    });
+    if (signInError || !signInData.session) return res.status(400).json({ error: '旧密码不正确' });
+
     const { error: updateError } = await userClient.auth.updateUser({ password: newPassword });
     if (updateError) return res.status(400).json({ error: updateError.message });
     res.json({ success: true });
