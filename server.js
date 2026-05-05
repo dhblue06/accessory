@@ -1569,6 +1569,11 @@ app.get('/api/products/cache/status', async (req, res) => {
   res.json(cached || { source: 'empty', count: 0, updatedAt: null });
 });
 
+app.get('/api/product-cache-status', async (req, res) => {
+  const cached = productService.getCacheMeta();
+  res.json(cached || { source: 'empty', count: 0, updatedAt: null });
+});
+
 app.get('/api/products/image/:fileId', (req, res) => {
   const fileId = req.params.fileId;
   if (!/^[a-zA-Z0-9_-]+$/.test(fileId)) {
@@ -1646,6 +1651,22 @@ app.post('/api/admin/products/refresh', authMiddleware, requireAdmin, async (req
 });
 
 app.get('/api/cron/products/sync', async (req, res) => {
+  const expectedSecret = process.env.CRON_SECRET || '';
+  const providedSecret = req.headers.authorization?.replace('Bearer ', '') || req.query.secret || req.headers['x-cron-secret'];
+  if (expectedSecret && providedSecret !== expectedSecret) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    productService.clearCache();
+    const products = await productService.syncProductsFromGoogleSheet();
+    res.json({ success: true, count: products.length, cache: productService.getCacheMeta() });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/product-sync', async (req, res) => {
   const expectedSecret = process.env.CRON_SECRET || '';
   const providedSecret = req.headers.authorization?.replace('Bearer ', '') || req.query.secret || req.headers['x-cron-secret'];
   if (expectedSecret && providedSecret !== expectedSecret) {
