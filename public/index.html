@@ -1721,7 +1721,8 @@ input,textarea,select{font-family:inherit}
         <option value="zh">中文</option>
       </select>
       <span id="nav-version" class="nav-badge">v1.0</span>
-      <div id="clerk-user-button"></div>
+      <button id="clerk-auth-btn" class="btn btn-primary btn-sm" onclick="openClerkSignIn()">会员登录 / 注册</button>
+      <div id="clerk-user-button" style="display:none"></div>
       <button id="admin-btn" class="btn btn-secondary btn-sm" onclick="goAdmin()">后台管理</button>
       <button id="logout-btn" class="btn btn-secondary btn-sm" style="display:none" onclick="doLogout()">退出</button>
     </div>
@@ -2573,6 +2574,32 @@ function waitForClerk(timeoutMs = 10000) {
   });
 }
 
+function setClerkNavState(isSignedIn) {
+  const authButton = document.getElementById('clerk-auth-btn');
+  const userButton = document.getElementById('clerk-user-button');
+  if (authButton) authButton.style.display = isSignedIn ? 'none' : 'inline-flex';
+  if (userButton) userButton.style.display = isSignedIn ? 'block' : 'none';
+}
+
+async function openClerkSignIn() {
+  try {
+    const clerk = await waitForClerk();
+    await clerk.load();
+    if (clerk.openSignIn) {
+      clerk.openSignIn();
+      return;
+    }
+  } catch (err) {
+    console.error('Clerk sign-in failed:', err);
+  }
+
+  document.getElementById('app-content').style.display = 'none';
+  document.getElementById('clerk-login-page').style.display = 'flex';
+  const loginContainer = document.getElementById('login-container');
+  loginContainer.innerHTML = '';
+  if (window.Clerk) window.Clerk.mountSignIn(loginContainer);
+}
+
 async function requireClerkMembership() {
   const appContent = document.getElementById('app-content');
   const clerkLoginPage = document.getElementById('clerk-login-page');
@@ -2583,6 +2610,7 @@ async function requireClerkMembership() {
     console.warn('Clerk publishable key is not configured. Replace data-clerk-publishable-key with your pk_... key.');
     appContent.style.display = 'block';
     clerkLoginPage.style.display = 'none';
+    setClerkNavState(false);
     return true;
   }
 
@@ -2594,6 +2622,7 @@ async function requireClerkMembership() {
       clerkLoginPage.style.display = 'flex';
       loginContainer.innerHTML = '';
       clerk.mountSignIn(loginContainer);
+      setClerkNavState(false);
       return false;
     }
 
@@ -2604,11 +2633,13 @@ async function requireClerkMembership() {
       userButton.innerHTML = '';
       clerk.mountUserButton(userButton);
     }
+    setClerkNavState(true);
     return true;
   } catch (err) {
     console.error('Clerk initialization failed:', err);
     appContent.style.display = 'block';
     clerkLoginPage.style.display = 'none';
+    setClerkNavState(false);
     return true;
   }
 }
