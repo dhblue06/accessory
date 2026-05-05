@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://xjm0616_db_user:fOkVE5dAVKu8F5Ty@cluster0.afxj3we.mongodb.net/?appName=Cluster0';
 const DB_NAME = 'accessory_guide';
 const DEFAULT_SETTINGS = { siteName: 'TEMCO ACCESORIOS', version: 'v1.0' };
+const USE_MONGO_FOR_PUBLIC_READS = process.env.USE_MONGO_FOR_PUBLIC_READS === 'true';
 let db;
 let mongoClient;
 let httpServer;
@@ -110,6 +111,16 @@ async function writeDB(data) {
     { _id: 'main', ...data },
     { upsert: true }
   );
+}
+
+async function readPublicDB() {
+  if (!USE_MONGO_FOR_PUBLIC_READS) return readBundledDBData();
+  try {
+    return await readDB();
+  } catch (err) {
+    console.error('[public-db] MongoDB unavailable, using bundled data:', err.message);
+    return readBundledDBData();
+  }
 }
 
 // Initialize DB connection on startup
@@ -1046,13 +1057,7 @@ function migrateToMultiLang(item) {
 }
 
 app.get('/api/ipad', async (req, res) => {
-  let data;
-  try {
-    data = await readDB();
-  } catch (err) {
-    console.error('[ipad] MongoDB unavailable, using bundled data:', err.message);
-    data = readBundledDBData();
-  }
+  const data = await readPublicDB();
   const lang = req.query.lang || 'zh';
   const q = (req.query.q || '').toLowerCase();
   let items = data.ipad || [];
@@ -1087,13 +1092,7 @@ app.get('/api/ipad', async (req, res) => {
 });
 
 app.get('/api/watch', async (req, res) => {
-  let data;
-  try {
-    data = await readDB();
-  } catch (err) {
-    console.error('[watch] MongoDB unavailable, using bundled data:', err.message);
-    data = readBundledDBData();
-  }
+  const data = await readPublicDB();
   const lang = req.query.lang || 'zh';
   const q = (req.query.q || '').toLowerCase();
   let items = data.watch || [];
@@ -1133,17 +1132,23 @@ app.get('/api/film', async (req, res) => {
 
   // Track search query (don't block the response)
   if (q) {
-    const db = await readDB();
-    const stats = db.filmSearchStats || [];
-    const existing = stats.find(s => s.query === q);
-    if (existing) {
-      existing.count++;
-      existing.lastSearched = new Date().toISOString();
-    } else {
-      stats.push({ query: q, count: 1, lastSearched: new Date().toISOString() });
-    }
-    db.filmSearchStats = stats.slice(-500); // Keep last 500 searches
-    await writeDB(db);
+    (async () => {
+      try {
+        const db = await readDB();
+        const stats = db.filmSearchStats || [];
+        const existing = stats.find(s => s.query === q);
+        if (existing) {
+          existing.count++;
+          existing.lastSearched = new Date().toISOString();
+        } else {
+          stats.push({ query: q, count: 1, lastSearched: new Date().toISOString() });
+        }
+        db.filmSearchStats = stats.slice(-500); // Keep last 500 searches
+        await writeDB(db);
+      } catch (err) {
+        console.error('[film-stats] Failed to track search:', err.message);
+      }
+    })();
   }
 
   // Read from xlsx
@@ -1186,13 +1191,8 @@ app.get('/api/film', async (req, res) => {
 });
 
 app.get('/api/settings', async (req, res) => {
-  try {
-    const db = await readDB();
-    res.json(db.settings || DEFAULT_SETTINGS);
-  } catch (err) {
-    console.error('[settings] MongoDB unavailable, using defaults:', err.message);
-    res.json(DEFAULT_SETTINGS);
-  }
+  const db = await readPublicDB();
+  res.json(db.settings || DEFAULT_SETTINGS);
 });
 
 const PRODUCT_TRANSLATIONS = {
@@ -1329,13 +1329,8 @@ function getTranslationTexts(lang, dbTranslations = {}) {
 // Translations API
 app.get('/api/translations', async (req, res) => {
   const lang = req.query.lang || 'zh';
-  let translations = {};
-  try {
-    const db = await readDB();
-    translations = db.translations || {};
-  } catch (err) {
-    console.error('[translations] MongoDB unavailable, using defaults:', err.message);
-  }
+  const db = await readPublicDB();
+  const translations = db.translations || {};
   res.json({
     lang,
     texts: getTranslationTexts(lang, translations)
@@ -1481,13 +1476,8 @@ app.put('/api/admin/translations', authMiddleware, async (req, res) => {
 
 // Amazon category translations
 app.get('/api/amazon-categories', async (req, res) => {
-  try {
-    const db = await readDB();
-    res.json(db.amazonCategories || {});
-  } catch (err) {
-    console.error('[amazon-categories] MongoDB unavailable, using defaults:', err.message);
-    res.json({});
-  }
+  const db = await readPublicDB();
+  res.json(db.amazonCategories || {});
 });
 
 app.put('/api/admin/amazon-categories', authMiddleware, async (req, res) => {
