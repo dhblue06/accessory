@@ -21,6 +21,7 @@ let db;
 let mongoClient;
 let httpServer;
 let connectPromise;
+let bundledDBCache;
 
 // Multer config for logo upload
 const storage = multer.diskStorage({
@@ -78,6 +79,17 @@ function getDefaultDBData() {
     translations: {},
     filmSearchStats: []
   };
+}
+
+function readBundledDBData() {
+  if (bundledDBCache) return bundledDBCache;
+  const bundledPath = path.join(__dirname, 'data', 'db.json');
+  if (!fs.existsSync(bundledPath)) {
+    bundledDBCache = getDefaultDBData();
+    return bundledDBCache;
+  }
+  bundledDBCache = { ...getDefaultDBData(), ...JSON.parse(fs.readFileSync(bundledPath, 'utf8')) };
+  return bundledDBCache;
 }
 
 // Unified readDB/writeDB backed by MongoDB Atlas.
@@ -752,6 +764,22 @@ async function writeUsers(users) {
 // Initialize DB from film_data.json if empty
 async function initDB() {
   const db = await readDB();
+  const bundled = readBundledDBData();
+  let seededFromBundle = false;
+
+  if ((!db.ipad || db.ipad.length === 0) && bundled.ipad && bundled.ipad.length > 0) {
+    db.ipad = bundled.ipad;
+    seededFromBundle = true;
+  }
+  if ((!db.watch || db.watch.length === 0) && bundled.watch && bundled.watch.length > 0) {
+    db.watch = bundled.watch;
+    seededFromBundle = true;
+  }
+  if (seededFromBundle) {
+    await writeDB(db);
+    console.log('Seeded iPad/Watch data from bundled data into MongoDB');
+  }
+
   const filmSrc = path.join(__dirname, '..', 'film_data.json');
   if ((!db.film || !db.film.fullGlue || Object.keys(db.film.fullGlue).length === 0) && fs.existsSync(filmSrc)) {
     const raw = JSON.parse(fs.readFileSync(filmSrc, 'utf8'));
@@ -1018,10 +1046,17 @@ function migrateToMultiLang(item) {
 }
 
 app.get('/api/ipad', async (req, res) => {
-  const db = await readDB();
+  let data;
+  try {
+    data = await readDB();
+  } catch (err) {
+    console.error('[ipad] MongoDB unavailable, using bundled data:', err.message);
+    data = readBundledDBData();
+  }
   const lang = req.query.lang || 'zh';
   const q = (req.query.q || '').toLowerCase();
-  let items = db.ipad || [];
+  let items = data.ipad || [];
+  if (items.length === 0) items = readBundledDBData().ipad || [];
   
   // Search in Chinese for matching (assuming original data is Chinese)
   if (q) {
@@ -1052,10 +1087,17 @@ app.get('/api/ipad', async (req, res) => {
 });
 
 app.get('/api/watch', async (req, res) => {
-  const db = await readDB();
+  let data;
+  try {
+    data = await readDB();
+  } catch (err) {
+    console.error('[watch] MongoDB unavailable, using bundled data:', err.message);
+    data = readBundledDBData();
+  }
   const lang = req.query.lang || 'zh';
   const q = (req.query.q || '').toLowerCase();
-  let items = db.watch || [];
+  let items = data.watch || [];
+  if (items.length === 0) items = readBundledDBData().watch || [];
   
   // Search in Chinese for matching
   if (q) {

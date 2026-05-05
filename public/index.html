@@ -2688,7 +2688,7 @@ async function loadiPad() {
 
   // Fetch fresh data if first load, search changed, or language changed
   if (ipadData.length === 0 || q !== ipadSearchQ || currentLang !== lastFetchedLang) {
-    ipadData = await fetch('/api/ipad?q='+encodeURIComponent(q)+'&lang='+currentLang).then(r=>r.json());
+    ipadData = await fetchJsonWithTimeout('/api/ipad?q='+encodeURIComponent(q)+'&lang='+currentLang, 8000);
     ipadSearchQ = q;
     lastFetchedLang = currentLang;
     ipadLoadedCount = 20;
@@ -2825,7 +2825,7 @@ async function loadWatch() {
 
   // Fetch fresh data if first load, search changed, or language changed
   if (watchData.length === 0 || q !== watchSearchQ || currentLang !== lastWatchFetchedLang) {
-    watchData = await fetch('/api/watch?q='+encodeURIComponent(q)+'&lang='+currentLang).then(r=>r.json());
+    watchData = await fetchJsonWithTimeout('/api/watch?q='+encodeURIComponent(q)+'&lang='+currentLang, 8000);
     watchSearchQ = q;
     lastWatchFetchedLang = currentLang;
     watchLoadedCount = 20;
