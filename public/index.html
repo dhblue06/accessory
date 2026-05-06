@@ -2051,28 +2051,13 @@ input,textarea,select{font-family:inherit}
       <div id="panel-dashboard" class="admin-panel active">
         <div class="admin-header"><h2 class="admin-title" data-i18n="admin_dashboard">数据概览</h2></div>
         <div class="stat-grid" id="stat-grid">
-          <div class="stat-card"><div class="stat-label" data-i18n="stat_ipad">iPad 型号</div><div class="stat-value" id="stat-ipad">—</div></div>
-          <div class="stat-card"><div class="stat-label" data-i18n="stat_watch">Watch 型号</div><div class="stat-value" id="stat-watch">—</div></div>
-          <div class="stat-card"><div class="stat-label" data-i18n="stat_film">全胶防静电膜</div><div class="stat-value" id="stat-fg">—</div></div>
-          <div class="stat-card"><div class="stat-label" data-i18n="stat_2d">2.5D 膜条目</div><div class="stat-value" id="stat-2d">—</div></div>
-          <div class="stat-card"><div class="stat-label" data-i18n="stat_privacy">防窥膜</div><div class="stat-value" id="stat-priv">—</div></div>
-          <div class="stat-card"><div class="stat-label" data-i18n="stat_users">管理用户</div><div class="stat-value" id="stat-users">—</div></div>
-        </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
-          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="quick_actions">快速操作</h3>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button class="btn btn-secondary" onclick="switchPanel('ipad-mgmt',document.querySelector('[data-panel=ipad-mgmt]'))" data-i18n="admin_ipad_mgmt">管理 iPad 数据</button>
-            <button class="btn btn-secondary" onclick="switchPanel('film-mgmt',document.querySelector('[data-panel=film-mgmt]'))" data-i18n="admin_film_mgmt">管理膜数据</button>
-            <button class="btn btn-secondary" onclick="switchPanel('users-mgmt',document.querySelector('[data-panel=users-mgmt]'))" data-i18n="admin_users_mgmt">管理用户</button>
-            <button id="sync-products-btn" class="btn btn-primary" onclick="syncProducts()" data-i18n="admin_sync_products">同步产品素材</button>
-            <button class="btn btn-primary" onclick="syncAmazon()" style="background:var(--accent-2)">同步 Amazon 数据</button>
-            <button class="btn btn-primary" onclick="syncFilm()" style="background:var(--accent-2)">同步膜数据</button>
-            <button class="btn btn-secondary" onclick="syncAll()">同步全部数据</button>
-          </div>
+          <div class="stat-card"><div class="stat-label" data-i18n="stat_users">用户数量</div><div class="stat-value" id="stat-users">—</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="stat_total_visits">总访问量</div><div class="stat-value" id="stat-total-visits">—</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="stat_today_visits">今日访问量</div><div class="stat-value" id="stat-today-visits">—</div></div>
         </div>
         <!-- Film Search Stats -->
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:20px">
-          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="film_search_stats">热门搜索型号</h3>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="search_keywords_stats">热门搜索关键字</h3>
           <div id="film-search-stats" style="max-height:300px;overflow-y:auto">
             <div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">加载中...</div>
           </div>
@@ -2568,6 +2553,12 @@ async function loadTranslations() {
   }
 }
 
+function trackSiteVisit() {
+  if (sessionStorage.getItem('ag_visit_tracked')) return;
+  sessionStorage.setItem('ag_visit_tracked', '1');
+  fetch('/api/track-visit', { method: 'POST', keepalive: true }).catch(() => {});
+}
+
 function setLanguage(lang) {
   currentLang = lang;
   localStorage.setItem('ag_lang', lang);
@@ -2697,19 +2688,13 @@ function applyTranslations() {
     if (panel === 'amazon-cat' && span) span.textContent = t('admin_amazon_cat_title');
   });
 
-  // Stats labels
-  const statEls = document.querySelectorAll('.stat-label');
-  if (statEls[0]) statEls[0].textContent = t('stat_ipad');
-  if (statEls[1]) statEls[1].textContent = t('stat_watch');
-  if (statEls[2]) statEls[2].textContent = t('stat_film');
-  if (statEls[3]) statEls[3].textContent = t('stat_2d');
-  if (statEls[4]) statEls[4].textContent = t('stat_privacy');
-  if (statEls[5]) statEls[5].textContent = t('stat_users');
+  // Stats labels are handled by data-i18n attributes.
 }
 
 // ============ INIT ============
 async function init() {
   applyTheme();
+  trackSiteVisit();
 
   if (window.location.hash === '#admin' || window.location.hash === '#member') {
     const token = localStorage.getItem('ag_token');
@@ -3501,12 +3486,9 @@ function setBrand(b) {
 async function loadAdminDashboard() {
   try {
     const s = await api('/api/admin/stats');
-    document.getElementById('stat-ipad').textContent = s.ipadCount;
-    document.getElementById('stat-watch').textContent = s.watchCount;
-    document.getElementById('stat-fg').textContent = s.fgCount;
-    document.getElementById('stat-2d').textContent = s.tdCount;
-    document.getElementById('stat-priv').textContent = s.privacyCount;
     document.getElementById('stat-users').textContent = s.userCount;
+    document.getElementById('stat-total-visits').textContent = s.totalVisits || 0;
+    document.getElementById('stat-today-visits').textContent = s.todayVisits || 0;
     loadFilmSearchStats();
   } catch {}
 }

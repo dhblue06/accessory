@@ -244,7 +244,8 @@ function getDefaultDBData() {
     film: { fullGlue: {}, twoPointFiveD: [], privacy: [] },
     settings: DEFAULT_SETTINGS,
     translations: {},
-    filmSearchStats: []
+    filmSearchStats: [],
+    siteVisits: { total: 0, byDate: {} }
   };
 }
 
@@ -316,8 +317,11 @@ const DEFAULT_TRANSLATIONS = {
     stat_2d: '2.5D 膜条目',
     stat_privacy: '防窥膜',
     stat_users: '管理用户',
+    stat_total_visits: '总访问量',
+    stat_today_visits: '今日访问量',
     stat_film_search: '膜搜索统计',
     film_search_stats: '热门搜索型号',
+    search_keywords_stats: '热门搜索关键字',
     film_search_count: '搜索次数',
     film_search_last: '最后搜索',
     quick_actions: '快速操作',
@@ -524,8 +528,11 @@ const DEFAULT_TRANSLATIONS = {
     stat_2d: '2.5D Films',
     stat_privacy: 'Privacy Films',
     stat_users: 'Users',
+    stat_total_visits: 'Total Visits',
+    stat_today_visits: 'Today Visits',
     stat_film_search: 'Film Search Stats',
     film_search_stats: 'Popular Searches',
+    search_keywords_stats: 'Popular Search Keywords',
     film_search_count: 'Searches',
     film_search_last: 'Last Searched',
     quick_actions: 'Quick Actions',
@@ -732,8 +739,11 @@ const DEFAULT_TRANSLATIONS = {
     stat_2d: 'Cristales 2.5D',
     stat_privacy: 'Cristales Privacidad',
     stat_users: 'Usuarios',
+    stat_total_visits: 'Visitas Totales',
+    stat_today_visits: 'Visitas de Hoy',
     stat_film_search: 'Búsquedas de Cristales',
     film_search_stats: 'Búsquedas Populares',
+    search_keywords_stats: 'Palabras Clave Populares',
     film_search_count: 'Búsquedas',
     film_search_last: 'Última Búsqueda',
     quick_actions: 'Acciones Rápidas',
@@ -1646,6 +1656,22 @@ app.get('/api/admin/film-search-stats', authMiddleware, async (req, res) => {
   res.json(top);
 });
 
+app.post('/api/track-visit', async (req, res) => {
+  try {
+    const db = await readDB();
+    const today = new Date().toISOString().slice(0, 10);
+    const siteVisits = db.siteVisits || { total: 0, byDate: {} };
+    siteVisits.total = Number(siteVisits.total || 0) + 1;
+    siteVisits.byDate = siteVisits.byDate || {};
+    siteVisits.byDate[today] = Number(siteVisits.byDate[today] || 0) + 1;
+    db.siteVisits = siteVisits;
+    await writeDB(db);
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ============ ADMIN APIs ============
 // iPad CRUD
 app.get('/api/admin/ipad', authMiddleware, async (req, res) => {
@@ -2505,19 +2531,25 @@ app.get('/api/product-sync', async (req, res) => {
 app.get('/api/admin/stats', authMiddleware, async (req, res) => {
   const db = await readDB();
   let productCount = 0;
+  let userCount = 0;
+  if (supabaseAdmin) {
+    try {
+      const { data } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+      userCount = (data.users || []).length;
+    } catch {}
+  }
   if (pool) {
     try {
       const { rows } = await pool.query('SELECT count FROM products_meta WHERE id = $1', ['syncMeta']);
       if (rows.length > 0) productCount = rows[0].count;
     } catch {}
   }
+  const today = new Date().toISOString().slice(0, 10);
+  const siteVisits = db.siteVisits || { total: 0, byDate: {} };
   res.json({
-    ipadCount: (db.ipad || []).length,
-    watchCount: (db.watch || []).length,
-    fgCount: Object.keys((await readPublicDB()).film?.fullGlue || {}).length,
-    tdCount: 0,
-    privacyCount: 0,
-    userCount: 1,
+    userCount,
+    totalVisits: Number(siteVisits.total || 0),
+    todayVisits: Number(siteVisits.byDate?.[today] || 0),
     productCount
   });
 });
