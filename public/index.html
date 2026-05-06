@@ -4728,6 +4728,26 @@ function renderAmazonData() {
 let googleAllData = [];
 let googleCategory = '';
 
+const GOOGLE_CAT_TRANS = {
+  '🛡️ 手机壳': { zh: '🛡️ 手机壳', en: '🛡️ Phone Cases', es: '🛡️ Fundas' },
+  '📱 手机': { zh: '📱 手机', en: '📱 Phones', es: '📱 Teléfonos' },
+  '📟 平板': { zh: '📟 平板', en: '📟 Tablets', es: '📟 Tablets' },
+  '⌚ 智能手表': { zh: '⌚ 智能手表', en: '⌚ Smartwatches', es: '⌚ Smartwatches' },
+  '💻 笔记本': { zh: '💻 笔记本', en: '💻 Laptops', es: '💻 Portátiles' },
+  '🎧 音频设备': { zh: '🎧 音频设备', en: '🎧 Audio', es: '🎧 Audio' },
+  '🎮 游戏机': { zh: '🎮 游戏机', en: '🎮 Gaming', es: '🎮 Videojuegos' },
+  '📷 电子设备': { zh: '📷 电子设备', en: '📷 Electronics', es: '📷 Electrónicos' },
+  '🔌 充电设备': { zh: '🔌 充电设备', en: '🔌 Chargers', es: '🔌 Cargadores' },
+  '📺 电视': { zh: '📺 电视', en: '📺 TVs', es: '📺 Televisores' }
+};
+
+function translateGoogleCategory(cat) {
+  if (!cat) return cat;
+  const trans = GOOGLE_CAT_TRANS[cat];
+  if (trans && trans[currentLang]) return trans[currentLang];
+  return cat;
+}
+
 function getGoogleTrendLabel(trend) {
   const t = (trend || '').toLowerCase();
   if (t.includes('very_high') || t === 'extreme') return { text: '极高 🔥', style: 'background:rgba(52,211,153,0.15);color:#059669' };
@@ -4768,7 +4788,6 @@ async function fetchGoogleData() {
 function renderGoogleCategoryFilters() {
   const el = document.getElementById('google-cat-filter');
   const cats = [...new Set(googleAllData.map(r => r.category).filter(Boolean))];
-  // Custom sort order for categories
   const sortOrder = ['📱 手机', '🛡️ 手机壳', '📟 平板', '⌚ 智能手表', '💻 笔记本', '🎧 音频设备', '🎮 游戏机', '📷 电子设备', '🔌 充电设备', '📺 电视'];
   cats.sort((a, b) => {
     const ai = sortOrder.indexOf(a);
@@ -4778,7 +4797,7 @@ function renderGoogleCategoryFilters() {
     if (bi === -1) return -1;
     return ai - bi;
   });
-  el.innerHTML = cats.map(c => `<button class="amazon-mode-btn ${!googleCategory && cats.indexOf(c) === 0 ? 'active' : ''}" data-cat="${c}" onclick="setGoogleCategory('${c.replace(/'/g,"\\'")}',this)" style="font-size:12px">${c}</button>`).join('');
+  el.innerHTML = cats.map(c => `<button class="amazon-mode-btn ${!googleCategory && cats.indexOf(c) === 0 ? 'active' : ''}" data-cat="${c}" onclick="setGoogleCategory('${c.replace(/'/g,"\\'")}',this)" style="font-size:12px">${translateGoogleCategory(c)}</button>`).join('');
   if (!googleCategory && cats.length > 0) { googleCategory = cats[0]; }
 }
 
