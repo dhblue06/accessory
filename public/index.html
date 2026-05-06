@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TEMCO ACCESORIOS</title>
+<link id="favicon-link" rel="icon" href="/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -2172,6 +2173,17 @@ input,textarea,select{font-family:inherit}
             <p style="font-size:11px;color:var(--text3);margin-top:4px" data-i18n="settings_logo_hint">支持 PNG、JPG，建议尺寸 200x200</p>
           </div>
           <div class="form-group">
+            <label class="form-label" data-i18n="settings_current_favicon">当前 favicon</label>
+            <div style="margin-bottom:8px">
+              <img id="current-favicon" src="/favicon.ico" style="height:32px;width:32px;border-radius:6px;border:1px solid var(--border);object-fit:contain" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="settings_upload_favicon">上传新 favicon</label>
+            <input id="set-favicon" type="file" accept="image/x-icon,image/png,image/svg+xml,image/*" style="font-size:13px">
+            <p style="font-size:11px;color:var(--text3);margin-top:4px" data-i18n="settings_favicon_hint">支持 ICO、PNG、SVG，建议 32x32 或 64x64</p>
+          </div>
+          <div class="form-group">
             <label class="form-label" data-i18n="settings_site_name">站点名称</label>
             <input id="set-sitename" class="form-input" type="text" placeholder="TEMCO ACCESORIOS">
           </div>
@@ -3614,7 +3626,7 @@ async function loadAdminiPad() {
     <td>
       <div style="display:flex;gap:6px">
         <button class="btn btn-secondary btn-sm" onclick='editItem("ipad",${JSON.stringify(i)})'>${t('btn_edit')}</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteItem('ipad","${i.id}")">${t('btn_delete')}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteItem('ipad','${i.id}')">${t('btn_delete')}</button>
       </div>
     </td>
   </tr>`).join('');
@@ -3631,7 +3643,7 @@ async function loadAdminWatch() {
     <td>
       <div style="display:flex;gap:6px">
         <button class="btn btn-secondary btn-sm" onclick='editItem("watch",${JSON.stringify(i)})'>${t('btn_edit')}</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteItem('watch","${i.id}")">${t('btn_delete')}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteItem('watch','${i.id}')">${t('btn_delete')}</button>
       </div>
     </td>
   </tr>`).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:32px">暂无数据，点击新增开始添加</td></tr>';
@@ -3688,6 +3700,8 @@ function editUser(u) {
         <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
       </select>
     </div>
+    <div class="form-group"><label class="form-label">${t('new_password')}</label><input id="edit-password" class="form-input" type="password" placeholder="${t('password_placeholder')}"></div>
+    <div class="form-group"><label class="form-label">${t('confirm_new_password')}</label><input id="edit-password-confirm" class="form-input" type="password" placeholder="${t('confirm_new_password_placeholder')}"></div>
   `;
   document.getElementById('modal-save').onclick = saveEditUser;
   document.getElementById('modal-overlay').classList.remove('hidden');
@@ -3699,8 +3713,14 @@ async function saveEditUser() {
   const phone = document.getElementById('edit-phone').value.trim();
   const store = document.getElementById('edit-store').value.trim();
   const role = document.getElementById('edit-role').value;
+  const password = document.getElementById('edit-password').value;
+  const passwordConfirm = document.getElementById('edit-password-confirm').value;
+  if (password || passwordConfirm) {
+    if (password.length < 6) { toast(t('password_min_6'), 'error'); return; }
+    if (password !== passwordConfirm) { toast(t('passwords_do_not_match'), 'error'); return; }
+  }
   try {
-    await api('/api/admin/users/' + id, { method: 'PUT', body: JSON.stringify({ name, phone, store, role }) });
+    await api('/api/admin/users/' + id, { method: 'PUT', body: JSON.stringify({ name, phone, store, role, password }) });
     toast(t('save_success'), 'success');
     closeModal();
     loadAdminUsers();
@@ -3719,6 +3739,12 @@ async function loadSettings() {
     document.title = (s.siteName||'TEMCO') + ' — AccessoryGuide';
     const vEl = document.getElementById('nav-version');
     if(vEl) vEl.textContent = s.version||'v1.0';
+    const cacheKey = Date.now();
+    const faviconImg = document.getElementById('current-favicon');
+    const faviconLink = document.getElementById('favicon-link');
+    const faviconUrl = s.faviconDataUrl || ('/favicon.ico?v=' + cacheKey);
+    if (faviconImg) faviconImg.src = faviconUrl;
+    if (faviconLink) faviconLink.href = faviconUrl;
   } catch {}
 }
 
@@ -3729,6 +3755,13 @@ async function saveSettings() {
     formData.append('logo', logoInput.files[0]);
     const uploadRes = await fetch('/api/admin/logo', { method: 'POST', headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') }, body: formData });
     if (!uploadRes.ok) { toast('Logo 上传失败', 'error'); return; }
+  }
+  const faviconInput = document.getElementById('set-favicon');
+  if (faviconInput.files && faviconInput.files[0]) {
+    const formData = new FormData();
+    formData.append('favicon', faviconInput.files[0]);
+    const uploadRes = await fetch('/api/admin/favicon', { method: 'POST', headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') }, body: formData });
+    if (!uploadRes.ok) { toast('favicon 上传失败', 'error'); return; }
   }
   const body = { siteName: document.getElementById('set-sitename').value, version: document.getElementById('set-version').value, note: document.getElementById('set-note').value };
   await api('/api/admin/settings', { method:'PUT', body: JSON.stringify(body) });

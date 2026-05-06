@@ -431,6 +431,9 @@ const DEFAULT_TRANSLATIONS = {
     settings_logo: '当前 Logo',
     settings_logo_upload: '上传新 Logo',
     settings_logo_hint: '支持 PNG、JPG，建议尺寸 200x200',
+    settings_current_favicon: '当前 favicon',
+    settings_upload_favicon: '上传新 favicon',
+    settings_favicon_hint: '支持 ICO、PNG、SVG，建议 32x32 或 64x64',
     settings_site_name: '站点名称',
     settings_version: '版本号',
     settings_note: '备注说明',
@@ -642,6 +645,9 @@ const DEFAULT_TRANSLATIONS = {
     settings_logo: 'Current Logo',
     settings_logo_upload: 'Upload New Logo',
     settings_logo_hint: 'PNG, JPG supported. Recommended 200x200',
+    settings_current_favicon: 'Current favicon',
+    settings_upload_favicon: 'Upload New favicon',
+    settings_favicon_hint: 'ICO, PNG, SVG supported. Recommended 32x32 or 64x64',
     settings_site_name: 'Site Name',
     settings_version: 'Version',
     settings_note: 'Notes',
@@ -853,6 +859,9 @@ const DEFAULT_TRANSLATIONS = {
     settings_logo: 'Logo Actual',
     settings_logo_upload: 'Subir Nuevo Logo',
     settings_logo_hint: 'PNG, JPG soportados. Recomendado 200x200',
+    settings_current_favicon: 'favicon actual',
+    settings_upload_favicon: 'Subir nuevo favicon',
+    settings_favicon_hint: 'ICO, PNG, SVG soportados. Recomendado 32x32 o 64x64',
     settings_site_name: 'Nombre del Sitio',
     settings_version: 'Versión',
     settings_note: 'Notas',
@@ -1677,7 +1686,13 @@ app.post('/api/track-visit', async (req, res) => {
 app.get('/api/admin/ipad', authMiddleware, async (req, res) => {
   const db = await readDB();
   // Migrate legacy data to multi-language format
-  const items = (db.ipad || []).map(migrateToMultiLang);
+  let sourceItems = db.ipad || [];
+  if (sourceItems.length === 0) {
+    sourceItems = readBundledDBData().ipad || [];
+    db.ipad = sourceItems.map(migrateToMultiLang);
+    await writeDB(db);
+  }
+  const items = sourceItems.map(migrateToMultiLang);
   res.json(items);
 });
 
@@ -1710,7 +1725,13 @@ app.delete('/api/admin/ipad/:id', authMiddleware, async (req, res) => {
 app.get('/api/admin/watch', authMiddleware, async (req, res) => {
   const db = await readDB();
   // Migrate legacy data to multi-language format
-  const items = (db.watch || []).map(migrateToMultiLang);
+  let sourceItems = db.watch || [];
+  if (sourceItems.length === 0) {
+    sourceItems = readBundledDBData().watch || [];
+    db.watch = sourceItems.map(migrateToMultiLang);
+    await writeDB(db);
+  }
+  const items = sourceItems.map(migrateToMultiLang);
   res.json(items);
 });
 
@@ -1768,6 +1789,16 @@ app.delete('/api/admin/film/fg/:filmName', authMiddleware, async (req, res) => {
 // Logo upload
 app.post('/api/admin/logo', authMiddleware, upload.single('logo'), (req, res) => {
   res.json({ ok: true, file: req.file });
+});
+
+app.post('/api/admin/favicon', authMiddleware, uploadMemory.single('favicon'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const db = await readDB();
+  const mimeType = req.file.mimetype || 'image/x-icon';
+  const faviconDataUrl = `data:${mimeType};base64,${req.file.buffer.toString('base64')}`;
+  db.settings = { ...(db.settings || DEFAULT_SETTINGS), faviconDataUrl };
+  await writeDB(db);
+  res.json({ ok: true, faviconDataUrl });
 });
 
 // Settings
@@ -1846,13 +1877,18 @@ app.get('/api/admin/users', authMiddleware, requireAdmin, async (req, res) => {
 
 app.put('/api/admin/users/:id', authMiddleware, requireAdmin, async (req, res) => {
   if (!supabaseAdmin) return res.status(500).json({ error: 'SUPABASE_SERVICE_KEY is not configured' });
-  const { name, phone, store, role } = req.body;
+  const { name, phone, store, role, password } = req.body;
   if (role && !['admin', 'member'].includes(role)) return res.status(400).json({ error: 'Invalid role' });
+  if (password && String(password).length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
   // Update auth metadata
   const metadata = {};
   if (name !== undefined) metadata.full_name = name;
-  if (Object.keys(metadata).length > 0) {
-    await supabaseAdmin.auth.admin.updateUserById(req.params.id, { user_metadata: metadata }).catch(() => {});
+  const authUpdate = {};
+  if (Object.keys(metadata).length > 0) authUpdate.user_metadata = metadata;
+  if (password) authUpdate.password = String(password);
+  if (Object.keys(authUpdate).length > 0) {
+    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(req.params.id, authUpdate);
+    if (updateError) return res.status(400).json({ error: updateError.message });
   }
   // Update profiles table
   const profileUpdate = {};
