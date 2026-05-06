@@ -1964,6 +1964,7 @@ input,textarea,select{font-family:inherit}
         <span class="arrow">▾</span>
         <div class="nav-dropdown">
           <a href="#" onclick="switchPage('calculator');return false" data-i18n="nav_calculator">商业计算器</a>
+          <a href="#" onclick="switchPage('exchange');return false" data-i18n="nav_exchange">汇率查询</a>
         </div>
       </div>
       <a class="nav-tab" data-page="products" onclick="switchPage('products');return false" href="#">
@@ -2017,6 +2018,7 @@ input,textarea,select{font-family:inherit}
       <div style="border-top:1px solid var(--border);margin-top:4px"></div>
       <div style="font-size:12px;font-weight:600;color:var(--text3);padding:12px 14px 4px" data-i18n="nav_tools">小工具</div>
       <a class="mobile-nav-tab" data-page="calculator" onclick="switchPage('calculator');closeMobileMenu();return false" href="#" data-i18n="nav_calculator">商业计算器</a>
+      <a class="mobile-nav-tab" data-page="exchange" onclick="switchPage('exchange');closeMobileMenu();return false" href="#" data-i18n="nav_exchange">汇率查询</a>
       <a class="mobile-nav-tab" data-page="products" onclick="switchPage('products');closeMobileMenu();return false" href="#" data-i18n="nav_products">产品素材库</a>
     </div>
     <div class="mobile-menu-actions">
@@ -2449,6 +2451,44 @@ input,textarea,select{font-family:inherit}
           <button class="calc-btn num" onclick="calcInput('.')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">.</button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXCHANGE PAGE -->
+<div id="exchange-page" class="page" style="padding:0!important">
+  <div class="film-page-body" style="max-width:1000px;margin:0 auto;padding:24px 20px">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+      <div>
+        <h1 style="font-size:22px;font-weight:700" data-i18n="exchange_title">实时汇率</h1>
+        <p style="color:var(--text3);font-size:13px" data-i18n="exchange_desc">获取最新的货币汇率信息</p>
+        <p style="color:var(--text3);font-size:11px;margin-top:4px"><span data-i18n="exchange_last_updated">最后更新</span>: <span id="exchange-updated">-</span></p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <select id="exchange-base" class="form-input" style="width:140px;font-size:13px" onchange="fetchExchangeRates()"></select>
+        <button id="exchange-refresh-btn" class="btn btn-primary btn-sm" onclick="fetchExchangeRates()" data-i18n="exchange_refresh" style="display:flex;align-items:center;gap:4px">刷新汇率</button>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div id="exchange-error" style="display:none;background:rgba(239,68,68,0.1);border:1px solid var(--accent-red);border-radius:var(--radius);padding:12px 16px;color:var(--accent-red);font-size:13px;margin-bottom:16px"></div>
+
+    <!-- Loading -->
+    <div id="exchange-loading" style="display:none;text-align:center;padding:40px;color:var(--text3)">加载中...</div>
+
+    <!-- Rate Cards -->
+    <div id="exchange-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px"></div>
+
+    <!-- Converter -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px">
+      <h2 style="font-size:16px;font-weight:600;margin-bottom:16px">💱 <span data-i18n="exchange_title">货币转换</span></h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+        <div class="form-group"><label class="form-label" data-i18n="exchange_amount">金额</label><input id="conv-amount" class="form-input" type="number" value="100" oninput="convertCurrency()"></div>
+        <div class="form-group"><label class="form-label" data-i18n="exchange_base_currency">源货币</label><select id="conv-from" class="form-input" onchange="convertCurrency()"></select></div>
+        <div class="form-group"><label class="form-label" data-i18n="exchange_target_currency">目标货币</label><select id="conv-to" class="form-input" onchange="convertCurrency()"></select></div>
+      </div>
+      <div id="conv-result" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;font-size:18px;font-weight:600;min-height:50px;display:flex;align-items:center;justify-content:center">--</div>
     </div>
   </div>
 </div>
@@ -3465,7 +3505,8 @@ function switchPage(page, load=true) {
     else if (page==='amazon') fetchAmazonData();
     else if (page==='products') loadProductsPage();
     else if (page==='google') fetchGoogleData();
-    else if (page==='calculator') {} // placeholder
+    else if (page==='calculator') { calcProfit(); calcDiscount(); calcVat(); }
+    else if (page==='exchange') { populateCurrencySelects(); fetchExchangeRates(); }
   }
 }
 
@@ -3563,6 +3604,99 @@ function renderCalcHistory() {
 }
 function calcHistoryClick(i) { calcExpr = String(parseFloat(calcHistory[i].result.toFixed(10))); updateCalcDisplay(); document.getElementById('calc-expr').textContent = ''; document.getElementById('calc-history-panel').style.display = 'none'; }
 function clearCalcHistory() { calcHistory = []; localStorage.removeItem('calcHistory'); renderCalcHistory(); }
+
+// ============ EXCHANGE RATES ============
+const CURRENCIES = [
+  { code: 'USD', flag: '🇺🇸', nameKey: 'cur_USD', nameZh: '美元' },
+  { code: 'EUR', flag: '🇪🇺', nameKey: 'cur_EUR', nameZh: '欧元' },
+  { code: 'GBP', flag: '🇬🇧', nameKey: 'cur_GBP', nameZh: '英镑' },
+  { code: 'JPY', flag: '🇯🇵', nameKey: 'cur_JPY', nameZh: '日元' },
+  { code: 'CNY', flag: '🇨🇳', nameKey: 'cur_CNY', nameZh: '人民币' },
+  { code: 'CAD', flag: '🇨🇦', nameKey: 'cur_CAD', nameZh: '加拿大元' },
+  { code: 'AUD', flag: '🇦🇺', nameKey: 'cur_AUD', nameZh: '澳大利亚元' },
+  { code: 'CHF', flag: '🇨🇭', nameKey: 'cur_CHF', nameZh: '瑞士法郎' }
+];
+
+function getCurrencyName(code) { const c = CURRENCIES.find(x => x.code === code); return c ? (t(c.nameKey) || c.nameZh) : code; }
+function getCurrencyFlag(code) { const c = CURRENCIES.find(x => x.code === code); return c ? c.flag : ''; }
+
+function populateCurrencySelects() {
+  const baseSel = document.getElementById('exchange-base');
+  const fromSel = document.getElementById('conv-from');
+  const toSel = document.getElementById('conv-to');
+  const opts = CURRENCIES.map(c => `<option value="${c.code}">${c.flag} ${c.code} - ${getCurrencyName(c.code)}</option>`).join('');
+  baseSel.innerHTML = opts; baseSel.value = 'USD';
+  fromSel.innerHTML = opts; fromSel.value = 'USD';
+  toSel.innerHTML = opts; toSel.value = 'EUR';
+}
+
+async function fetchExchangeRates() {
+  const base = document.getElementById('exchange-base').value;
+  const cards = document.getElementById('exchange-cards');
+  const loading = document.getElementById('exchange-loading');
+  const errorEl = document.getElementById('exchange-error');
+  const btn = document.getElementById('exchange-refresh-btn');
+  loading.style.display = 'block';
+  cards.innerHTML = '';
+  errorEl.style.display = 'none';
+  btn.disabled = true;
+  try {
+    const res = await fetch(`https://api.frankfurter.dev/v1/latest?base=${base}`);
+    if (!res.ok) throw new Error('API error');
+    const data = await res.json();
+    document.getElementById('exchange-updated').textContent = data.date || new Date().toLocaleDateString();
+    renderExchangeCards(data);
+    convertCurrency();
+  } catch(e) {
+    errorEl.textContent = t('exchange_error') || '获取汇率失败';
+    errorEl.style.display = 'block';
+  } finally {
+    loading.style.display = 'none';
+    btn.disabled = false;
+  }
+}
+
+function formatRate(rate) {
+  if (rate < 0.01) return rate.toFixed(6);
+  if (rate < 1) return rate.toFixed(4);
+  return rate.toFixed(2);
+}
+
+function renderExchangeCards(data) {
+  const cards = document.getElementById('exchange-cards');
+  cards.innerHTML = CURRENCIES.filter(c => c.code !== data.base).map(c => {
+    const rate = data.rates[c.code];
+    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:box-shadow 0.15s" onmouseover="this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.boxShadow=''">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:24px">${c.flag}</span>
+        <div><div style="font-weight:600;font-size:14px">${c.code}</div><div style="font-size:11px;color:var(--text3)">${getCurrencyName(c.code)}</div></div>
+      </div>
+      <div style="font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:4px">${formatRate(rate)}</div>
+      <div style="font-size:11px;color:var(--text3)">1 ${data.base} = ${formatRate(rate)} ${c.code}</div>
+    </div>`;
+  }).join('');
+}
+
+async function convertCurrency() {
+  const from = document.getElementById('conv-from').value;
+  const to = document.getElementById('conv-to').value;
+  const amount = parseFloat(document.getElementById('conv-amount').value) || 0;
+  const resultEl = document.getElementById('conv-result');
+  if (!amount) { resultEl.textContent = '--'; return; }
+  try {
+    const res = await fetch(`https://api.frankfurter.dev/v1/latest?base=${from}&symbols=${to}`);
+    if (!res.ok) throw new Error('API error');
+    const data = await res.json();
+    const rate = data.rates[to];
+    const converted = amount * rate;
+    resultEl.innerHTML = `<div style="background:${document.body.classList.contains('dark') ? '#1e3a5f' : '#eef2ff'};padding:12px;border-radius:var(--radius-sm);margin-bottom:8px;font-size:13px;color:var(--text3)">
+      ${getCurrencyFlag(from)} ${amount} ${from} = ${getCurrencyFlag(to)} <strong style="font-size:20px;color:var(--accent)">${converted.toFixed(2)}</strong> ${to}
+    </div>
+    <div style="font-size:13px;color:var(--text3)">1 ${from} = ${formatRate(rate)} ${to}</div>`;
+  } catch {
+    resultEl.textContent = '--';
+  }
+}
 
 function updateAuthUI() {
   const loggedIn = !!localStorage.getItem('ag_token');
