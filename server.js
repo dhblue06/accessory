@@ -5,6 +5,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
+const { createHash } = require('crypto');
 const axios = require('axios');
 const XLSX = require('xlsx');
 const multer = require('multer');
@@ -272,11 +273,11 @@ const DEFAULT_TRANSLATIONS = {
     subtitle_film: '全胶钢化膜通用型号兼容性对照',
     subtitle_ipad: '查询各代 iPad 的保护壳和钢化膜通用情况',
     subtitle_watch: '查询各代 Apple Watch 的保护壳和表带通用情况',
-    title_amazon: '亚马逊爆款精选',
+    title_amazon: '亚马逊西班牙爆款精选',
     subtitle_amazon: '一站式选品参考',
     tagline_amazon: '精选好物，帮你做出明智选择',
     amazon_updated: '数据更新:',
-    amazon_update_schedule: '每周五更新数据',
+    amazon_update_schedule: '每周五更新数据，Amazon 数据源',
     amazon_login_tip: '登录后可查看完整100条',
     amazon_show_20: '20条',
     amazon_show_100: '100条',
@@ -407,8 +408,9 @@ const DEFAULT_TRANSLATIONS = {
     nav_calculator: '商业计算器',
     nav_products: '产品素材库',
     nav_google: 'Google',
-    google_title: 'Google 全品类热销周报',
-    google_subtitle: '西班牙市场 • Google Merchant Center 数据源',
+    google_title: 'Google 西班牙全品类热销周报',
+    google_subtitle: '一站式选品参考\n精选好物，帮你做出明智选择',
+    google_update_schedule: '每周五更新数据，Google Merchant Center 数据源',
     google_no_data: '暂无数据',
     google_sync_hint: '请先在管理后台同步 Google 数据',
     google_not_found: '未找到',
@@ -519,11 +521,11 @@ const DEFAULT_TRANSLATIONS = {
     subtitle_film: 'Full-Glue Tempered Glass Compatibility Guide',
     subtitle_ipad: 'Check case and film compatibility for iPad models',
     subtitle_watch: 'Check case and band compatibility for Apple Watch models',
-    title_amazon: 'Amazon Bestsellers Curated',
+    title_amazon: 'Amazon Spain Best Sellers',
     subtitle_amazon: 'Your One-Stop Sourcing Guide',
     tagline_amazon: 'Handpicked picks to help you shop smarter',
     amazon_updated: 'Data updated:',
-    amazon_update_schedule: 'Updated every Friday',
+    amazon_update_schedule: 'Updated every Friday, Amazon data source',
     amazon_login_tip: 'Login to view all 100 items',
     amazon_show_20: '20 items',
     amazon_show_100: '100 items',
@@ -654,8 +656,9 @@ const DEFAULT_TRANSLATIONS = {
     nav_calculator: 'Business Calculator',
     nav_products: 'Product Assets',
     nav_google: 'Google',
-    google_title: 'Google Weekly Hot Products',
-    google_subtitle: 'Spain Market • Google Merchant Center',
+    google_title: 'Google Spain Weekly Hot Products',
+    google_subtitle: 'One-stop product selection reference\nCurated picks to help you choose wisely',
+    google_update_schedule: 'Updated every Friday, Google Merchant Center data source',
     google_no_data: 'No data',
     google_sync_hint: 'Sync Google data from admin panel first',
     google_not_found: 'Not found',
@@ -766,11 +769,11 @@ const DEFAULT_TRANSLATIONS = {
     subtitle_film: 'Guía de Compatibilidad de Cristal Adhesivo Completo',
     subtitle_ipad: 'Consultar compatibilidad de fundas y cristales para iPad',
     subtitle_watch: 'Consultar compatibilidad de fundas y correas para Apple Watch',
-    title_amazon: 'Los más vendidos en Amazon',
+    title_amazon: 'Los más vendidos en Amazon España',
     subtitle_amazon: 'guía completa para tu selección',
     tagline_amazon: 'Selección curada para ayudarte a comprar mejor',
     amazon_updated: 'Datos actualizados:',
-    amazon_update_schedule: 'Actualizado cada viernes',
+    amazon_update_schedule: 'Actualizado cada viernes, fuente de datos Amazon',
     amazon_login_tip: 'Inicia sesión para ver los 100 artículos',
     amazon_show_20: '20 artículos',
     amazon_show_100: '100 artículos',
@@ -901,8 +904,9 @@ const DEFAULT_TRANSLATIONS = {
     nav_calculator: 'Calculadora',
     nav_products: 'Biblioteca de materiales',
     nav_google: 'Google',
-    google_title: 'Google Productos Semanales',
-    google_subtitle: 'Mercado España • Google Merchant Center',
+    google_title: 'Google España: productos semanales más vendidos',
+    google_subtitle: 'Referencia integral para seleccionar productos\nSelección curada para ayudarte a decidir mejor',
+    google_update_schedule: 'Actualizado cada viernes, fuente Google Merchant Center',
     google_no_data: 'Sin datos',
     google_sync_hint: 'Sincronice los datos de Google desde el panel de administración',
     google_not_found: 'No encontrado',
@@ -2491,6 +2495,38 @@ function normalizeProductVideoUrls(product) {
   return product;
 }
 
+function normalizeProductAssetUrls(product) {
+  if (!product) return product;
+  if (product.mainImage?.url || product.mainImage?.downloadUrl) {
+    const source = product.mainImage.url || product.mainImage.downloadUrl;
+    product.mainImage = {
+      ...product.mainImage,
+      url: toDisplayImageUrl(source),
+      downloadUrl: toDownloadUrl(product.mainImage.downloadUrl || source)
+    };
+  }
+  product.imageGroups = (product.imageGroups || []).map(group => ({
+    ...group,
+    items: (group.items || []).map(item => {
+      const source = item.url || item.downloadUrl;
+      return {
+        ...item,
+        url: toDisplayImageUrl(source),
+        downloadUrl: toDownloadUrl(item.downloadUrl || source)
+      };
+    }).filter(item => item.url)
+  })).filter(group => (group.items || []).length > 0);
+  return normalizeProductVideoUrls(product);
+}
+
+function recalculateProductStats(product) {
+  const imageCount = (product.mainImage?.url ? 1 : 0) + (product.imageGroups || []).reduce((sum, group) => sum + ((group.items || []).filter(item => item?.url).length), 0);
+  const videoCount = (product.videos || []).filter(video => video?.url || video?.videoUrl || video?.downloadUrl || video?.embedUrl).length;
+  const docCount = ['es', 'zh'].reduce((sum, lang) => sum + (product.descriptions?.[lang] ? 1 : 0), 0);
+  product.stats = { imageCount, videoCount, docCount };
+  return product;
+}
+
 function rowToProduct(row) {
   const sku = extractTextFromCell(cellAt(row, COL.SKU));
   if (!sku || sku.toLowerCase() === 'sku') return null;
@@ -2806,25 +2842,44 @@ app.post('/api/admin/products/refresh', authMiddleware, requireAdmin, async (req
 app.put('/api/admin/products/:sku', authMiddleware, requireAdmin, async (req, res) => {
   try {
     if (!pool) return res.status(503).json({ error: 'Database not available' });
-    const sku = decodeURIComponent(req.params.sku);
-    const { name, category, mainImageUrl, descriptions, videos } = req.body;
-    const { rows } = await pool.query('SELECT data FROM products WHERE sku = $1', [sku]);
+    const oldSku = decodeURIComponent(req.params.sku);
+    const { sku: requestedSku, name, category, mainImage, mainImageUrl, descriptions, imageGroups, videos } = req.body;
+    const newSku = String(requestedSku || oldSku).trim();
+    if (!newSku) return res.status(400).json({ error: 'SKU is required' });
+    const { rows } = await pool.query('SELECT data FROM products WHERE sku = $1', [oldSku]);
     if (rows.length === 0) return res.status(404).json({ error: 'Product not found' });
     const product = rows[0].data;
+    product.sku = newSku;
     if (name !== undefined) product.name = name;
     if (category !== undefined) product.category = category;
+    if (mainImage !== undefined) {
+      product.mainImage = mainImage;
+    }
     if (mainImageUrl !== undefined) {
       product.mainImage = mainImageUrl ? { ...product.mainImage, url: mainImageUrl, downloadUrl: product.mainImage?.downloadUrl || mainImageUrl, label: '主产品图' } : null;
     }
     if (descriptions !== undefined) {
       product.descriptions = { ...product.descriptions, ...descriptions };
     }
-    if (videos !== undefined) {
-      product.videos = videos;
+    if (imageGroups !== undefined) {
+      product.imageGroups = Array.isArray(imageGroups) ? imageGroups : [];
     }
-    await pool.query('UPDATE products SET data = $1, synced_at = NOW() WHERE sku = $2', [JSON.stringify(product), sku]);
+    if (videos !== undefined) {
+      product.videos = Array.isArray(videos) ? videos : [];
+    }
+    normalizeProductAssetUrls(product);
+    recalculateProductStats(product);
+    if (newSku !== oldSku) {
+      await pool.query(
+        'INSERT INTO products (sku, data, source_hash, synced_at) VALUES ($1, $2, $3, NOW()) ON CONFLICT (sku) DO UPDATE SET data = EXCLUDED.data, source_hash = EXCLUDED.source_hash, synced_at = NOW()',
+        [newSku, JSON.stringify(product), createHash('sha1').update(JSON.stringify(product)).digest('hex')]
+      );
+      await pool.query('DELETE FROM products WHERE sku = $1', [oldSku]);
+    } else {
+      await pool.query('UPDATE products SET data = $1, source_hash = $2, synced_at = NOW() WHERE sku = $3', [JSON.stringify(product), createHash('sha1').update(JSON.stringify(product)).digest('hex'), oldSku]);
+    }
     productService.clearCache();
-    res.json({ success: true });
+    res.json({ success: true, product });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

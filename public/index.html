@@ -1459,6 +1459,69 @@ input,textarea,select{font-family:inherit}
   background:var(--surface);
 }
 
+#google-page .amazon-hero{
+  min-height:180px;
+}
+
+#google-page .amazon-hero-bg{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:50%;
+  right:50%;
+  margin-left:-50vw;
+  margin-right:-50vw;
+  width:100vw;
+  background:
+    linear-gradient(90deg,rgba(37,99,235,0.78),rgba(124,58,237,0.55)),
+    url('/google-hero-img.webp') center/cover no-repeat;
+  border-bottom:1px solid var(--border);
+  z-index:0;
+}
+
+#google-page .google-hero-title{
+  font-size:28px;
+  font-weight:700;
+  color:#fff;
+  line-height:1.25;
+  margin-bottom:8px;
+}
+
+#google-page .google-hero-copy{
+  color:rgba(255,255,255,0.9);
+  font-size:14px;
+  line-height:1.55;
+  margin-bottom:8px;
+  white-space:pre-line;
+}
+
+#google-page .google-hero-meta p{
+  color:rgba(255,255,255,0.78);
+  font-size:12px;
+  line-height:1.6;
+}
+
+#google-cat-filter{
+  padding:14px 0 !important;
+  margin:0 !important;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+#google-cat-filter .amazon-mode-btn{
+  padding:8px 18px;
+  background:var(--surface);
+}
+
+#google-cat-filter .amazon-mode-btn.active{
+  background:#eff6ff;
+  border-color:#60a5fa;
+  color:#1d4ed8;
+  box-shadow:0 2px 8px rgba(59,130,246,0.16);
+}
+
 [data-theme="dark"] .amazon-hero-bg{
   background:linear-gradient(135deg,#1e2d4a 0%,#1a2540 50%,#162030 100%) !important;
 }
@@ -1798,12 +1861,12 @@ input,textarea,select{font-family:inherit}
   <div class="amazon-hero">
     <div class="amazon-hero-bg"></div>
     <div class="amazon-hero-left">
-      <h1 data-i18n="title_amazon">Los más vendidos en Amazon</h1>
+      <h1 data-i18n="title_amazon">亚马逊西班牙爆款精选</h1>
       <p data-i18n="subtitle_amazon" class="amazon-hero-sub">Guía completa para tu selección</p>
       <p data-i18n="tagline_amazon" class="amazon-hero-tagline">Selección curada para ayudarte a comprar mejor</p>
       <div class="amazon-hero-meta">
         <p id="amazon-updated"></p>
-        <p data-i18n="amazon_update_schedule">Actualizado cada viernes</p>
+        <p data-i18n="amazon_update_schedule">每周五更新数据，Amazon 数据源</p>
       </div>
       <div id="amazon-mode-filter" class="amazon-mode-tabs">
         <button class="amazon-mode-btn active" data-mode="BESTSELLER"
@@ -2041,21 +2104,22 @@ input,textarea,select{font-family:inherit}
 <div id="google-page" class="page" style="padding:0!important">
 
   <!-- HERO -->
-  <div class="amazon-hero" style="background:linear-gradient(135deg,#667eea,#764ba2)">
+  <div class="amazon-hero">
     <div class="amazon-hero-bg"></div>
     <div class="amazon-hero-left">
-      <h1 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:4px" data-i18n="google_title">Google 全品类热销周报</h1>
-      <p style="color:rgba(255,255,255,0.8);font-size:13px" data-i18n="google_subtitle">西班牙市场 • Google Merchant Center 数据源</p>
-      <p id="google-updated" style="color:rgba(255,255,255,0.6);font-size:11px;margin-top:4px"></p>
-    </div>
-    <div class="amazon-hero-img">
-      <div style="font-size:64px;line-height:1">🔍</div>
+      <h1 class="google-hero-title" data-i18n="google_title">Google 西班牙全品类热销周报</h1>
+      <p class="google-hero-copy" data-i18n="google_subtitle">一站式选品参考
+精选好物，帮你做出明智选择</p>
+      <div class="google-hero-meta">
+        <p id="google-updated"></p>
+        <p data-i18n="google_update_schedule">每周五更新数据，Google Merchant Center 数据源</p>
+      </div>
     </div>
   </div>
 
   <div class="amazon-page-body">
     <!-- Category Filters -->
-    <div id="google-cat-filter" class="filter-bar" style="padding:14px 0;margin:0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px"></div>
+    <div id="google-cat-filter" class="filter-bar"></div>
 
     <!-- Results -->
     <div id="google-results" style="padding:20px 0">
@@ -2836,6 +2900,7 @@ function applyTranslations() {
     if (panel === 'ipad-mgmt' && span) span.textContent = t('admin_ipad_mgmt');
     if (panel === 'watch-mgmt' && span) span.textContent = t('admin_watch_mgmt');
     if (panel === 'film-mgmt' && span) span.textContent = t('admin_film_mgmt');
+    if (panel === 'products-mgmt' && span) span.textContent = t('admin_products_mgmt');
     if (panel === 'users-mgmt' && span) span.textContent = t('admin_users_mgmt');
     if (panel === 'settings-mgmt' && span) span.textContent = t('admin_settings_mgmt');
     if (panel === 'trans-mgmt' && span) span.textContent = t('tab_translations');
@@ -3721,6 +3786,7 @@ async function syncProducts() {
     toast('产品素材同步成功，共 ' + (result.count || 0) + ' 个', 'success');
     if (currentPage === 'products') loadProductsPage();
     if (currentPage === 'product-detail' && currentProduct) openProductDetail(currentProduct.sku);
+    if (document.getElementById('panel-products-mgmt')?.classList.contains('active')) loadAdminProducts();
   } catch (err) {
     toast('同步失败: ' + err.message, 'error');
   } finally { if (btn) { btn.disabled = false; btn.textContent = originalText; } }
@@ -3923,59 +3989,39 @@ async function loadAdminProducts() {
     <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${escapeHtml(p.sku)}</td>
     <td><strong>${escapeHtml(p.name)}</strong></td>
     <td><span class="badge" style="background:var(--surface2);padding:2px 8px;border-radius:12px;font-size:11px">${escapeHtml(p.category)}</span></td>
-    <td>${p.mainImage ? '<img src="'+p.mainImage.url+'" style="width:40px;height:40px;border-radius:4px;object-fit:cover">' : '<span style="color:var(--text3)">无图</span>'}</td>
-    <td><button class="btn btn-secondary btn-sm" onclick="editProduct('${p.sku}')">编辑</button></td>
+    <td>${p.mainImage ? '<img src="'+escapeAttr(p.mainImage.url)+'" style="width:40px;height:40px;border-radius:4px;object-fit:cover">' : '<span style="color:var(--text3)">无图</span>'}</td>
+    <td><button class="btn btn-secondary btn-sm" onclick="editProduct('${encodeURIComponent(p.sku)}')">编辑</button></td>
   </tr>`).join('');
 }
 
-async function editProduct(sku) {
-  const product = await api('/api/products/' + sku);
-  const imgGroupsHtml = (product.imageGroups || []).map((g, gi) => `
-    <div style="margin-bottom:12px;padding:12px;background:var(--surface2);border-radius:var(--radius)">
-      <h4 style="font-size:12px;font-weight:600;margin-bottom:8px">${g.title}</h4>
-      ${g.items.map((item, ii) => `
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-          <img src="${item.url}" style="width:32px;height:32px;border-radius:4px;object-fit:cover">
-          <input id="img-${gi}-${ii}-url" class="form-input" value="${item.url}" style="flex:1;font-size:11px" placeholder="图片 URL">
-          <select id="img-${gi}-${ii}-lang" class="form-input" style="width:70px;font-size:11px">
-            <option value="es" ${item.lang==='es'?'selected':''}>ES</option>
-            <option value="zh" ${item.lang==='zh'?'selected':''}>ZH</option>
-          </select>
-        </div>
-      `).join('')}
-    </div>
-  `).join('');
+async function editProduct(encodedSku) {
+  const sku = decodeURIComponent(encodedSku);
+  const product = await api('/api/products/' + encodedSku);
+  const imageGroupsJson = JSON.stringify(product.imageGroups || [], null, 2);
+  const videosJson = JSON.stringify(product.videos || [], null, 2);
   document.getElementById('modal-title').textContent = '编辑产品: ' + sku;
   document.getElementById('modal-body').innerHTML = `
-    <input type="hidden" id="edit-product-sku" value="${sku}">
-    <div class="form-group"><label class="form-label">SKU</label><input class="form-input" value="${escapeHtml(product.sku)}" disabled></div>
-    <div class="form-group"><label class="form-label">名称</label><input id="edit-product-name" class="form-input" value="${escapeHtml(product.name || '')}"></div>
-    <div class="form-group"><label class="form-label">分类</label><input id="edit-product-cat" class="form-input" value="${escapeHtml(product.category || '')}"></div>
+    <input type="hidden" id="edit-product-sku" value="${escapeAttr(product.sku || sku)}">
+    <div class="form-group"><label class="form-label">SKU</label><input id="edit-product-new-sku" class="form-input" value="${escapeAttr(product.sku || sku)}"></div>
+    <div class="form-group"><label class="form-label">名称</label><input id="edit-product-name" class="form-input" value="${escapeAttr(product.name || '')}"></div>
+    <div class="form-group"><label class="form-label">分类</label><input id="edit-product-cat" class="form-input" value="${escapeAttr(product.category || '')}"></div>
     <div style="margin-bottom:12px;padding:12px;background:var(--surface2);border-radius:var(--radius)">
       <h4 style="font-size:12px;font-weight:600;margin-bottom:8px">主图</h4>
-      <input id="edit-product-mainimg" class="form-input" value="${product.mainImage ? product.mainImage.url : ''}" placeholder="主图 URL" style="font-size:11px">
+      <input id="edit-product-mainimg" class="form-input" value="${escapeAttr(product.mainImage?.url || '')}" placeholder="主图 URL" style="font-size:11px;margin-bottom:8px">
+      <input id="edit-product-mainimg-download" class="form-input" value="${escapeAttr(product.mainImage?.downloadUrl || product.mainImage?.url || '')}" placeholder="主图下载 URL" style="font-size:11px">
     </div>
-    ${imgGroupsHtml}
     <h4 style="font-size:12px;font-weight:600;margin-bottom:8px">文案（ES）</h4>
     <textarea id="edit-product-desc-es" class="form-input" rows="3" style="font-size:12px;resize:vertical">${escapeHtml(product.descriptions?.es || '')}</textarea>
     <h4 style="font-size:12px;font-weight:600;margin-bottom:8px;margin-top:8px">文案（ZH）</h4>
     <textarea id="edit-product-desc-zh" class="form-input" rows="3" style="font-size:12px;resize:vertical">${escapeHtml(product.descriptions?.zh || '')}</textarea>
-    <h4 style="font-size:12px;font-weight:600;margin:12px 0 8px">视频</h4>
-    ${(product.videos || []).map((v, vi) => `
-      <div style="margin-bottom:8px;padding:10px;background:var(--surface2);border-radius:var(--radius)">
-        <div style="font-size:11px;font-weight:600;margin-bottom:4px">${v.title}</div>
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <div style="display:flex;align-items:center;gap:4px">
-            <span style="font-size:10px;color:var(--text3);width:60px;flex-shrink:0">在线播放</span>
-            <input id="video-${vi}-url" class="form-input" value="${v.url || ''}" placeholder="YouTube / Drive / MP4 链接" style="font-size:11px;flex:1">
-          </div>
-          <div style="display:flex;align-items:center;gap:4px">
-            <span style="font-size:10px;color:var(--text3);width:60px;flex-shrink:0">下载链接</span>
-            <input id="video-${vi}-download" class="form-input" value="${v.downloadUrl || ''}" placeholder="文件下载直链" style="font-size:11px;flex:1">
-          </div>
-        </div>
-      </div>
-    `).join('') || '<div style="color:var(--text3);font-size:12px;padding:8px">无视频</div>'}
+    <div class="form-group" style="margin-top:12px">
+      <label class="form-label">图片素材组（JSON，可修改每张图片 URL / 下载 URL / 语言）</label>
+      <textarea id="edit-product-imagegroups" class="form-input" rows="10" style="font-family:'JetBrains Mono',monospace;font-size:11px;resize:vertical">${escapeHtml(imageGroupsJson)}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">视频素材（JSON，可修改视频 URL / 下载 URL）</label>
+      <textarea id="edit-product-videos" class="form-input" rows="8" style="font-family:'JetBrains Mono',monospace;font-size:11px;resize:vertical">${escapeHtml(videosJson)}</textarea>
+    </div>
   `;
   document.getElementById('modal-save').onclick = saveProductEdit;
   document.getElementById('modal-overlay').classList.remove('hidden');
@@ -3983,21 +4029,35 @@ async function editProduct(sku) {
 
 async function saveProductEdit() {
   const sku = document.getElementById('edit-product-sku').value;
+  const newSku = document.getElementById('edit-product-new-sku').value.trim();
   const name = document.getElementById('edit-product-name').value.trim();
   const category = document.getElementById('edit-product-cat').value.trim();
   const mainImageUrl = document.getElementById('edit-product-mainimg').value.trim();
+  const mainImageDownloadUrl = document.getElementById('edit-product-mainimg-download').value.trim();
   const descEs = document.getElementById('edit-product-desc-es').value.trim();
   const descZh = document.getElementById('edit-product-desc-zh').value.trim();
-  const product = await api('/api/products/' + sku);
-  const videos = (product.videos || []).map((v, vi) => ({
-    ...v,
-    url: document.getElementById('video-' + vi + '-url')?.value || v.url,
-    downloadUrl: document.getElementById('video-' + vi + '-download')?.value || v.downloadUrl
-  }));
+  if (!newSku || !name) { toast('SKU 和名称不能为空', 'error'); return; }
+  let imageGroups = [];
+  let videos = [];
+  try {
+    imageGroups = JSON.parse(document.getElementById('edit-product-imagegroups').value || '[]');
+    videos = JSON.parse(document.getElementById('edit-product-videos').value || '[]');
+  } catch(e) {
+    toast('图片组或视频 JSON 格式错误: ' + e.message, 'error');
+    return;
+  }
   try {
     await api('/api/admin/products/' + encodeURIComponent(sku), {
       method: 'PUT',
-      body: JSON.stringify({ name, category, mainImageUrl, descriptions: { es: descEs, zh: descZh }, videos })
+      body: JSON.stringify({
+        sku: newSku,
+        name,
+        category,
+        mainImage: mainImageUrl ? { url: mainImageUrl, downloadUrl: mainImageDownloadUrl || mainImageUrl, label: '主产品图' } : null,
+        descriptions: { es: descEs, zh: descZh },
+        imageGroups,
+        videos
+      })
     });
     toast('产品已更新', 'success');
     closeModal();
