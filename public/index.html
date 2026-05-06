@@ -2038,8 +2038,8 @@ input,textarea,select{font-family:inherit}
   <div class="amazon-hero" style="background:linear-gradient(135deg,#667eea,#764ba2)">
     <div class="amazon-hero-bg"></div>
     <div class="amazon-hero-left">
-      <h1 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:4px">Google 全品类热销周报</h1>
-      <p style="color:rgba(255,255,255,0.8);font-size:13px">西班牙市场 • Google Merchant Center 数据源</p>
+      <h1 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:4px" data-i18n="google_title">Google 全品类热销周报</h1>
+      <p style="color:rgba(255,255,255,0.8);font-size:13px" data-i18n="google_subtitle">西班牙市场 • Google Merchant Center 数据源</p>
       <p id="google-updated" style="color:rgba(255,255,255,0.6);font-size:11px;margin-top:4px"></p>
     </div>
     <div class="amazon-hero-img">
@@ -2049,19 +2049,17 @@ input,textarea,select{font-family:inherit}
 
   <div class="amazon-page-body">
     <!-- Category Filters -->
-    <div id="google-cat-filter" class="filter-bar" style="padding:14px 0;margin:0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px">
-      <button class="amazon-mode-btn active" data-cat="" onclick="setGoogleCategory('',this)" style="font-size:12px">全部</button>
-    </div>
+    <div id="google-cat-filter" class="filter-bar" style="padding:14px 0;margin:0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px"></div>
 
     <!-- Results -->
     <div id="google-results" style="padding:20px 0">
       <div class="amazon-loading">
         <div class="amazon-loading-spinner"></div>
-        <div>正在加载...</div>
+        <div data-i18n="loading_data">正在加载...</div>
       </div>
     </div>
 
-    <div style="text-align:center;padding:20px 0;color:var(--text3);font-size:11px">数据来源: Google Merchant Center</div>
+    <div style="text-align:center;padding:20px 0;color:var(--text3);font-size:11px" data-i18n="google_data_from">数据来源: Google Merchant Center</div>
   </div>
 </div>
 
@@ -2102,7 +2100,7 @@ input,textarea,select{font-family:inherit}
       </div>
       <div class="admin-sidebar-item" data-panel="products-mgmt" onclick="switchPanel('products-mgmt',this)">
         <svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"/><path d="M4 7a1 1 0 011 1v9a1 1 0 01-1 1H3a1 1 0 01-1-1V8a1 1 0 011-1h1zm12 0a1 1 0 011 1v9a1 1 0 01-1 1h-1a1 1 0 01-1-1V8a1 1 0 011-1h1z"/></svg>
-        <span>产品素材管理</span>
+        <span data-i18n="admin_products_mgmt">产品素材管理</span>
       </div>
       <div class="admin-sidebar-item" data-panel="users-mgmt" onclick="switchPanel('users-mgmt',this)">
         <svg viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg>
@@ -2143,12 +2141,12 @@ input,textarea,select{font-family:inherit}
           </div>
         </div>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:20px">
-          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">数据同步</h3>
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="admin_sync_title">数据同步</h3>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-primary" onclick="syncProducts()">同步产品素材</button>
-            <button class="btn btn-primary" onclick="syncAmazonNow()">同步 Amazon 数据</button>
-            <button class="btn btn-primary" onclick="syncGoogle()" style="background:var(--accent-2)">同步 Google 数据</button>
-            <button class="btn btn-secondary" onclick="syncAll()">同步全部数据</button>
+            <button class="btn btn-primary" onclick="syncProducts()" data-i18n="admin_sync_products">同步产品素材</button>
+            <button class="btn btn-primary" onclick="syncAmazonNow()" data-i18n="admin_sync_amazon">同步 Amazon 数据</button>
+            <button class="btn btn-primary" onclick="syncGoogle()" style="background:var(--accent-2)" data-i18n="admin_sync_google">同步 Google 数据</button>
+            <button class="btn btn-secondary" onclick="syncAll()" data-i18n="admin_sync_all">同步全部数据</button>
           </div>
         </div>
       </div>
@@ -2223,7 +2221,7 @@ input,textarea,select{font-family:inherit}
       <!-- PRODUCTS MGMT -->
       <div id="panel-products-mgmt" class="admin-panel">
         <div class="admin-header">
-          <h2 class="admin-title">产品素材管理</h2>
+          <h2 class="admin-title" data-i18n="admin_products_mgmt">产品素材管理</h2>
           <div style="display:flex;gap:8px">
             <button class="btn btn-primary" onclick="syncProducts()">同步 Google Sheet</button>
           </div>
@@ -4793,13 +4791,13 @@ function setGoogleCategory(cat, btn) {
 function renderGoogleData() {
   const el = document.getElementById('google-results');
   if (!googleAllData || googleAllData.length === 0) {
-    el.innerHTML = '<div class="amazon-empty"><div>暂无数据</div><div style="font-size:12px;color:var(--text3);margin-top:8px">请先在管理后台同步 Google 数据</div></div>';
+    el.innerHTML = '<div class="amazon-empty"><div>' + (t('google_no_data') || '暂无数据') + '</div><div style="font-size:12px;color:var(--text3);margin-top:8px">' + (t('google_sync_hint') || '请先在管理后台同步 Google 数据') + '</div></div>';
     return;
   }
   let items = googleCategory ? googleAllData.filter(r => r.category === googleCategory) : googleAllData;
-  if (items.length === 0) { el.innerHTML = '<div class="amazon-empty"><div>未找到</div></div>'; return; }
+  if (items.length === 0) { el.innerHTML = '<div class="amazon-empty"><div>' + (t('google_not_found') || '未找到') + '</div></div>'; return; }
   el.innerHTML = '<div class="data-table-wrap" style="overflow-x:auto"><table class="data-table" style="width:100%"><thead><tr>' +
-    '<th style="width:50px;text-align:center">排名</th><th>品牌</th><th>产品</th><th style="width:140px;text-align:center">热度</th></tr></thead><tbody>' +
+    '<th style="width:50px;text-align:center">' + (t('google_rank') || '排名') + '</th><th>' + (t('google_brand') || '品牌') + '</th><th>' + (t('google_product') || '产品') + '</th><th style="width:140px;text-align:center">' + (t('google_trend') || '热度') + '</th></tr></thead><tbody>' +
     items.map((item, i) => {
       const trend = getGoogleTrendLabel(item.trend);
       const changeHtml = getGoogleRankChange(item);
