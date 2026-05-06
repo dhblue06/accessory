@@ -1810,10 +1810,18 @@ input,textarea,select{font-family:inherit}
           <a href="#" onclick="switchPage('google');return false" data-i18n="nav_google_child">Google</a>
         </div>
       </div>
-      <a class="nav-tab" data-page="calculator" onclick="switchPage('calculator');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
-        <span data-i18n="nav_calculator">商业计算器</span>
+      <a class="nav-tab" data-page="products" onclick="switchPage('products');return false" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span>产品素材库</span>
       </a>
+      <div class="nav-parent" onmouseleave="closeNavDropdown(this)" onclick="toggleNavDropdown(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+        <span data-i18n="nav_tools">小工具</span>
+        <span class="arrow">▾</span>
+        <div class="nav-dropdown">
+          <a href="#" onclick="switchPage('calculator');return false" data-i18n="nav_calculator">商业计算器</a>
+        </div>
+      </div>
       <a class="nav-tab" data-page="products" onclick="switchPage('products');return false" href="#">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         <span data-i18n="nav_products">产品素材库</span>
@@ -1863,6 +1871,7 @@ input,textarea,select{font-family:inherit}
       <a class="mobile-nav-tab" data-page="amazon" onclick="switchPage('amazon');closeMobileMenu();return false" href="#" data-i18n="nav_amazon_child">Amazon</a>
       <a class="mobile-nav-tab" data-page="google" onclick="switchPage('google');closeMobileMenu();return false" href="#" data-i18n="nav_google_child">Google</a>
       <div style="border-top:1px solid var(--border);margin-top:4px"></div>
+      <div style="font-size:12px;font-weight:600;color:var(--text3);padding:12px 14px 4px" data-i18n="nav_tools">小工具</div>
       <a class="mobile-nav-tab" data-page="calculator" onclick="switchPage('calculator');closeMobileMenu();return false" href="#" data-i18n="nav_calculator">商业计算器</a>
       <a class="mobile-nav-tab" data-page="products" onclick="switchPage('products');closeMobileMenu();return false" href="#" data-i18n="nav_products">产品素材库</a>
     </div>
@@ -2168,11 +2177,125 @@ input,textarea,select{font-family:inherit}
 
 <!-- CALCULATOR PAGE -->
 <div id="calculator-page" class="page" style="padding:0!important">
-  <div class="film-page-body">
-    <div style="background:var(--surface2);border-radius:var(--radius);padding:40px 24px;max-width:500px;margin:40px auto;text-align:center">
-      <div style="font-size:48px;margin-bottom:16px">📐</div>
-      <h3 style="font-size:18px;margin-bottom:8px">商业计算器</h3>
-      <p style="color:var(--text3);font-size:13px">即将上线，敬请期待</p>
+  <div class="film-page-body" style="max-width:700px;margin:0 auto;padding:24px 20px">
+    <!-- Tabs -->
+    <div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap">
+      <button class="calc-tab active" data-tab="profit" onclick="switchCalcTab('profit',this)" style="padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff;border:none" data-i18n="calc_profit">利润计算器</button>
+      <button class="calc-tab" data-tab="discount" onclick="switchCalcTab('discount',this)" style="padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;background:var(--surface2);color:var(--text);border:1px solid var(--border)" data-i18n="calc_discount">折扣计算器</button>
+      <button class="calc-tab" data-tab="vat" onclick="switchCalcTab('vat',this)" style="padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;background:var(--surface2);color:var(--text);border:1px solid var(--border)" data-i18n="calc_vat">增值税计算器</button>
+      <button class="calc-tab" data-tab="scientific" onclick="switchCalcTab('scientific',this)" style="padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;background:var(--surface2);color:var(--text);border:1px solid var(--border)" data-i18n="calc_scientific">科学计算器</button>
+    </div>
+
+    <!-- Profit Calculator -->
+    <div id="calc-profit" class="calc-panel">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px">
+        <div class="form-group"><label class="form-label" data-i18n="calc_product_cost">产品成本 (€)</label><input id="profit-cost" class="form-input" type="number" value="10" step="0.01" min="0" oninput="calcProfit()"></div>
+        <div class="form-group"><label class="form-label" data-i18n="calc_markup">加价率 (%)</label><input id="profit-markup" class="form-input" type="number" value="50" step="1" min="0" oninput="calcProfit()"></div>
+        <div class="form-group"><label class="form-label" data-i18n="calc_customer_cost">客户成本 (€)</label><input id="profit-cc" class="form-input" type="number" value="0" step="0.01" min="0" oninput="calcProfit()"></div>
+        <div class="form-group"><label class="form-label" data-i18n="calc_shipping_cost">运费成本 (€)</label><input id="profit-sc" class="form-input" type="number" value="0" step="0.01" min="0" oninput="calcProfit()"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+          <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_selling_price">售价</div><div style="font-size:20px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace" id="profit-price">15.00€</div></div>
+          <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_profit">利润</div><div style="font-size:20px;font-weight:700;color:var(--accent-green);font-family:'JetBrains Mono',monospace" id="profit-profit">5.00€</div></div>
+          <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_profit_margin">利润率</div><div style="font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace" id="profit-margin">50%</div></div>
+          <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_total_cost">总成本</div><div style="font-size:20px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace" id="profit-total">10.00€</div></div>
+        </div>
+        <button class="btn btn-secondary" style="margin-top:12px;width:100%" onclick="resetProfit()" data-i18n="calc_reset">重置</button>
+      </div>
+    </div>
+
+    <!-- Discount Calculator -->
+    <div id="calc-discount" class="calc-panel" style="display:none">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px">
+        <div class="form-group"><label class="form-label" data-i18n="calc_original_price">原价 (€)</label><input id="discount-original" class="form-input" type="number" value="10" step="0.01" min="0" oninput="calcDiscount()"></div>
+        <div class="form-group"><label class="form-label" data-i18n="calc_discount_rate">折扣率 (%)</label><input id="discount-rate" class="form-input" type="number" value="50" step="1" min="0" max="100" oninput="calcDiscount()"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px">
+          <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_original_price">原价</div><div style="font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace" id="discount-original-display">10.00€</div></div>
+          <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_discounted_price">折后价</div><div style="font-size:20px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace" id="discount-price">5.00€</div></div>
+          <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_savings">节省金额</div><div style="font-size:20px;font-weight:700;color:var(--accent-green);font-family:'JetBrains Mono',monospace" id="discount-savings">5.00€</div></div>
+        </div>
+        <button class="btn btn-secondary" style="margin-top:12px;width:100%" onclick="resetDiscount()" data-i18n="calc_reset">重置</button>
+      </div>
+    </div>
+
+    <!-- VAT Calculator -->
+    <div id="calc-vat" class="calc-panel" style="display:none">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px">
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <button class="vat-subtab active" data-sub="add" onclick="switchVatSub('add',this)" style="flex:1;padding:8px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;background:var(--accent);color:#fff;border:none;cursor:pointer" data-i18n="calc_add_tax">加税计算</button>
+          <button class="vat-subtab" data-sub="remove" onclick="switchVatSub('remove',this)" style="flex:1;padding:8px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;background:var(--surface2);color:var(--text);border:1px solid var(--border);cursor:pointer" data-i18n="calc_remove_tax">去税计算</button>
+        </div>
+        <div class="form-group"><label class="form-label" data-i18n="calc_tax_rate">税率 (%)</label><input id="vat-rate" class="form-input" type="number" value="21" step="0.1" min="0" max="100" oninput="calcVat()"></div>
+        <div id="vat-add">
+          <div class="form-group"><label class="form-label" data-i18n="calc_price_ex_vat">不含税价格 (€)</label><input id="vat-ex" class="form-input" type="number" value="9.90" step="0.01" min="0" oninput="calcVat()"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px">
+            <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_price_ex_vat">不含税</div><div style="font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace" id="vat-ex-display">9.90€</div></div>
+            <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_vat_amount">增值税</div><div style="font-size:20px;font-weight:700;color:var(--accent-red);font-family:'JetBrains Mono',monospace" id="vat-tax-display">2.08€</div></div>
+            <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_price_inc_vat">含税</div><div style="font-size:20px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace" id="vat-inc-display">11.98€</div></div>
+          </div>
+        </div>
+        <div id="vat-remove" style="display:none">
+          <div class="form-group"><label class="form-label" data-i18n="calc_price_inc_vat">含税价格 (€)</label><input id="vat-inc" class="form-input" type="number" value="20" step="0.01" min="0" oninput="calcVat()"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px">
+            <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_price_ex_vat">不含税</div><div style="font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace" id="vat-rem-ex-display">16.53€</div></div>
+            <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_vat_amount">增值税</div><div style="font-size:20px;font-weight:700;color:var(--accent-red);font-family:'JetBrains Mono',monospace" id="vat-rem-tax-display">3.47€</div></div>
+            <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_price_inc_vat">含税</div><div style="font-size:20px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace" id="vat-rem-inc-display">20.00€</div></div>
+          </div>
+        </div>
+        <button class="btn btn-secondary" style="margin-top:12px;width:100%" onclick="resetVat()" data-i18n="calc_reset">重置</button>
+      </div>
+    </div>
+
+    <!-- Scientific Calculator -->
+    <div id="calc-scientific" class="calc-panel" style="display:none">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+        <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+          <button class="btn btn-secondary btn-sm" onclick="toggleCalcHistory()" data-i18n="calc_history">历史</button>
+          <button class="btn btn-secondary btn-sm" onclick="clearCalcHistory()" data-i18n="calc_clear">清除</button>
+        </div>
+        <div style="background:#1a1a2e;border-radius:8px;padding:16px;margin-bottom:12px;min-height:80px">
+          <div style="color:rgba(255,255,255,0.5);font-size:12px;font-family:'JetBrains Mono',monospace;text-align:right;min-height:18px" id="calc-expr"></div>
+          <div style="color:#fff;font-size:28px;font-weight:700;font-family:'JetBrains Mono',monospace;text-align:right;word-break:break-all" id="calc-display">0</div>
+        </div>
+        <!-- History panel -->
+        <div id="calc-history-panel" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:12px;max-height:200px;overflow-y:auto"></div>
+        <!-- Calculator buttons grid -->
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px">
+          <button class="calc-btn func" onclick="calcInput('sin(')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">sin</button>
+          <button class="calc-btn func" onclick="calcInput('cos(')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">cos</button>
+          <button class="calc-btn func" onclick="calcInput('tan(')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">tan</button>
+          <button class="calc-btn func" onclick="calcInput('(')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">(</button>
+          <button class="calc-btn func" onclick="calcInput(')')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">)</button>
+          <button class="calc-btn func" onclick="calcInput('log(')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">log</button>
+          <button class="calc-btn func" onclick="calcInput('ln(')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">ln</button>
+          <button class="calc-btn func" onclick="calcInput('sqrt(')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">√</button>
+          <button class="calc-btn func" onclick="calcInput('**2')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">x²</button>
+          <button class="calc-btn func" onclick="calcInput('**')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">x^y</button>
+          <button class="calc-btn func" onclick="calcInput('1/')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">1/x</button>
+          <button class="calc-btn func" onclick="calcInput('!')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">n!</button>
+          <button class="calc-btn func" onclick="calcInput('exp(')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">exp</button>
+          <button class="calc-btn func" onclick="calcInput(Math.PI)" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">π</button>
+          <button class="calc-btn func" onclick="calcInput('e')" style="padding:8px;border-radius:6px;font-size:11px;background:var(--surface2);border:1px solid var(--border);cursor:pointer">e</button>
+          <button class="calc-btn op" onclick="calcInput('+')" style="padding:12px;border-radius:6px;font-size:16px;background:#e2e8f0;border:1px solid var(--border);cursor:pointer">+</button>
+          <button class="calc-btn op" onclick="calcInput('-')" style="padding:12px;border-radius:6px;font-size:16px;background:#e2e8f0;border:1px solid var(--border);cursor:pointer">−</button>
+          <button class="calc-btn op" onclick="calcInput('*')" style="padding:12px;border-radius:6px;font-size:16px;background:#e2e8f0;border:1px solid var(--border);cursor:pointer">×</button>
+          <button class="calc-btn op" onclick="calcInput('/')" style="padding:12px;border-radius:6px;font-size:16px;background:#e2e8f0;border:1px solid var(--border);cursor:pointer">÷</button>
+          <button class="calc-btn eq" onclick="calcEvaluate()" style="padding:12px;border-radius:6px;font-size:16px;background:var(--accent);color:#fff;border:none;cursor:pointer">=</button>
+          <button class="calc-btn num" onclick="calcInput('7')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">7</button>
+          <button class="calc-btn num" onclick="calcInput('8')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">8</button>
+          <button class="calc-btn num" onclick="calcInput('9')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">9</button>
+          <button class="calc-btn clr" onclick="calcClear()" style="padding:12px;border-radius:6px;font-size:13px;background:#fee2e2;color:#dc2626;border:none;cursor:pointer">AC</button>
+          <button class="calc-btn clr" onclick="calcBackspace()" style="padding:12px;border-radius:6px;font-size:13px;background:#fee2e2;color:#dc2626;border:none;cursor:pointer">⌫</button>
+          <button class="calc-btn num" onclick="calcInput('4')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">4</button>
+          <button class="calc-btn num" onclick="calcInput('5')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">5</button>
+          <button class="calc-btn num" onclick="calcInput('6')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">6</button>
+          <button class="calc-btn num" onclick="calcInput('1')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">1</button>
+          <button class="calc-btn num" onclick="calcInput('2')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">2</button>
+          <button class="calc-btn num" onclick="calcInput('3')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">3</button>
+          <button class="calc-btn num" onclick="calcInput('0')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">0</button>
+          <button class="calc-btn num" onclick="calcInput('00')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">00</button>
+          <button class="calc-btn num" onclick="calcInput('.')" style="padding:12px;border-radius:6px;font-size:16px;background:#fff;border:1px solid var(--border);cursor:pointer">.</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -3202,6 +3325,90 @@ function toggleNavDropdown(el) {
 function closeNavDropdown(el) {
   el.classList.remove('open');
 }
+
+// ============ CALCULATOR ============
+function switchCalcTab(tab, btn) {
+  document.querySelectorAll('.calc-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('calc-' + tab).style.display = 'block';
+  document.querySelectorAll('.calc-tab').forEach(b => { b.style.background = 'var(--surface2)'; b.style.color = 'var(--text)'; b.style.border = '1px solid var(--border)'; });
+  btn.style.background = 'var(--accent)'; btn.style.color = '#fff'; btn.style.border = 'none';
+}
+function switchVatSub(sub, btn) {
+  document.getElementById('vat-add').style.display = sub === 'add' ? 'block' : 'none';
+  document.getElementById('vat-remove').style.display = sub === 'remove' ? 'block' : 'none';
+  document.querySelectorAll('.vat-subtab').forEach(b => { b.style.background = 'var(--surface2)'; b.style.color = 'var(--text)'; b.style.border = '1px solid var(--border)'; });
+  btn.style.background = 'var(--accent)'; btn.style.color = '#fff'; btn.style.border = 'none'; calcVat();
+}
+function calcProfit() {
+  const cost = parseFloat(document.getElementById('profit-cost').value) || 0;
+  const markup = parseFloat(document.getElementById('profit-markup').value) || 0;
+  const cc = parseFloat(document.getElementById('profit-cc').value) || 0;
+  const sc = parseFloat(document.getElementById('profit-sc').value) || 0;
+  const price = cost * (1 + markup / 100);
+  const profit = price - cost - cc - sc;
+  const margin = cost > 0 ? (profit / cost) * 100 : 0;
+  document.getElementById('profit-price').textContent = price.toFixed(2) + '€';
+  document.getElementById('profit-profit').textContent = profit.toFixed(2) + '€';
+  document.getElementById('profit-margin').textContent = margin.toFixed(1) + '%';
+  document.getElementById('profit-total').textContent = cost.toFixed(2) + '€';
+}
+function resetProfit() {
+  ['profit-cost','profit-markup','profit-cc','profit-sc'].forEach((id,i) => document.getElementById(id).value = [10,50,0,0][i]); calcProfit();
+}
+function calcDiscount() {
+  const orig = parseFloat(document.getElementById('discount-original').value) || 0;
+  const rate = parseFloat(document.getElementById('discount-rate').value) || 0;
+  const disc = orig * (1 - rate / 100);
+  document.getElementById('discount-original-display').textContent = orig.toFixed(2) + '€';
+  document.getElementById('discount-price').textContent = disc.toFixed(2) + '€';
+  document.getElementById('discount-savings').textContent = (orig - disc).toFixed(2) + '€';
+}
+function resetDiscount() { document.getElementById('discount-original').value = 10; document.getElementById('discount-rate').value = 50; calcDiscount(); }
+function calcVat() {
+  const rate = parseFloat(document.getElementById('vat-rate').value) || 0;
+  const exVat = parseFloat(document.getElementById('vat-ex').value) || 0;
+  document.getElementById('vat-ex-display').textContent = exVat.toFixed(2) + '€';
+  document.getElementById('vat-tax-display').textContent = (exVat * rate / 100).toFixed(2) + '€';
+  document.getElementById('vat-inc-display').textContent = (exVat + exVat * rate / 100).toFixed(2) + '€';
+  const incVat2 = parseFloat(document.getElementById('vat-inc').value) || 0;
+  document.getElementById('vat-rem-ex-display').textContent = (incVat2 / (1 + rate / 100)).toFixed(2) + '€';
+  document.getElementById('vat-rem-tax-display').textContent = (incVat2 - incVat2 / (1 + rate / 100)).toFixed(2) + '€';
+  document.getElementById('vat-rem-inc-display').textContent = incVat2.toFixed(2) + '€';
+}
+function resetVat() { document.getElementById('vat-rate').value = 21; document.getElementById('vat-ex').value = 9.90; document.getElementById('vat-inc').value = 20; calcVat(); }
+
+// Scientific Calculator
+let calcExpr = '';
+let calcHistory = JSON.parse(localStorage.getItem('calcHistory') || '[]');
+function updateCalcDisplay() { document.getElementById('calc-display').textContent = calcExpr || '0'; }
+function calcInput(val) { calcExpr += val; updateCalcDisplay(); document.getElementById('calc-expr').textContent = calcExpr; }
+function calcClear() { calcExpr = ''; updateCalcDisplay(); document.getElementById('calc-expr').textContent = ''; }
+function calcBackspace() { calcExpr = calcExpr.slice(0, -1); updateCalcDisplay(); document.getElementById('calc-expr').textContent = calcExpr; }
+function calcEvaluate() {
+  try {
+    let expr = calcExpr.replace(/sin\(/g,'Math.sin(').replace(/cos\(/g,'Math.cos(').replace(/tan\(/g,'Math.tan(').replace(/log\(/g,'Math.log10(').replace(/ln\(/g,'Math.log(').replace(/sqrt\(/g,'Math.sqrt(').replace(/exp\(/g,'Math.exp(');
+    expr = expr.replace(/π/g, '('+Math.PI+')').replace(/(\d+)!/g, (_,n) => { let r=1; for(let i=2;i<=+n;i++) r*=i; return r; });
+    const result = Function('"use strict"; return (' + expr + ')')();
+    calcHistory.unshift({ expr: calcExpr, result, time: new Date().toLocaleString() });
+    if (calcHistory.length > 50) calcHistory.pop();
+    localStorage.setItem('calcHistory', JSON.stringify(calcHistory));
+    document.getElementById('calc-expr').textContent = calcExpr + ' =';
+    calcExpr = String(parseFloat(result.toFixed(10)));
+    updateCalcDisplay();
+  } catch(e) { document.getElementById('calc-expr').textContent = '错误'; }
+}
+function toggleCalcHistory() {
+  const panel = document.getElementById('calc-history-panel');
+  panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+  if (panel.style.display === 'block') renderCalcHistory();
+}
+function renderCalcHistory() {
+  const panel = document.getElementById('calc-history-panel');
+  if (calcHistory.length === 0) { panel.innerHTML = '<div style="color:var(--text3);font-size:12px;text-align:center;padding:12px">暂无历史记录</div>'; return; }
+  panel.innerHTML = calcHistory.map((h, i) => `<div onclick="calcHistoryClick(${i})" style="padding:6px 8px;cursor:pointer;border-bottom:1px solid var(--border);font-size:12px"><div style="color:var(--text3)">${h.expr}</div><div style="font-weight:600">= ${parseFloat(h.result.toFixed(10))}</div></div>`).join('');
+}
+function calcHistoryClick(i) { calcExpr = String(parseFloat(calcHistory[i].result.toFixed(10))); updateCalcDisplay(); document.getElementById('calc-expr').textContent = ''; document.getElementById('calc-history-panel').style.display = 'none'; }
+function clearCalcHistory() { calcHistory = []; localStorage.removeItem('calcHistory'); renderCalcHistory(); }
 
 function updateAuthUI() {
   const loggedIn = !!localStorage.getItem('ag_token');
