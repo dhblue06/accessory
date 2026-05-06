@@ -2475,7 +2475,7 @@ input,textarea,select{font-family:inherit}
     <div id="exchange-error" style="display:none;background:rgba(239,68,68,0.1);border:1px solid var(--accent-red);border-radius:var(--radius);padding:12px 16px;color:var(--accent-red);font-size:13px;margin-bottom:16px"></div>
 
     <!-- Loading -->
-    <div id="exchange-loading" style="display:none;text-align:center;padding:40px;color:var(--text3)">加载中...</div>
+    <div id="exchange-loading" style="display:none;text-align:center;padding:40px;color:var(--text3)" data-i18n="loading_data">加载中...</div>
 
     <!-- Rate Cards -->
     <div id="exchange-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px"></div>
@@ -3153,6 +3153,7 @@ function setLanguage(lang) {
     renderWatchInfoCards();
     // Re-render Amazon if active
     if (currentPage === 'amazon') { renderAmazonCategoryFilters(); renderAmazonData(); }
+    if (currentPage === 'exchange') refreshExchangeLanguage();
   });
 }
 
@@ -3607,27 +3608,44 @@ function clearCalcHistory() { calcHistory = []; localStorage.removeItem('calcHis
 
 // ============ EXCHANGE RATES ============
 const CURRENCIES = [
-  { code: 'USD', flag: '🇺🇸', nameKey: 'cur_USD', nameZh: '美元' },
-  { code: 'EUR', flag: '🇪🇺', nameKey: 'cur_EUR', nameZh: '欧元' },
-  { code: 'GBP', flag: '🇬🇧', nameKey: 'cur_GBP', nameZh: '英镑' },
-  { code: 'JPY', flag: '🇯🇵', nameKey: 'cur_JPY', nameZh: '日元' },
-  { code: 'CNY', flag: '🇨🇳', nameKey: 'cur_CNY', nameZh: '人民币' },
-  { code: 'CAD', flag: '🇨🇦', nameKey: 'cur_CAD', nameZh: '加拿大元' },
-  { code: 'AUD', flag: '🇦🇺', nameKey: 'cur_AUD', nameZh: '澳大利亚元' },
-  { code: 'CHF', flag: '🇨🇭', nameKey: 'cur_CHF', nameZh: '瑞士法郎' }
+  { code: 'USD', flag: '🇺🇸', names: { zh: '美元', en: 'US Dollar', es: 'Dólar estadounidense' } },
+  { code: 'EUR', flag: '🇪🇺', names: { zh: '欧元', en: 'Euro', es: 'Euro' } },
+  { code: 'GBP', flag: '🇬🇧', names: { zh: '英镑', en: 'British Pound', es: 'Libra esterlina' } },
+  { code: 'JPY', flag: '🇯🇵', names: { zh: '日元', en: 'Japanese Yen', es: 'Yen japonés' } },
+  { code: 'CNY', flag: '🇨🇳', names: { zh: '人民币', en: 'Chinese Yuan', es: 'Yuan chino' } },
+  { code: 'CAD', flag: '🇨🇦', names: { zh: '加拿大元', en: 'Canadian Dollar', es: 'Dólar canadiense' } },
+  { code: 'AUD', flag: '🇦🇺', names: { zh: '澳大利亚元', en: 'Australian Dollar', es: 'Dólar australiano' } },
+  { code: 'CHF', flag: '🇨🇭', names: { zh: '瑞士法郎', en: 'Swiss Franc', es: 'Franco suizo' } }
 ];
 
-function getCurrencyName(code) { const c = CURRENCIES.find(x => x.code === code); return c ? (t(c.nameKey) || c.nameZh) : code; }
+let lastExchangeData = null;
+
+function getCurrencyName(code) {
+  const c = CURRENCIES.find(x => x.code === code);
+  if (!c) return code;
+  return c.names[currentLang] || c.names.en || code;
+}
 function getCurrencyFlag(code) { const c = CURRENCIES.find(x => x.code === code); return c ? c.flag : ''; }
 
 function populateCurrencySelects() {
   const baseSel = document.getElementById('exchange-base');
   const fromSel = document.getElementById('conv-from');
   const toSel = document.getElementById('conv-to');
+  const selected = {
+    base: baseSel.value || 'USD',
+    from: fromSel.value || 'USD',
+    to: toSel.value || 'EUR'
+  };
   const opts = CURRENCIES.map(c => `<option value="${c.code}">${c.flag} ${c.code} - ${getCurrencyName(c.code)}</option>`).join('');
-  baseSel.innerHTML = opts; baseSel.value = 'USD';
-  fromSel.innerHTML = opts; fromSel.value = 'USD';
-  toSel.innerHTML = opts; toSel.value = 'EUR';
+  baseSel.innerHTML = opts; baseSel.value = selected.base;
+  fromSel.innerHTML = opts; fromSel.value = selected.from;
+  toSel.innerHTML = opts; toSel.value = selected.to;
+}
+
+function refreshExchangeLanguage() {
+  populateCurrencySelects();
+  if (lastExchangeData) renderExchangeCards(lastExchangeData);
+  convertCurrency();
 }
 
 async function fetchExchangeRates() {
@@ -3644,6 +3662,7 @@ async function fetchExchangeRates() {
     const res = await fetch(`https://api.frankfurter.dev/v1/latest?base=${base}`);
     if (!res.ok) throw new Error('API error');
     const data = await res.json();
+    lastExchangeData = data;
     document.getElementById('exchange-updated').textContent = data.date || new Date().toLocaleDateString();
     renderExchangeCards(data);
     convertCurrency();
