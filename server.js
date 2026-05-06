@@ -2529,29 +2529,33 @@ app.get('/api/product-sync', async (req, res) => {
 
 // Stats
 app.get('/api/admin/stats', authMiddleware, async (req, res) => {
-  const db = await readDB();
-  let productCount = 0;
-  let userCount = 0;
-  if (supabaseAdmin) {
-    try {
-      const { data } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
-      userCount = (data.users || []).length;
-    } catch {}
+  try {
+    const db = await readDB();
+    let productCount = 0;
+    let userCount = 0;
+    if (supabaseAdmin) {
+      try {
+        const { data } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+        userCount = (data.users || []).length;
+      } catch {}
+    }
+    if (pool) {
+      try {
+        const { rows } = await pool.query('SELECT count FROM products_meta WHERE id = $1', ['syncMeta']);
+        if (rows.length > 0) productCount = rows[0].count;
+      } catch {}
+    }
+    const today = new Date().toISOString().slice(0, 10);
+    const siteVisits = db.siteVisits || { total: 0, byDate: {} };
+    res.json({
+      userCount,
+      totalVisits: Number(siteVisits.total || 0),
+      todayVisits: Number(siteVisits.byDate?.[today] || 0),
+      productCount
+    });
+  } catch (err) {
+    res.json({ userCount: 0, totalVisits: 0, todayVisits: 0, productCount: 0 });
   }
-  if (pool) {
-    try {
-      const { rows } = await pool.query('SELECT count FROM products_meta WHERE id = $1', ['syncMeta']);
-      if (rows.length > 0) productCount = rows[0].count;
-    } catch {}
-  }
-  const today = new Date().toISOString().slice(0, 10);
-  const siteVisits = db.siteVisits || { total: 0, byDate: {} };
-  res.json({
-    userCount,
-    totalVisits: Number(siteVisits.total || 0),
-    todayVisits: Number(siteVisits.byDate?.[today] || 0),
-    productCount
-  });
 });
 
 // SPA fallback
