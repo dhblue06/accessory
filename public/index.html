@@ -4770,8 +4770,17 @@ async function fetchGoogleData() {
 function renderGoogleCategoryFilters() {
   const el = document.getElementById('google-cat-filter');
   const cats = [...new Set(googleAllData.map(r => r.category).filter(Boolean))];
+  // Custom sort order for categories
+  const sortOrder = ['📱 手机', '🛡️ 手机壳', '📟 平板', '⌚ 智能手表', '💻 笔记本', '🎧 音频设备', '🎮 游戏机', '📷 电子设备', '🔌 充电设备', '📺 电视'];
+  cats.sort((a, b) => {
+    const ai = sortOrder.indexOf(a);
+    const bi = sortOrder.indexOf(b);
+    if (ai === -1 && bi === -1) return 0;
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
   el.innerHTML = cats.map(c => `<button class="amazon-mode-btn ${!googleCategory && cats.indexOf(c) === 0 ? 'active' : ''}" data-cat="${c}" onclick="setGoogleCategory('${c.replace(/'/g,"\\'")}',this)" style="font-size:12px">${c}</button>`).join('');
-  // Auto-select first category
   if (!googleCategory && cats.length > 0) { googleCategory = cats[0]; }
 }
 
@@ -4794,7 +4803,7 @@ function renderGoogleData() {
     items.map((item, i) => {
       const trend = getGoogleTrendLabel(item.trend);
       const changeHtml = getGoogleRankChange(item);
-      const searchQ = encodeURIComponent(item.title + ' ' + (item.brand || ''));
+      const searchQ = encodeURIComponent(item.title);
       const productLink = `https://www.google.es/search?q=${searchQ}&udm=28`;
       const trendsLink = `https://trends.google.com/trends/explore?date=today%203-m&geo=ES&q=${encodeURIComponent(item.title)}`;
       return `<tr>
