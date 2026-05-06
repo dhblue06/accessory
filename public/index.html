@@ -2075,7 +2075,7 @@ input,textarea,select{font-family:inherit}
       <div class="mobile-lang-select">
         <button class="lang-btn btn" data-lang="es" onclick="setLanguage('es');closeMobileMenu()" style="padding:4px 8px;font-size:11px;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer">ES</button>
         <button class="lang-btn btn" data-lang="en" onclick="setLanguage('en');closeMobileMenu()" style="padding:4px 8px;font-size:11px;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer">EN</button>
-        <button class="lang-btn btn" data-lang="zh" onclick="setLanguage('zh');closeMobileMenu()" style="padding:4px 8px;font-size:11px;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer">中文</button>
+        <button class="lang-btn btn" data-lang="zh" onclick="setLanguage('zh');closeMobileMenu()" style="padding:4px 8px;font-size:11px;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer">CN</button>
       </div>
       <button class="mobile-theme-row" onclick="toggleTheme();closeMobileMenu()">
         <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/></svg>
@@ -3237,7 +3237,7 @@ function setLanguage(lang) {
 }
 
 function rerenderLocalizedViews() {
-  if (currentPage === 'google') { renderGoogleCategoryFilters(); renderGoogleData(); }
+  if (currentPage === 'google') { updateGoogleUpdatedLabel(); renderGoogleCategoryFilters(); renderGoogleData(); }
   renderIpadInfoCards();
   renderWatchInfoCards();
   if (currentPage === 'amazon') { renderAmazonCategoryFilters(); renderAmazonData(); }
@@ -5440,6 +5440,22 @@ function renderAmazonData() {
 let googleAllData = [];
 let googleCategory = '';
 let googleDisplayLimit = 50;
+let googleUpdatedAt = null;
+
+const GOOGLE_UPDATED_LABELS = {
+  zh: '数据更新:',
+  en: 'Data updated:',
+  es: 'Datos actualizados:'
+};
+
+function updateGoogleUpdatedLabel() {
+  const updatedEl = document.getElementById('google-updated');
+  if (!updatedEl || !googleUpdatedAt) return;
+  const d = new Date(googleUpdatedAt);
+  const locale = currentLang === 'zh' ? 'zh-CN' : currentLang === 'es' ? 'es-ES' : 'en-US';
+  const dateText = d.toLocaleDateString(locale, currentLang === 'zh' ? undefined : { year: 'numeric', month: 'short', day: 'numeric' });
+  updatedEl.textContent = `${GOOGLE_UPDATED_LABELS[currentLang] || GOOGLE_UPDATED_LABELS.en} ${dateText}`;
+}
 
 const GOOGLE_CAT_TRANS = {
   '🛡️ 手机壳': { zh: '🛡️ 手机壳', en: '🛡️ Phone Cases', es: '🛡️ Fundas' },
@@ -5509,8 +5525,8 @@ async function fetchGoogleData() {
     if (noteEl) noteEl.style.display = isMember ? 'none' : 'block';
     const updatedEl = document.getElementById('google-updated');
     if (updatedEl && json.updatedAt) {
-      const d = new Date(json.updatedAt);
-      updatedEl.textContent = '数据更新: ' + d.toLocaleDateString('zh-CN');
+      googleUpdatedAt = json.updatedAt;
+      updateGoogleUpdatedLabel();
     }
     renderGoogleCategoryFilters();
     renderGoogleData();
