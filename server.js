@@ -1787,8 +1787,14 @@ app.delete('/api/admin/film/fg/:filmName', authMiddleware, async (req, res) => {
 });
 
 // Logo upload
-app.post('/api/admin/logo', authMiddleware, upload.single('logo'), (req, res) => {
-  res.json({ ok: true, file: req.file });
+app.post('/api/admin/logo', authMiddleware, uploadMemory.single('logo'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const db = await readDB();
+  const mimeType = req.file.mimetype || 'image/png';
+  const logoDataUrl = `data:${mimeType};base64,${req.file.buffer.toString('base64')}`;
+  db.settings = { ...(db.settings || DEFAULT_SETTINGS), logoDataUrl };
+  await writeDB(db);
+  res.json({ ok: true, logoDataUrl });
 });
 
 app.post('/api/admin/favicon', authMiddleware, uploadMemory.single('favicon'), async (req, res) => {

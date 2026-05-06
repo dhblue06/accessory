@@ -2744,6 +2744,14 @@ async function loadSettings() {
     document.title = (s.siteName || 'TEMCO ACCESORIOS') + ' — TEMCO ACCESORIOS';
     const vEl = document.getElementById('nav-version');
     if (vEl) vEl.textContent = s.version || 'v1.0';
+    const cacheKey = Date.now();
+    const logoUrl = s.logoDataUrl || ('/Logo.png?v=' + cacheKey);
+    document.querySelectorAll('img[src^="/Logo.png"], #current-logo').forEach(img => { img.src = logoUrl; });
+    const faviconUrl = s.faviconDataUrl || ('/favicon.ico?v=' + cacheKey);
+    const faviconImg = document.getElementById('current-favicon');
+    const faviconLink = document.getElementById('favicon-link');
+    if (faviconImg) faviconImg.src = faviconUrl;
+    if (faviconLink) faviconLink.href = faviconUrl;
   } catch {}
 }
 
@@ -3740,6 +3748,8 @@ async function loadSettings() {
     const vEl = document.getElementById('nav-version');
     if(vEl) vEl.textContent = s.version||'v1.0';
     const cacheKey = Date.now();
+    const logoUrl = s.logoDataUrl || ('/Logo.png?v=' + cacheKey);
+    document.querySelectorAll('img[src^="/Logo.png"], #current-logo').forEach(img => { img.src = logoUrl; });
     const faviconImg = document.getElementById('current-favicon');
     const faviconLink = document.getElementById('favicon-link');
     const faviconUrl = s.faviconDataUrl || ('/favicon.ico?v=' + cacheKey);
