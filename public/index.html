@@ -2142,6 +2142,15 @@ input,textarea,select{font-family:inherit}
             <div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">加载中...</div>
           </div>
         </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:20px">
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">数据同步</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="syncProducts()">同步产品素材</button>
+            <button class="btn btn-primary" onclick="syncAmazonNow()">同步 Amazon 数据</button>
+            <button class="btn btn-primary" onclick="syncGoogle()" style="background:var(--accent-2)">同步 Google 数据</button>
+            <button class="btn btn-secondary" onclick="syncAll()">同步全部数据</button>
+          </div>
+        </div>
       </div>
 
       <!-- TRAFFIC STATS -->
@@ -3721,6 +3730,8 @@ async function syncAmazon() {
     if (currentPage === 'amazon') fetchAmazonData();
   } catch (err) { toast('Amazon 同步失败: ' + err.message, 'error'); }
 }
+
+async function syncAmazonNow() { await syncAmazon(); }
 
 async function syncFilm() {
   try {
