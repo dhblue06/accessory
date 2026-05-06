@@ -1816,6 +1816,8 @@ const PRODUCT_TRANSLATIONS = {
     product_image_resources: '图片资源',
     product_video_resources: '视频资源',
     product_descriptions: '文案与描述',
+    product_overview: '产品信息',
+    product_source_page: '来源页面',
     product_download: '下载',
     product_download_all: '下载全部',
     product_download_selected: '下载选中...',
@@ -1856,6 +1858,8 @@ const PRODUCT_TRANSLATIONS = {
     product_image_resources: 'Recursos de imagen',
     product_video_resources: 'Recursos de vídeo',
     product_descriptions: 'Textos y descripciones',
+    product_overview: 'Información del producto',
+    product_source_page: 'Página de origen',
     product_download: 'Descargar',
     product_download_all: 'Descargar todo',
     product_download_selected: 'Descargando seleccionados...',
@@ -1896,6 +1900,8 @@ const PRODUCT_TRANSLATIONS = {
     product_image_resources: 'Image Assets',
     product_video_resources: 'Video Assets',
     product_descriptions: 'Copy and Descriptions',
+    product_overview: 'Product Info',
+    product_source_page: 'Source page',
     product_download: 'Download',
     product_download_all: 'Download all',
     product_download_selected: 'Downloading selected...',
@@ -2710,6 +2716,100 @@ function recalculateProductStats(product) {
   return product;
 }
 
+function htmlToPlainText(html) {
+  return String(html || '')
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<(br|\/p|\/div|\/li|\/h[1-6]|\/section|\/article)\b[^>]*>/gi, '\n')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .split(/\r?\n/)
+    .map(line => line.replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .join('\n');
+}
+
+function cleanScrapedText(text) {
+  return String(text || '').replace(/\s+/g, ' ').trim();
+}
+
+function extractHtmlMeta(html, key) {
+  const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const patterns = [
+    new RegExp(`<meta[^>]+property=["']${escaped}["'][^>]+content=["']([^"']*)["'][^>]*>`, 'i'),
+    new RegExp(`<meta[^>]+name=["']${escaped}["'][^>]+content=["']([^"']*)["'][^>]*>`, 'i'),
+    new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]+property=["']${escaped}["'][^>]*>`, 'i'),
+    new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]+name=["']${escaped}["'][^>]*>`, 'i')
+  ];
+  for (const pattern of patterns) {
+    const match = html.match(pattern);
+    if (match?.[1]) return cleanScrapedText(match[1]);
+  }
+  return '';
+}
+
+function extractJsonLdProducts(html) {
+  const products = [];
+  const blocks = [...String(html || '').matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  const visit = value => {
+    if (!value) return;
+    if (Array.isArray(value)) return value.forEach(visit);
+    if (typeof value !== 'object') return;
+    const type = value['@type'];
+    if (type === 'Product' || (Array.isArray(type) && type.includes('Product'))) products.push(value);
+    if (value['@graph']) visit(value['@graph']);
+  };
+  for (const block of blocks) {
+    try { visit(JSON.parse(block[1])); } catch {}
+  }
+  return products;
+}
+
+function buildProductDescriptionFromText(text) {
+  const lines = String(text || '').split(/\n+/).map(line => line.trim()).filter(Boolean);
+  const detailsIdx = lines.findIndex(line => /^Detalles:?$/i.test(line));
+  const specIdx = lines.findIndex(line => /^Especificaciones:?$/i.test(line));
+  const relatedIdx = lines.findIndex(line => /Productos relacionados/i.test(line));
+  const start = detailsIdx >= 0 ? detailsIdx + 1 : specIdx >= 0 ? specIdx + 1 : -1;
+  if (start < 0) return '';
+  const end = relatedIdx > start ? relatedIdx : Math.min(lines.length, start + 14);
+  const descriptionLines = lines.slice(start, end).filter(line => !/^Referencia:?/i.test(line));
+  return descriptionLines.join('\n').trim();
+}
+
+function extractScrapedProduct(html, url) {
+  const jsonLdProduct = extractJsonLdProducts(html)[0] || {};
+  const plainText = htmlToPlainText(html);
+  const titleFromHeading = cleanScrapedText((html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i) || html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i) || html.match(/<h3[^>]*>([\s\S]*?)<\/h3>/i) || [])[1]?.replace(/<[^>]+>/g, ' '));
+  const titleFromTag = cleanScrapedText((html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1]);
+  const name = cleanScrapedText(
+    jsonLdProduct.name ||
+    extractHtmlMeta(html, 'og:title') ||
+    extractHtmlMeta(html, 'twitter:title') ||
+    titleFromHeading ||
+    titleFromTag
+  ).replace(/\s+en\s+TECNOTEMCO.*$/i, '');
+  const description = (
+    buildProductDescriptionFromText(plainText) ||
+    cleanScrapedText(jsonLdProduct.description) ||
+    extractHtmlMeta(html, 'og:description') ||
+    extractHtmlMeta(html, 'description') ||
+    extractHtmlMeta(html, 'twitter:description')
+  );
+  const skuMatch = plainText.match(/Referencia:\s*([A-Za-z0-9._-]+)/i);
+  return {
+    name,
+    description,
+    sku: skuMatch?.[1] || '',
+    sourceUrl: url
+  };
+}
+
 function rowToProduct(row) {
   const sku = extractTextFromCell(cellAt(row, COL.SKU));
   if (!sku || sku.toLowerCase() === 'sku') return null;
@@ -2718,6 +2818,7 @@ function rowToProduct(row) {
     sku,
     name: extractTextFromCell(cellAt(row, COL.NAME)) || '',
     category: extractTextFromCell(cellAt(row, COL.CAT)) || '',
+    sourceUrl: '',
     mainImage: null,
     imageGroups: [],
     videos: [],
@@ -3022,11 +3123,37 @@ app.post('/api/admin/products/refresh', authMiddleware, requireAdmin, async (req
   }
 });
 
+app.post('/api/admin/products/scrape', authMiddleware, requireAdmin, async (req, res) => {
+  try {
+    const rawUrl = String(req.body?.url || '').trim();
+    if (!rawUrl) return res.status(400).json({ error: 'Missing url' });
+    let parsed;
+    try { parsed = new URL(rawUrl); } catch { return res.status(400).json({ error: 'Invalid url' }); }
+    if (!['http:', 'https:'].includes(parsed.protocol)) return res.status(400).json({ error: 'Only http/https URLs are supported' });
+
+    const response = await axios.get(parsed.toString(), {
+      timeout: 15000,
+      maxRedirects: 5,
+      responseType: 'text',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 AccessoryGuide/1.0 (+https://temco-accessory.vercel.app)',
+        'Accept': 'text/html,application/xhtml+xml'
+      }
+    });
+    const html = typeof response.data === 'string' ? response.data : String(response.data || '');
+    const scraped = extractScrapedProduct(html, parsed.toString());
+    if (!scraped.name && !scraped.description) return res.status(422).json({ error: 'No product name or description found' });
+    res.json(scraped);
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Scrape failed' });
+  }
+});
+
 app.put('/api/admin/products/:sku', authMiddleware, requireAdmin, async (req, res) => {
   try {
     if (!pool) return res.status(503).json({ error: 'Database not available' });
     const oldSku = decodeURIComponent(req.params.sku);
-    const { sku: requestedSku, name, category, mainImage, mainImageUrl, descriptions, imageGroups, videos } = req.body;
+    const { sku: requestedSku, name, category, sourceUrl, mainImage, mainImageUrl, descriptions, imageGroups, videos } = req.body;
     const newSku = String(requestedSku || oldSku).trim();
     if (!newSku) return res.status(400).json({ error: 'SKU is required' });
     const { rows } = await pool.query('SELECT data FROM products WHERE sku = $1', [oldSku]);
@@ -3035,6 +3162,7 @@ app.put('/api/admin/products/:sku', authMiddleware, requireAdmin, async (req, re
     product.sku = newSku;
     if (name !== undefined) product.name = name;
     if (category !== undefined) product.category = category;
+    if (sourceUrl !== undefined) product.sourceUrl = sourceUrl;
     if (mainImage !== undefined) {
       product.mainImage = mainImage;
     }

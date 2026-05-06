@@ -1896,6 +1896,42 @@ input,textarea,select{font-family:inherit}
 .detail-cat-tag{padding:3px 10px;background:var(--accent);color:#fff;border-radius:6px;font-size:12px}
 .detail-sku{font-size:13px;color:var(--text3)}
 .detail-name{font-size:24px;font-weight:600;margin:4px 0 12px;color:var(--text)}
+.detail-summary{
+  background:linear-gradient(180deg,var(--surface),var(--surface2));
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px 20px;
+  margin:0 0 24px;
+}
+.detail-summary-kicker{
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+.detail-summary-title{
+  font-size:20px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:10px;
+}
+.detail-summary-desc{
+  font-size:14px;
+  line-height:1.75;
+  color:var(--text2);
+  white-space:pre-wrap;
+}
+.detail-summary-source{
+  display:inline-flex;
+  align-items:center;
+  margin-top:14px;
+  font-size:12px;
+  color:var(--accent);
+  text-decoration:none;
+}
+.detail-summary-source:hover{text-decoration:underline}
 .detail-stats{display:flex;gap:12px;margin-top:16px}
 .stat-card{
   flex:1;text-align:center;padding:16px 12px;
@@ -2940,7 +2976,7 @@ if (!localStorage.getItem('ag_lang')) {
   localStorage.setItem('ag_lang', 'es');
 }
 const TRANSLATION_LANGS = ['es', 'en', 'zh'];
-const TRANSLATION_CACHE_KEY = 'ag_translations_cache_v3';
+const TRANSLATION_CACHE_KEY = 'ag_translations_cache_v4';
 const TRANSLATION_CACHE_TTL = 6 * 60 * 60 * 1000;
 let translations = loadCachedTranslations();
 let adminLang = 'zh'; // Admin panel editing language for iPad/Watch
@@ -4641,6 +4677,14 @@ async function editProduct(encodedSku) {
   document.getElementById('modal-body').innerHTML = `
     <input type="hidden" id="edit-product-sku" value="${escapeAttr(product.sku || sku)}">
     <div class="form-group"><label class="form-label">SKU</label><input id="edit-product-new-sku" class="form-input" value="${escapeAttr(product.sku || sku)}"></div>
+    <div class="form-group">
+      <label class="form-label">产品来源链接</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="edit-product-source-url" class="form-input" value="${escapeAttr(product.sourceUrl || '')}" placeholder="粘贴产品页面链接，点击自动抓取" style="flex:1">
+        <button type="button" id="scrape-product-btn" class="btn btn-secondary btn-sm" onclick="scrapeProductSource()" style="white-space:nowrap">自动抓取</button>
+      </div>
+      <p style="font-size:11px;color:var(--text3);margin-top:6px">抓取结果会先填入下面的名称和文案，确认后点击保存才会写入数据库。</p>
+    </div>
     <div class="form-group"><label class="form-label">名称</label><input id="edit-product-name" class="form-input" value="${escapeAttr(product.name || '')}"></div>
     <div class="form-group"><label class="form-label">分类</label><input id="edit-product-cat" class="form-input" value="${escapeAttr(product.category || '')}"></div>
     <div style="margin-bottom:12px;padding:12px;background:var(--surface2);border-radius:var(--radius)">
@@ -4665,9 +4709,33 @@ async function editProduct(encodedSku) {
   document.getElementById('modal-overlay').classList.remove('hidden');
 }
 
+async function scrapeProductSource() {
+  const urlEl = document.getElementById('edit-product-source-url');
+  const btn = document.getElementById('scrape-product-btn');
+  const sourceUrl = urlEl?.value.trim();
+  if (!sourceUrl) { toast('请先输入产品来源链接', 'error'); return; }
+  const originalText = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = '抓取中...'; }
+  try {
+    const result = await api('/api/admin/products/scrape', {
+      method: 'POST',
+      body: JSON.stringify({ url: sourceUrl })
+    });
+    if (result.sourceUrl && urlEl) urlEl.value = result.sourceUrl;
+    if (result.name) document.getElementById('edit-product-name').value = result.name;
+    if (result.description) document.getElementById('edit-product-desc-es').value = result.description;
+    toast('已抓取产品名称和描述，请确认后保存', 'success');
+  } catch (e) {
+    toast('抓取失败: ' + e.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = originalText; }
+  }
+}
+
 async function saveProductEdit() {
   const sku = document.getElementById('edit-product-sku').value;
   const newSku = document.getElementById('edit-product-new-sku').value.trim();
+  const sourceUrl = document.getElementById('edit-product-source-url').value.trim();
   const name = document.getElementById('edit-product-name').value.trim();
   const category = document.getElementById('edit-product-cat').value.trim();
   const mainImageUrl = document.getElementById('edit-product-mainimg').value.trim();
@@ -4691,6 +4759,7 @@ async function saveProductEdit() {
         sku: newSku,
         name,
         category,
+        sourceUrl,
         mainImage: mainImageUrl ? { url: mainImageUrl, downloadUrl: mainImageDownloadUrl || mainImageUrl, label: '主产品图' } : null,
         descriptions: { es: descEs, zh: descZh },
         imageGroups,
@@ -5734,6 +5803,8 @@ async function openProductDetail(sku) {
 
 function renderProductDetail(p) {
   const c = document.getElementById('product-detail-content');
+  const detailDescription = p.descriptions?.[currentLang] || p.descriptions?.es || p.descriptions?.zh || '';
+  const detailTitle = p.name || p.sku;
   let html = `
     <div class="detail-header">
       ${p.mainImage ? `<img class="detail-header-img" src="${escHtml(p.mainImage.url)}" alt="${escHtml(p.name)}">` : ''}
@@ -5751,6 +5822,17 @@ function renderProductDetail(p) {
       </div>
     </div>
   `;
+
+  if (detailDescription || p.sourceUrl) {
+    html += `
+      <div class="detail-summary">
+        <div class="detail-summary-kicker">${t('product_overview')}</div>
+        <div class="detail-summary-title">${escHtml(detailTitle)}</div>
+        ${detailDescription ? `<div class="detail-summary-desc">${escHtml(detailDescription)}</div>` : ''}
+        ${p.sourceUrl ? `<a class="detail-summary-source" href="${escHtml(p.sourceUrl)}" target="_blank" rel="noopener">${t('product_source_page')}</a>` : ''}
+      </div>
+    `;
+  }
 
   const renderMainImageGroup = () => {
     if (!p.mainImage) return '';
