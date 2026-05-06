@@ -143,6 +143,19 @@ input,textarea,select{font-family:inherit}
 .nav-tab svg{width:14px;height:14px;opacity:0.7}
 .nav-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
 .nav-badge{font-size:11px;padding:3px 8px;border-radius:var(--radius-sm);background:var(--surface2);color:var(--text3);font-family:'JetBrains Mono',monospace;font-weight:500}
+/* Dropdown nav */
+.nav-parent{position:relative;display:flex;align-items:center;padding:8px 14px;font-size:13px;font-weight:500;color:var(--text2);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.15s;gap:4px;white-space:nowrap}
+.nav-parent:hover,.nav-parent.open{color:var(--text);background:var(--surface-hover)}
+.nav-parent .arrow{font-size:8px;transition:transform 0.2s;margin-left:2px}
+.nav-parent.open .arrow{transform:rotate(180deg)}
+.nav-dropdown{position:absolute;top:100%;left:0;min-width:180px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);padding:4px;display:none;z-index:200}
+.nav-parent.open .nav-dropdown{display:block}
+.nav-dropdown a{display:block;padding:8px 12px;font-size:13px;color:var(--text);border-radius:var(--radius-sm);text-decoration:none}
+.nav-dropdown a:hover{background:var(--surface-hover);color:var(--accent)}
+.nav-tab{display:flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:500;color:var(--text2);border-radius:var(--radius-sm);transition:all 0.15s;cursor:pointer;text-decoration:none;white-space:nowrap}
+.nav-tab:hover{color:var(--text);background:var(--surface-hover)}
+.nav-tab.active{color:var(--accent);background:var(--blue-bg)}
+.nav-tab svg{width:14px;height:14px;opacity:0.7;flex-shrink:0}
 .hamburger-btn{display:none}
 .mobile-menu{display:none}
 
@@ -1685,25 +1698,32 @@ input,textarea,select{font-family:inherit}
       <img src="/Logo.png" alt="Logo">
     </a>
     <div class="nav-tabs" id="nav-tabs">
-      <a class="nav-tab" data-page="amazon" onclick="switchPage('amazon');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        <span>Amazon</span>
-      </a>
-      <a class="nav-tab" data-page="ipad" onclick="switchPage('ipad');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg>
-        <span>iPad</span>
-      </a>
-      <a class="nav-tab" data-page="watch" onclick="switchPage('watch');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/><polyline points="12 7 12 12 15 15"/></svg>
-        <span>Watch</span>
-      </a>
-      <a class="nav-tab" data-page="film" onclick="switchPage('film');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        <span>Cristal Templado</span>
+      <div class="nav-parent" onclick="toggleNavDropdown(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        <span>钢化膜</span>
+        <span class="arrow">▾</span>
+        <div class="nav-dropdown">
+          <a href="#" onclick="switchPage('film');return false">通用型号查询</a>
+          <a href="#" onclick="switchPage('ipad');return false">iPad</a>
+          <a href="#" onclick="switchPage('watch');return false">Apple Watch</a>
+        </div>
+      </div>
+      <div class="nav-parent" onclick="toggleNavDropdown(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <span>选品助手</span>
+        <span class="arrow">▾</span>
+        <div class="nav-dropdown">
+          <a href="#" onclick="switchPage('amazon');return false">Amazon</a>
+          <a href="#" onclick="switchPage('google');return false">Google</a>
+        </div>
+      </div>
+      <a class="nav-tab" data-page="calculator" onclick="switchPage('calculator');return false" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+        <span>商业计算器</span>
       </a>
       <a class="nav-tab" data-page="products" onclick="switchPage('products');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        <span>Materiales</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span>产品素材库</span>
       </a>
     </div>
     <div class="nav-actions">
@@ -1736,11 +1756,16 @@ input,textarea,select{font-family:inherit}
       <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Close">&times;</button>
     </div>
     <div class="mobile-nav-tabs">
-      <a class="mobile-nav-tab" data-page="amazon" onclick="switchPage('amazon');closeMobileMenu();return false" href="#"><span class="mobile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>Amazon</a>
-      <a class="mobile-nav-tab" data-page="ipad" onclick="switchPage('ipad');closeMobileMenu();return false" href="#"><span class="mobile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg></span>iPad</a>
-      <a class="mobile-nav-tab" data-page="watch" onclick="switchPage('watch');closeMobileMenu();return false" href="#"><span class="mobile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/><polyline points="12 7 12 12 15 15"/></svg></span>Watch</a>
-      <a class="mobile-nav-tab" data-page="film" onclick="switchPage('film');closeMobileMenu();return false" href="#"><span class="mobile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>钢化膜通用</a>
-      <a class="mobile-nav-tab" data-page="products" onclick="switchPage('products');closeMobileMenu();return false" href="#"><span class="mobile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>产品素材</a>
+      <div style="font-size:12px;font-weight:600;color:var(--text3);padding:8px 14px 4px">钢化膜</div>
+      <a class="mobile-nav-tab" data-page="film" onclick="switchPage('film');closeMobileMenu();return false" href="#">通用型号查询</a>
+      <a class="mobile-nav-tab" data-page="ipad" onclick="switchPage('ipad');closeMobileMenu();return false" href="#">iPad</a>
+      <a class="mobile-nav-tab" data-page="watch" onclick="switchPage('watch');closeMobileMenu();return false" href="#">Apple Watch</a>
+      <div style="font-size:12px;font-weight:600;color:var(--text3);padding:12px 14px 4px;border-top:1px solid var(--border);margin-top:4px">选品助手</div>
+      <a class="mobile-nav-tab" data-page="amazon" onclick="switchPage('amazon');closeMobileMenu();return false" href="#">Amazon</a>
+      <a class="mobile-nav-tab" data-page="google" onclick="switchPage('google');closeMobileMenu();return false" href="#">Google</a>
+      <div style="border-top:1px solid var(--border);margin-top:4px"></div>
+      <a class="mobile-nav-tab" data-page="calculator" onclick="switchPage('calculator');closeMobileMenu();return false" href="#">商业计算器</a>
+      <a class="mobile-nav-tab" data-page="products" onclick="switchPage('products');closeMobileMenu();return false" href="#">产品素材库</a>
     </div>
     <div class="mobile-menu-actions">
       <div class="mobile-lang-select">
@@ -2003,6 +2028,28 @@ input,textarea,select{font-family:inherit}
   <div class="film-page-body">
     <div id="brand-filters" class="filter-bar" style="margin:0;border-bottom:1px solid var(--border);padding:14px 0"></div>
     <div id="film-results" style="padding:20px 0"></div>
+  </div>
+</div>
+
+<!-- GOOGLE PAGE -->
+<div id="google-page" class="page" style="padding:0!important">
+  <div class="film-page-body">
+    <div style="background:var(--surface2);border-radius:var(--radius);padding:40px 24px;max-width:500px;margin:40px auto;text-align:center">
+      <div style="font-size:48px;margin-bottom:16px">🔍</div>
+      <h3 style="font-size:18px;margin-bottom:8px">Google 选品</h3>
+      <p style="color:var(--text3);font-size:13px">即将上线，敬请期待</p>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULATOR PAGE -->
+<div id="calculator-page" class="page" style="padding:0!important">
+  <div class="film-page-body">
+    <div style="background:var(--surface2);border-radius:var(--radius);padding:40px 24px;max-width:500px;margin:40px auto;text-align:center">
+      <div style="font-size:48px;margin-bottom:16px">📐</div>
+      <h3 style="font-size:18px;margin-bottom:8px">商业计算器</h3>
+      <p style="color:var(--text3);font-size:13px">即将上线，敬请期待</p>
+    </div>
   </div>
 </div>
 
@@ -2718,16 +2765,6 @@ function applyTranslations() {
     el.placeholder = t(key);
   });
 
-  // Nav tabs
-  const filmTab = document.querySelector('[data-page="film"] span');
-  const ipadTab = document.querySelector('[data-page="ipad"] span');
-  const watchTab = document.querySelector('[data-page="watch"] span');
-  const productsTab = document.querySelector('[data-page="products"] span');
-  if (filmTab) filmTab.textContent = t('nav_film');
-  if (ipadTab) ipadTab.textContent = t('nav_ipad');
-  if (watchTab) watchTab.textContent = t('nav_watch');
-  if (productsTab) productsTab.textContent = t('nav_products');
-
   const productsEmpty = document.getElementById('products-empty');
   const productsLoading = document.getElementById('products-loading');
   if (productsEmpty) productsEmpty.textContent = t('products_empty');
@@ -3009,16 +3046,24 @@ function switchPage(page, load=true) {
   document.querySelectorAll('.nav-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.page === page);
   });
-  document.querySelectorAll('.mobile-nav-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.page === page);
-  });
+  // Close all nav dropdowns
+  document.querySelectorAll('.nav-parent.open').forEach(p => p.classList.remove('open'));
   if (load) {
     if (page==='ipad') loadiPad();
     else if (page==='watch') loadWatch();
     else if (page==='film') loadFilm();
     else if (page==='amazon') fetchAmazonData();
     else if (page==='products') loadProductsPage();
+    else if (page==='google') {} // placeholder
+    else if (page==='calculator') {} // placeholder
   }
+}
+
+function toggleNavDropdown(el) {
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.nav-parent.open').forEach(p => p.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
 }
 
 function updateAuthUI() {
