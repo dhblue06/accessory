@@ -2033,12 +2033,35 @@ input,textarea,select{font-family:inherit}
 
 <!-- GOOGLE PAGE -->
 <div id="google-page" class="page" style="padding:0!important">
-  <div class="film-page-body">
-    <div style="background:var(--surface2);border-radius:var(--radius);padding:40px 24px;max-width:500px;margin:40px auto;text-align:center">
-      <div style="font-size:48px;margin-bottom:16px">🔍</div>
-      <h3 style="font-size:18px;margin-bottom:8px">Google 选品</h3>
-      <p style="color:var(--text3);font-size:13px">即将上线，敬请期待</p>
+
+  <!-- HERO -->
+  <div class="amazon-hero" style="background:linear-gradient(135deg,#667eea,#764ba2)">
+    <div class="amazon-hero-bg"></div>
+    <div class="amazon-hero-left">
+      <h1 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:4px">Google 全品类热销周报</h1>
+      <p style="color:rgba(255,255,255,0.8);font-size:13px">西班牙市场 • Google Merchant Center 数据源</p>
+      <p id="google-updated" style="color:rgba(255,255,255,0.6);font-size:11px;margin-top:4px"></p>
     </div>
+    <div class="amazon-hero-img">
+      <div style="font-size:64px;line-height:1">🔍</div>
+    </div>
+  </div>
+
+  <div class="amazon-page-body">
+    <!-- Category Filters -->
+    <div id="google-cat-filter" class="filter-bar" style="padding:14px 0;margin:0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px">
+      <button class="amazon-mode-btn active" data-cat="" onclick="setGoogleCategory('',this)" style="font-size:12px">全部</button>
+    </div>
+
+    <!-- Results -->
+    <div id="google-results" style="padding:20px 0">
+      <div class="amazon-loading">
+        <div class="amazon-loading-spinner"></div>
+        <div>正在加载...</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:20px 0;color:var(--text3);font-size:11px">数据来源: Google Merchant Center</div>
   </div>
 </div>
 
@@ -3054,7 +3077,7 @@ function switchPage(page, load=true) {
     else if (page==='film') loadFilm();
     else if (page==='amazon') fetchAmazonData();
     else if (page==='products') loadProductsPage();
-    else if (page==='google') {} // placeholder
+    else if (page==='google') fetchGoogleData();
     else if (page==='calculator') {} // placeholder
   }
 }
@@ -3706,11 +3729,20 @@ async function syncFilm() {
   } catch (err) { toast('膜数据同步失败: ' + err.message, 'error'); }
 }
 
+async function syncGoogle() {
+  try {
+    await api('/api/admin/sync/google', { method: 'GET' });
+    toast('Google 数据同步成功', 'success');
+    if (currentPage === 'google') fetchGoogleData();
+  } catch (err) { toast('Google 同步失败: ' + err.message, 'error'); }
+}
+
 async function syncAll() {
   try {
     await api('/api/admin/sync/all', { method: 'GET' });
     toast('全部数据同步成功', 'success');
     if (currentPage === 'amazon') fetchAmazonData();
+    if (currentPage === 'google') fetchGoogleData();
     if (currentPage === 'products') loadProductsPage();
   } catch (err) { toast('同步失败: ' + err.message, 'error'); }
 }
@@ -4681,6 +4713,77 @@ function renderAmazonData() {
   el.innerHTML = html;
   const loadMoreBtn = document.getElementById('amazon-load-more-btn');
   if (loadMoreBtn) loadMoreBtn.style.display = filtered.length > shown.length ? 'inline-flex' : 'none';
+}
+
+// ============ GOOGLE WEEKLY REPORT ============
+let googleAllData = [];
+let googleCategory = '';
+
+function getGoogleTrendLabel(trend) {
+  const t = (trend || '').toLowerCase();
+  if (t.includes('极高') || t === 'extreme') return { text: '极高 🔥', cls: 'bg-emerald-100 text-emerald-700' };
+  if (t.includes('high') || t === '高') return { text: '高 📈', cls: 'bg-blue-100 text-blue-700' };
+  if (t.includes('medium') || t === '中') return { text: '中 ⚖️', cls: 'bg-amber-50 text-amber-700' };
+  if (t.includes('low') || t === '低') return { text: '低 📉', cls: 'bg-slate-100 text-slate-600' };
+  return { text: trend || '-', cls: 'bg-slate-100 text-slate-500' };
+}
+
+function getGoogleRankChange(change) {
+  if (!change || change === '-') return '';
+  const c = parseInt(change);
+  if (c > 0) return `<span style="font-size:10px;color:var(--accent-green)">↑${c}</span>`;
+  if (c < 0) return `<span style="font-size:10px;color:var(--accent-red)">↓${Math.abs(c)}</span>`;
+  return `<span style="font-size:10px;color:var(--text3)">—</span>`;
+}
+
+async function fetchGoogleData() {
+  const el = document.getElementById('google-results');
+  el.innerHTML = '<div class="amazon-loading"><div class="amazon-loading-spinner"></div><div>正在加载...</div></div>';
+  try {
+    const res = await fetch('/api/google');
+    const json = await res.json();
+    googleAllData = json.data || [];
+    const updatedEl = document.getElementById('google-updated');
+    if (updatedEl && json.updatedAt) {
+      const d = new Date(json.updatedAt);
+      updatedEl.textContent = '数据更新: ' + d.toLocaleDateString('zh-CN');
+    }
+    renderGoogleCategoryFilters();
+    renderGoogleData();
+  } catch(e) {
+    el.innerHTML = '<div class="amazon-empty"><div style="font-size:40px">⚠️</div><div>加载失败</div></div>';
+  }
+}
+
+function renderGoogleCategoryFilters() {
+  const el = document.getElementById('google-cat-filter');
+  const cats = [...new Set(googleAllData.map(r => r.category).filter(Boolean))];
+  el.innerHTML = '<button class="amazon-mode-btn active" data-cat="" onclick="setGoogleCategory(\'\',this)" style="font-size:12px">全部</button>' +
+    cats.map(c => `<button class="amazon-mode-btn" data-cat="${c}" onclick="setGoogleCategory('${c.replace(/'/g,"\\'")}',this)" style="font-size:12px">${c}</button>`).join('');
+}
+
+function setGoogleCategory(cat, btn) {
+  googleCategory = cat;
+  document.querySelectorAll('#google-cat-filter .amazon-mode-btn').forEach(b => b.classList.toggle('active', b===btn));
+  renderGoogleData();
+}
+
+function renderGoogleData() {
+  const el = document.getElementById('google-results');
+  let items = googleCategory ? googleAllData.filter(r => r.category === googleCategory) : googleAllData;
+  if (items.length === 0) { el.innerHTML = '<div class="amazon-empty"><div>未找到</div></div>'; return; }
+  el.innerHTML = '<div class="data-table-wrap" style="overflow-x:auto"><table class="data-table" style="width:100%"><thead><tr>' +
+    '<th style="width:50px;text-align:center">排名</th><th>品牌</th><th>产品</th><th style="width:100px;text-align:center">趋势</th></tr></thead><tbody>' +
+    items.map((item, i) => {
+      const trend = getGoogleTrendLabel(item.trend);
+      const changeHtml = getGoogleRankChange(item.rankChange);
+      return `<tr>
+        <td style="text-align:center;font-weight:700;font-size:16px;font-family:'JetBrains Mono',monospace">${item.rank <= 3 ? ['🥇','🥈','🥉'][item.rank-1] : item.rank}</td>
+        <td><span style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase">${item.brand || '—'}</span></td>
+        <td><div style="font-size:13px;font-weight:500">${item.title}</div>${changeHtml ? '<div style="margin-top:2px">' + changeHtml + '</div>' : ''}</td>
+        <td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600;${trend.cls}">${trend.text}</span></td>
+      </tr>`;
+    }).join('') + '</tbody></table></div>';
 }
 
 // ============ PRODUCT LIBRARY ============

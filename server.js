@@ -2154,10 +2154,54 @@ app.get('/api/admin/sync/all', authMiddleware, requireAdmin, async (req, res) =>
     await syncProductsToDB();
     await syncAmazonToDB();
     await syncFilmToDB();
+    await syncGoogleToDB();
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// --- Google Sheet Sync ---
+const GOOGLE_SHEET_ID = process.env.GOOGLE_SHEET_ID || '1UdyeRo6vo-VR-Maut0ryAiJJ0tU6obQqdFIcWfnzZPQ';
+const GOOGLE_SHEET_NAME = process.env.GOOGLE_SHEET_NAME || 'Sheet1';
+
+async function syncGoogleToDB() {
+  await connectDB();
+  if (!pool) throw new Error('Database is not connected');
+  console.log('[google-sync] Fetching from Google Sheet...');
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(GOOGLE_SHEET_NAME)}`;
+    const { data } = await axios.get(url, { timeout: 30000 });
+    const match = data.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if (!match) throw new Error('Invalid gviz response');
+    const json = JSON.parse(match[1]);
+    const rows = (json.table?.rows || []).map(row => {
+      const c = row.c || [];
+      return { category: c[0]?.v||'', brand: c[1]?.v||'', title: c[2]?.v||'', rank: parseInt(c[3]?.v)||0, rankChange: c[4]?.v||'', trend: c[5]?.v||'', updatedAt: c[6]?.v||'' };
+    }).filter(r => r.title && r.title !== 'Title' && r.rank > 0);
+    if (rows.length === 0) throw new Error('No valid Google rows found');
+    await pool.query('INSERT INTO app_data (key, value, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()', ['google', JSON.stringify(rows)]);
+    console.log(`[google-sync] ✅ Synced ${rows.length} items`);
+    return rows.length;
+  } catch (err) {
+    console.error('[google-sync] ❌ Failed:', err.message);
+    throw err;
+  }
+}
+
+app.get('/api/admin/sync/google', authMiddleware, requireAdmin, async (req, res) => {
+  try { const count = await syncGoogleToDB(); res.json({ ok: true, count }); }
+  catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/google', async (req, res) => {
+  await connectDB();
+  if (!pool) return res.json({ data: [], source: 'no-db' });
+  try {
+    const result = await pool.query('SELECT value, updated_at FROM app_data WHERE key = $1', ['google']);
+    if (result.rows.length > 0) return res.json({ data: result.rows[0].value, source: 'cache', updatedAt: result.rows[0].updated_at });
+    return res.json({ data: [], source: 'empty' });
+  } catch { return res.json({ data: [], source: 'error' }); }
 });
 
 app.get('/api/admin/env-status', authMiddleware, requireAdmin, async (req, res) => {
@@ -2471,6 +2515,7 @@ async function startDataSyncScheduler() {
       await syncProductsToDB();
       await syncAmazonToDB();
       await syncFilmToDB();
+      await syncGoogleToDB();
     } catch (err) {
       console.error('[data-sync] Scheduled sync failed:', err.message);
     }
@@ -2797,6 +2842,7 @@ async function startServer() {
     await syncProductsToDB();
     await syncAmazonToDB();
     await syncFilmToDB();
+    await syncGoogleToDB();
   } catch (err) {
     console.error('[startup-sync] Initial sync failed:', err.message);
   }
