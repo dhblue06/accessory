@@ -391,11 +391,21 @@ input,textarea,select{font-family:inherit}
     flex-wrap:wrap!important;
     overflow-x:visible!important
   }
+  #google-cat-filter{
+    flex-wrap:wrap!important;
+    overflow-x:visible!important
+  }
   #amazon-cat-filter .pill{
     white-space:normal;
     flex-shrink:1;
     text-align:center;
     min-width:60px
+  }
+  #google-cat-filter .amazon-mode-btn{
+    white-space:normal;
+    flex-shrink:1;
+    text-align:center;
+    min-width:72px
   }
   /* Mobile: brand filter pills - wrap */
   #brand-filters{
@@ -4861,7 +4871,9 @@ async function fetchGoogleData() {
     const updatedEl = document.getElementById('google-updated');
     if (updatedEl && json.updatedAt) {
       const d = new Date(json.updatedAt);
-      updatedEl.textContent = '数据更新: ' + d.toLocaleDateString('zh-CN');
+      const locale = currentLang === 'zh' ? 'zh-CN' : currentLang === 'es' ? 'es-ES' : 'en-US';
+      const label = t('google_updated') || t('amazon_updated') || '数据更新:';
+      updatedEl.textContent = label + ' ' + d.toLocaleDateString(locale);
     }
     renderGoogleCategoryFilters();
     renderGoogleData();
