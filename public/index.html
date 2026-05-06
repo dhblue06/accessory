@@ -135,6 +135,7 @@ input,textarea,select{font-family:inherit}
 .nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px}
 .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:0;height:52px}
 .nav-logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;color:var(--text)}
+.nav-logo img{height:36px!important;width:36px!important;border-radius:8px!important;object-fit:contain}
 .nav-tabs{display:flex;gap:4px;flex:1}
 .nav-tab{padding:8px 14px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--text2);border-radius:var(--radius-sm);transition:all 0.15s}
 .nav-tab:hover{color:var(--text);background:var(--surface-hover)}
@@ -402,7 +403,7 @@ input,textarea,select{font-family:inherit}
   .nav{padding:0 12px!important}
   .nav-inner{padding:0!important;gap:0!important}
   .nav-logo span{display:none!important}
-  .nav-logo img{width:28px!important;height:28px!important}
+  .nav-logo img{width:34px!important;height:34px!important}
   .nav-actions{gap:8px!important}
   .nav-badge{display:none}
   
@@ -1681,7 +1682,7 @@ input,textarea,select{font-family:inherit}
 <nav class="nav" id="main-nav" style="display:none">
   <div class="nav-inner">
     <div class="nav-logo">
-      <img src="/Logo.png" alt="Logo" style="height:28px;width:28px;border-radius:6px">
+      <img src="/Logo.png" alt="Logo">
       <span>TEMCO</span>
     </div>
     <div class="nav-tabs" id="nav-tabs">
@@ -2572,6 +2573,29 @@ function trackSiteVisit() {
   fetch('/api/track-visit', { method: 'POST', keepalive: true }).catch(() => {});
 }
 
+function applyBrandAssets(settings = {}) {
+  const cacheKey = Date.now();
+  const logoUrl = settings.logoDataUrl || ('/Logo.png?v=' + cacheKey);
+  document.querySelectorAll('img[src^="/Logo.png"], #current-logo').forEach(img => { img.src = logoUrl; });
+
+  const faviconUrl = settings.faviconDataUrl || ('/favicon.ico?v=' + cacheKey);
+  const faviconType = settings.faviconMimeType || (faviconUrl.startsWith('data:image/png') ? 'image/png' : 'image/x-icon');
+  const faviconImg = document.getElementById('current-favicon');
+  if (faviconImg) {
+    faviconImg.src = faviconUrl;
+    faviconImg.style.background = 'var(--surface2)';
+  }
+  let faviconLink = document.getElementById('favicon-link');
+  if (!faviconLink) {
+    faviconLink = document.createElement('link');
+    faviconLink.id = 'favicon-link';
+    document.head.appendChild(faviconLink);
+  }
+  faviconLink.rel = 'icon';
+  faviconLink.type = faviconType;
+  faviconLink.href = faviconUrl;
+}
+
 function setLanguage(lang) {
   currentLang = lang;
   localStorage.setItem('ag_lang', lang);
@@ -2744,14 +2768,7 @@ async function loadSettings() {
     document.title = (s.siteName || 'TEMCO ACCESORIOS') + ' — TEMCO ACCESORIOS';
     const vEl = document.getElementById('nav-version');
     if (vEl) vEl.textContent = s.version || 'v1.0';
-    const cacheKey = Date.now();
-    const logoUrl = s.logoDataUrl || ('/Logo.png?v=' + cacheKey);
-    document.querySelectorAll('img[src^="/Logo.png"], #current-logo').forEach(img => { img.src = logoUrl; });
-    const faviconUrl = s.faviconDataUrl || ('/favicon.ico?v=' + cacheKey);
-    const faviconImg = document.getElementById('current-favicon');
-    const faviconLink = document.getElementById('favicon-link');
-    if (faviconImg) faviconImg.src = faviconUrl;
-    if (faviconLink) faviconLink.href = faviconUrl;
+    applyBrandAssets(s);
   } catch {}
 }
 
@@ -3747,14 +3764,7 @@ async function loadSettings() {
     document.title = (s.siteName||'TEMCO') + ' — AccessoryGuide';
     const vEl = document.getElementById('nav-version');
     if(vEl) vEl.textContent = s.version||'v1.0';
-    const cacheKey = Date.now();
-    const logoUrl = s.logoDataUrl || ('/Logo.png?v=' + cacheKey);
-    document.querySelectorAll('img[src^="/Logo.png"], #current-logo').forEach(img => { img.src = logoUrl; });
-    const faviconImg = document.getElementById('current-favicon');
-    const faviconLink = document.getElementById('favicon-link');
-    const faviconUrl = s.faviconDataUrl || ('/favicon.ico?v=' + cacheKey);
-    if (faviconImg) faviconImg.src = faviconUrl;
-    if (faviconLink) faviconLink.href = faviconUrl;
+    applyBrandAssets(s);
   } catch {}
 }
 
@@ -3765,6 +3775,8 @@ async function saveSettings() {
     formData.append('logo', logoInput.files[0]);
     const uploadRes = await fetch('/api/admin/logo', { method: 'POST', headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') }, body: formData });
     if (!uploadRes.ok) { toast('Logo 上传失败', 'error'); return; }
+    const uploadData = await uploadRes.json().catch(() => ({}));
+    if (uploadData.logoDataUrl) applyBrandAssets(uploadData);
   }
   const faviconInput = document.getElementById('set-favicon');
   if (faviconInput.files && faviconInput.files[0]) {
@@ -3772,6 +3784,8 @@ async function saveSettings() {
     formData.append('favicon', faviconInput.files[0]);
     const uploadRes = await fetch('/api/admin/favicon', { method: 'POST', headers: { 'Authorization': 'Bearer ' + localStorage.getItem('ag_token') }, body: formData });
     if (!uploadRes.ok) { toast('favicon 上传失败', 'error'); return; }
+    const uploadData = await uploadRes.json().catch(() => ({}));
+    if (uploadData.faviconDataUrl) applyBrandAssets(uploadData);
   }
   const body = { siteName: document.getElementById('set-sitename').value, version: document.getElementById('set-version').value, note: document.getElementById('set-note').value };
   await api('/api/admin/settings', { method:'PUT', body: JSON.stringify(body) });

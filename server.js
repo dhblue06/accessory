@@ -1802,9 +1802,9 @@ app.post('/api/admin/favicon', authMiddleware, uploadMemory.single('favicon'), a
   const db = await readDB();
   const mimeType = req.file.mimetype || 'image/x-icon';
   const faviconDataUrl = `data:${mimeType};base64,${req.file.buffer.toString('base64')}`;
-  db.settings = { ...(db.settings || DEFAULT_SETTINGS), faviconDataUrl };
+  db.settings = { ...(db.settings || DEFAULT_SETTINGS), faviconDataUrl, faviconMimeType: mimeType };
   await writeDB(db);
-  res.json({ ok: true, faviconDataUrl });
+  res.json({ ok: true, faviconDataUrl, faviconMimeType: mimeType });
 });
 
 // Settings
