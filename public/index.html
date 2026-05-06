@@ -2889,7 +2889,10 @@ let currentLang = localStorage.getItem('ag_lang') || 'es';
 if (!localStorage.getItem('ag_lang')) {
   localStorage.setItem('ag_lang', 'es');
 }
-let translations = {};
+const TRANSLATION_LANGS = ['es', 'en', 'zh'];
+const TRANSLATION_CACHE_KEY = 'ag_translations_cache_v2';
+const TRANSLATION_CACHE_TTL = 6 * 60 * 60 * 1000;
+let translations = loadCachedTranslations();
 let adminLang = 'zh'; // Admin panel editing language for iPad/Watch
 
 // Theme
@@ -3062,6 +3065,22 @@ function renderIpadInfoCards() {
 }
 
 // ============ I18N ============
+function loadCachedTranslations() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(TRANSLATION_CACHE_KEY) || '{}');
+    if (!cached.savedAt || Date.now() - cached.savedAt > TRANSLATION_CACHE_TTL) return {};
+    return cached.texts || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveCachedTranslations() {
+  try {
+    localStorage.setItem(TRANSLATION_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), texts: translations }));
+  } catch {}
+}
+
 function t(key) {
   return translations[currentLang]?.[key] || translations.zh?.[key] || key;
 }
@@ -3091,13 +3110,23 @@ async function fetchJsonWithTimeout(url, timeoutMs = 5000, opts = {}) {
   }
 }
 
-async function loadTranslations() {
+async function loadTranslations(lang = currentLang, opts = {}) {
+  if (!opts.force && translations[lang]) return translations[lang];
   try {
-    const data = await fetchJsonWithTimeout(`/api/translations?lang=${currentLang}`);
-    translations[currentLang] = data.texts;
+    const data = await fetchJsonWithTimeout(`/api/translations?lang=${lang}`);
+    translations[lang] = data.texts || {};
+    saveCachedTranslations();
+    return translations[lang];
   } catch (e) {
     console.error('Failed to load translations:', e);
+    return translations[lang] || null;
   }
+}
+
+function preloadTranslations() {
+  TRANSLATION_LANGS
+    .filter(lang => !translations[lang])
+    .forEach(lang => loadTranslations(lang).catch(() => {}));
 }
 
 function trackSiteVisit() {
@@ -3140,20 +3169,29 @@ function applyBrandAssets(settings = {}) {
 }
 
 function setLanguage(lang) {
+  if (!TRANSLATION_LANGS.includes(lang)) return;
   currentLang = lang;
   localStorage.setItem('ag_lang', lang);
   document.getElementById('lang-current').textContent = lang === 'zh' ? '中文' : lang.toUpperCase();
   document.getElementById('lang-dropdown-menu').style.display = 'none';
-  loadTranslations().then(() => {
+  updateLangButtons();
+  if (translations[lang]) {
     applyTranslations();
-    // Re-render current page with new language
-    if (currentPage === 'google') { renderGoogleCategoryFilters(); renderGoogleData(); }
-    renderIpadInfoCards();
-    renderWatchInfoCards();
-    // Re-render Amazon if active
-    if (currentPage === 'amazon') { renderAmazonCategoryFilters(); renderAmazonData(); }
-    if (currentPage === 'exchange') refreshExchangeLanguage();
+    rerenderLocalizedViews();
+  }
+  loadTranslations(lang, { force: true }).then(() => {
+    if (currentLang !== lang) return;
+    applyTranslations();
+    rerenderLocalizedViews();
   });
+}
+
+function rerenderLocalizedViews() {
+  if (currentPage === 'google') { renderGoogleCategoryFilters(); renderGoogleData(); }
+  renderIpadInfoCards();
+  renderWatchInfoCards();
+  if (currentPage === 'amazon') { renderAmazonCategoryFilters(); renderAmazonData(); }
+  if (currentPage === 'exchange') refreshExchangeLanguage();
 }
 
 function toggleLangDropdown(e) {
@@ -3288,12 +3326,12 @@ async function init() {
 
   Promise.allSettled([
     loadSettings(),
-    loadTranslations(),
+    loadTranslations(currentLang),
     loadAmazonCatTranslations()
   ]).then(() => {
     applyTranslations();
-    renderIpadInfoCards();
-    renderWatchInfoCards();
+    rerenderLocalizedViews();
+    preloadTranslations();
   });
 }
 
