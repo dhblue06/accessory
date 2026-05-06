@@ -2031,7 +2031,7 @@ input,textarea,select{font-family:inherit}
         <div id="lang-dropdown-menu" class="nav-dropdown" style="right:0;left:auto;min-width:80px;display:none">
           <a href="#" onclick="setLanguage('es');return false" data-lang="es" style="font-size:12px">ES</a>
           <a href="#" onclick="setLanguage('en');return false" data-lang="en" style="font-size:12px">EN</a>
-          <a href="#" onclick="setLanguage('zh');return false" data-lang="zh" style="font-size:12px">中文</a>
+          <a href="#" onclick="setLanguage('zh');return false" data-lang="zh" style="font-size:12px">CN</a>
         </div>
       </div>
       <button onclick="toggleTheme()" style="background:none;border:none;color:var(--text2);padding:4px;display:flex;align-items:center;cursor:pointer">
@@ -3222,7 +3222,7 @@ function setLanguage(lang) {
   if (!TRANSLATION_LANGS.includes(lang)) return;
   currentLang = lang;
   localStorage.setItem('ag_lang', lang);
-  document.getElementById('lang-current').textContent = lang === 'zh' ? '中文' : lang.toUpperCase();
+  document.getElementById('lang-current').textContent = lang === 'zh' ? 'CN' : lang.toUpperCase();
   document.getElementById('lang-dropdown-menu').style.display = 'none';
   updateLangButtons();
   if (translations[lang]) {
@@ -3353,7 +3353,7 @@ async function init() {
   applyTheme();
   // Set initial language button text
   const langEl = document.getElementById('lang-current');
-  if (langEl) langEl.textContent = currentLang === 'zh' ? '中文' : currentLang.toUpperCase();
+  if (langEl) langEl.textContent = lang === 'zh' ? 'CN' : lang.toUpperCase();
   trackSiteVisit();
 
   if (window.location.hash === '#admin' || window.location.hash === '#member') {
