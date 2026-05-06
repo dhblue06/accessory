@@ -3868,7 +3868,7 @@ async function editProduct(sku) {
     <textarea id="edit-product-desc-zh" class="form-input" rows="3" style="font-size:12px;resize:vertical">${escapeHtml(product.descriptions?.zh || '')}</textarea>
   `;
   document.getElementById('modal-save').onclick = saveProductEdit;
-  document.getElementById('modal').style.display = 'flex';
+  document.getElementById('modal-overlay').classList.remove('hidden');
 }
 
 async function saveProductEdit() {
