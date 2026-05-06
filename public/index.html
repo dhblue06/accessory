@@ -314,6 +314,7 @@ input,textarea,select{font-family:inherit}
 .login-card .form-label{text-align:left}
 .login-logo{text-align:center;margin-bottom:28px}
 .login-logo-icon{width:48px;height:48px;background:var(--accent);border-radius:10px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-family:'JetBrains Mono',monospace;font-weight:700;margin-bottom:12px}
+.login-logo img{width:72px!important;height:72px!important;border-radius:12px!important;object-fit:contain}
 .login-logo h1{font-size:18px;font-weight:600}
 .login-logo p{font-size:13px;color:var(--text3);margin-top:4px}
 .error-msg{background:var(--red-bg);color:var(--red-text);padding:10px 12px;border-radius:var(--radius);font-size:13px;margin-bottom:16px;display:none}
@@ -2345,23 +2346,11 @@ input,textarea,select{font-family:inherit}
         <label class="form-label" data-i18n="login_password">密码 <span style="color:var(--accent-red)">*</span></label>
         <input id="reg-password" class="form-input" type="password" data-i18n-placeholder="password_placeholder" placeholder="至少6位">
       </div>
+      <div class="form-group">
+        <label class="form-label"><span data-i18n="confirm_new_password">确认密码</span> <span style="color:var(--accent-red)">*</span></label>
+        <input id="reg-password-confirm" class="form-input" type="password" data-i18n-placeholder="confirm_new_password_placeholder" placeholder="再次输入密码">
+      </div>
       <button type="submit" class="btn btn-primary" style="width:100%" data-i18n="register_btn">注册</button>
-    </form>
-    <!-- Register Form -->
-    <form id="register-form" style="display:none" onsubmit="event.preventDefault();doRegister()">
-      <div class="form-group">
-        <label class="form-label">姓名</label>
-        <input id="reg-name" class="form-input" type="text" placeholder="Your Name">
-      </div>
-      <div class="form-group">
-        <label class="form-label">邮箱</label>
-        <input id="reg-email" class="form-input" type="email" placeholder="admin@example.com">
-      </div>
-      <div class="form-group">
-        <label class="form-label">密码</label>
-        <input id="reg-password" class="form-input" type="password" placeholder="至少6位">
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%">注册</button>
     </form>
   </div>
 </div>
@@ -3063,14 +3052,16 @@ function switchAuthTab(tab) {
 async function doRegister() {
   const email = document.getElementById('reg-email').value.trim();
   const password = document.getElementById('reg-password').value;
+  const passwordConfirm = document.getElementById('reg-password-confirm').value;
   const name = document.getElementById('reg-name').value.trim();
   const phone = document.getElementById('reg-phone').value.trim();
   const store = document.getElementById('reg-store').value.trim();
   const errEl = document.getElementById('login-error');
   errEl.style.display = 'none';
   errEl.style.color = '';
-  if (!email || !password || !name || !phone) { errEl.textContent = t('fill_required') || '请填写必填项'; errEl.style.display = 'block'; return; }
+  if (!email || !password || !passwordConfirm || !name || !phone) { errEl.textContent = t('fill_required') || '请填写必填项'; errEl.style.display = 'block'; return; }
   if (password.length < 6) { errEl.textContent = t('password_placeholder') || '密码至少6位'; errEl.style.display = 'block'; return; }
+  if (password !== passwordConfirm) { errEl.textContent = t('passwords_do_not_match') || '两次输入的密码不一致'; errEl.style.display = 'block'; return; }
   try {
     const r = await fetch(SUPABASE_URL + '/auth/v1/signup', {
       method: 'POST',
