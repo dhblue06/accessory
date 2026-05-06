@@ -2181,7 +2181,7 @@ async function syncGoogleToDB() {
     const cols = json.table?.cols || [];
     const rows = (json.table?.rows || []).map(row => {
       const c = row.c || [];
-      return { category: c[0]?.v||'', brand: c[1]?.v||'', title: c[2]?.v||'', rank: parseInt(c[3]?.v)||0, rankChange: c[4]?.v||'', trend: c[5]?.v||'', updatedAt: c[6]?.v||'' };
+      return { rank: parseInt(c[0]?.v)||0, title: c[1]?.v||'', brand: c[2]?.v||'', trend: c[3]?.v||'', prevRank: c[4]?.v||'', category: c[5]?.v||'', country: c[6]?.v||'', date: c[7]?.v||'' };
     }).filter(r => r.title && r.title !== 'Title' && r.rank > 0);
     console.log(`[google-sync] Columns found: ${cols.map(col => col.label || col.id).join(', ')}`);
     console.log(`[google-sync] Sample row: ${JSON.stringify(rows[0] || 'none')}`);

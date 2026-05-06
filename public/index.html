@@ -4721,18 +4721,19 @@ let googleCategory = '';
 
 function getGoogleTrendLabel(trend) {
   const t = (trend || '').toLowerCase();
-  if (t.includes('极高') || t === 'extreme') return { text: '极高 🔥', cls: 'bg-emerald-100 text-emerald-700' };
-  if (t.includes('high') || t === '高') return { text: '高 📈', cls: 'bg-blue-100 text-blue-700' };
-  if (t.includes('medium') || t === '中') return { text: '中 ⚖️', cls: 'bg-amber-50 text-amber-700' };
-  if (t.includes('low') || t === '低') return { text: '低 📉', cls: 'bg-slate-100 text-slate-600' };
-  return { text: trend || '-', cls: 'bg-slate-100 text-slate-500' };
+  if (t.includes('very_high') || t === 'extreme') return { text: '极高 🔥', style: 'background:rgba(52,211,153,0.15);color:#059669' };
+  if (t.includes('high')) return { text: '高 📈', style: 'background:rgba(59,130,246,0.12);color:#2563eb' };
+  if (t.includes('medium') || t === '中') return { text: '中 ⚖️', style: 'background:rgba(245,158,11,0.12);color:#d97706' };
+  if (t.includes('low')) return { text: '低 📉', style: 'background:rgba(148,163,184,0.15);color:#64748b' };
+  return { text: t || '-', style: 'background:var(--surface2);color:var(--text3)' };
 }
 
-function getGoogleRankChange(change) {
-  if (!change || change === '-') return '';
-  const c = parseInt(change);
-  if (c > 0) return `<span style="font-size:10px;color:var(--accent-green)">↑${c}</span>`;
-  if (c < 0) return `<span style="font-size:10px;color:var(--accent-red)">↓${Math.abs(c)}</span>`;
+function getGoogleRankChange(item) {
+  if (!item.prevRank || item.prevRank === '0' || item.prevRank === '-') return '';
+  const prev = parseInt(item.prevRank);
+  const curr = item.rank;
+  if (prev > curr) return `<span style="font-size:10px;color:var(--accent-green)">↑${prev - curr}</span>`;
+  if (prev < curr) return `<span style="font-size:10px;color:var(--accent-red)">↓${curr - prev}</span>`;
   return `<span style="font-size:10px;color:var(--text3)">—</span>`;
 }
 
@@ -4773,15 +4774,15 @@ function renderGoogleData() {
   let items = googleCategory ? googleAllData.filter(r => r.category === googleCategory) : googleAllData;
   if (items.length === 0) { el.innerHTML = '<div class="amazon-empty"><div>未找到</div></div>'; return; }
   el.innerHTML = '<div class="data-table-wrap" style="overflow-x:auto"><table class="data-table" style="width:100%"><thead><tr>' +
-    '<th style="width:50px;text-align:center">排名</th><th>品牌</th><th>产品</th><th style="width:100px;text-align:center">趋势</th></tr></thead><tbody>' +
+    '<th style="width:50px;text-align:center">排名</th><th>品牌</th><th>产品</th><th style="width:100px;text-align:center">热度</th></tr></thead><tbody>' +
     items.map((item, i) => {
       const trend = getGoogleTrendLabel(item.trend);
-      const changeHtml = getGoogleRankChange(item.rankChange);
+      const changeHtml = getGoogleRankChange(item);
       return `<tr>
         <td style="text-align:center;font-weight:700;font-size:16px;font-family:'JetBrains Mono',monospace">${item.rank <= 3 ? ['🥇','🥈','🥉'][item.rank-1] : item.rank}</td>
         <td><span style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase">${item.brand || '—'}</span></td>
         <td><div style="font-size:13px;font-weight:500">${item.title}</div>${changeHtml ? '<div style="margin-top:2px">' + changeHtml + '</div>' : ''}</td>
-        <td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600;${trend.cls}">${trend.text}</span></td>
+        <td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600;${trend.style}">${trend.text}</span></td>
       </tr>`;
     }).join('') + '</tbody></table></div>';
 }
