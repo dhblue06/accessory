@@ -135,7 +135,7 @@ input,textarea,select{font-family:inherit}
 .nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px}
 .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:0;height:52px}
 .nav-logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;color:var(--text)}
-.nav-logo img{height:36px!important;width:36px!important;border-radius:8px!important;object-fit:contain}
+.nav-logo img{height:44px!important;width:44px!important;border-radius:8px!important;object-fit:contain}
 .nav-tabs{display:flex;gap:4px;flex:1}
 .nav-tab{padding:8px 14px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--text2);border-radius:var(--radius-sm);transition:all 0.15s}
 .nav-tab:hover{color:var(--text);background:var(--surface-hover)}
@@ -403,7 +403,7 @@ input,textarea,select{font-family:inherit}
   .nav{padding:0 12px!important}
   .nav-inner{padding:0!important;gap:0!important}
   .nav-logo span{display:none!important}
-  .nav-logo img{width:34px!important;height:34px!important}
+  .nav-logo img{width:40px!important;height:40px!important}
   .nav-actions{gap:8px!important}
   .nav-badge{display:none}
   
@@ -2015,6 +2015,10 @@ input,textarea,select{font-family:inherit}
         <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
         <span data-i18n="admin_dashboard">概览</span>
       </div>
+      <div class="admin-sidebar-item" data-panel="traffic-stats" onclick="switchPanel('traffic-stats',this)">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+        <span data-i18n="admin_traffic_stats">流量统计</span>
+      </div>
       <div class="admin-sidebar-item" data-panel="ipad-mgmt" onclick="switchPanel('ipad-mgmt',this)">
         <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm3 14a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
         <span data-i18n="admin_ipad_mgmt">iPad 管理</span>
@@ -2064,6 +2068,31 @@ input,textarea,select{font-family:inherit}
           <div id="film-search-stats" style="max-height:300px;overflow-y:auto">
             <div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">加载中...</div>
           </div>
+        </div>
+      </div>
+
+      <!-- TRAFFIC STATS -->
+      <div id="panel-traffic-stats" class="admin-panel">
+        <div class="admin-header"><h2 class="admin-title" data-i18n="admin_traffic_stats">流量统计</h2></div>
+        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+          <div class="stat-card"><div class="stat-label" data-i18n="stat_total_visits">总访问量</div><div class="stat-value" id="traffic-total">—</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="stat_today_visits">今日访问量</div><div class="stat-value" id="traffic-today">—</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="traffic_7d">近 7 天</div><div class="stat-value" id="traffic-7d">—</div></div>
+          <div class="stat-card"><div class="stat-label" data-i18n="traffic_30d">近 30 天</div><div class="stat-value" id="traffic-30d">—</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:20px;margin-bottom:20px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+            <h3 style="font-size:14px;font-weight:600;margin-bottom:14px" data-i18n="traffic_daily_trend">每日访问趋势</h3>
+            <div id="traffic-daily" style="display:flex;flex-direction:column;gap:8px"></div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+            <h3 style="font-size:14px;font-weight:600;margin-bottom:14px" data-i18n="traffic_top_pages">热门页面</h3>
+            <div id="traffic-pages" style="display:flex;flex-direction:column;gap:8px"></div>
+          </div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:14px" data-i18n="traffic_referrers">访问来源</h3>
+          <div id="traffic-referrers" style="display:flex;flex-direction:column;gap:8px"></div>
         </div>
       </div>
 
@@ -2570,7 +2599,17 @@ async function loadTranslations() {
 function trackSiteVisit() {
   if (sessionStorage.getItem('ag_visit_tracked')) return;
   sessionStorage.setItem('ag_visit_tracked', '1');
-  fetch('/api/track-visit', { method: 'POST', keepalive: true }).catch(() => {});
+  const body = JSON.stringify({
+    path: location.pathname + location.hash,
+    referrer: document.referrer || '',
+    lang: currentLang
+  });
+  fetch('/api/track-visit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body,
+    keepalive: true
+  }).catch(() => {});
 }
 
 function applyBrandAssets(settings = {}) {
@@ -2716,6 +2755,7 @@ function applyTranslations() {
     const panel = item.dataset.panel;
     const span = item.querySelector('span');
     if (panel === 'dashboard' && span) span.textContent = t('admin_dashboard');
+    if (panel === 'traffic-stats' && span) span.textContent = t('admin_traffic_stats');
     if (panel === 'ipad-mgmt' && span) span.textContent = t('admin_ipad_mgmt');
     if (panel === 'watch-mgmt' && span) span.textContent = t('admin_watch_mgmt');
     if (panel === 'film-mgmt' && span) span.textContent = t('admin_film_mgmt');
@@ -3536,6 +3576,43 @@ async function loadAdminDashboard() {
   }
 }
 
+function renderTrafficList(containerId, items, labelKey = 'label') {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!items || items.length === 0) {
+    el.innerHTML = '<div style="color:var(--text3);font-size:12px;text-align:center;padding:18px">暂无数据</div>';
+    return;
+  }
+  const max = Math.max(...items.map(i => i.count), 1);
+  el.innerHTML = items.map(item => {
+    const pct = Math.max(3, Math.round((item.count / max) * 100));
+    return `<div style="display:grid;grid-template-columns:minmax(110px,1fr) 120px 48px;align-items:center;gap:12px">
+      <div style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeAttr(item[labelKey] || item.date || '')}">${escapeHtml(item[labelKey] || item.date || '')}</div>
+      <div style="height:8px;background:var(--surface2);border-radius:999px;overflow:hidden"><div style="width:${pct}%;height:100%;background:var(--accent);border-radius:999px"></div></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right;color:var(--text2)">${item.count}</div>
+    </div>`;
+  }).join('');
+}
+
+async function loadTrafficStats() {
+  try {
+    const stats = await api('/api/admin/traffic-stats');
+    document.getElementById('traffic-total').textContent = Number(stats.totalVisits ?? 0);
+    document.getElementById('traffic-today').textContent = Number(stats.todayVisits ?? 0);
+    document.getElementById('traffic-7d').textContent = Number(stats.last7Days ?? 0);
+    document.getElementById('traffic-30d').textContent = Number(stats.last30Days ?? 0);
+    renderTrafficList('traffic-daily', stats.daily || [], 'date');
+    renderTrafficList('traffic-pages', stats.topPages || [], 'path');
+    renderTrafficList('traffic-referrers', stats.referrers || [], 'referrer');
+  } catch (err) {
+    console.error('Failed to load traffic stats:', err);
+    ['traffic-total','traffic-today','traffic-7d','traffic-30d'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '0';
+    });
+  }
+}
+
 async function syncProducts() {
   const btn = document.getElementById('sync-products-btn');
   const originalText = btn ? btn.textContent : '';
@@ -3684,9 +3761,49 @@ async function loadAdminFilm() {
       <td><span class="film-name-badge" style="font-size:12px">${name}</span></td>
       <td>${brands.length} ${t('th_brands')}</td>
       <td style="font-family:'JetBrains Mono',monospace">~${totalModels} ${t('th_models')}</td>
-      <td><button class="btn btn-danger btn-sm" onclick="deleteFilmGroup('${encodeURIComponent(name)}')">${t('btn_delete')}</button></td>
+      <td><div style="display:flex;gap:6px">
+        <button class="btn btn-secondary btn-sm" onclick="editFilmGroup('${encodeURIComponent(name)}')">${t('btn_edit')}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteFilmGroup('${encodeURIComponent(name)}')">${t('btn_delete')}</button>
+      </div></td>
     </tr>`;
   }).join('');
+}
+
+async function editFilmGroup(encodedName) {
+  const name = decodeURIComponent(encodedName);
+  const data = await api('/api/film?type=fg');
+  const brands = data[name] || [];
+  document.getElementById('modal-title').textContent = t('modal_edit') + ' ' + name;
+  document.getElementById('modal-body').innerHTML = `
+    <input type="hidden" id="edit-film-original" value="${escapeAttr(name)}">
+    <div class="form-group">
+      <label class="form-label">${t('form_film_name')}</label>
+      <input id="edit-film-name" class="form-input" value="${escapeAttr(name)}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">${t('form_models_list')}</label>
+      <textarea id="edit-film-entries" class="form-input form-textarea" style="min-height:220px" placeholder="SAM | A12/A13/A14">${escapeHtml(brands.map(b => `${b.brand || ''} | ${b.models || ''}`).join('\n'))}</textarea>
+      <p style="font-size:11px;color:var(--text3);margin-top:6px">每行一个品牌，格式：品牌 | 型号/型号/型号</p>
+    </div>
+  `;
+  document.getElementById('modal-save').onclick = saveEditFilmGroup;
+  document.getElementById('modal-overlay').classList.remove('hidden');
+}
+
+async function saveEditFilmGroup() {
+  const originalName = document.getElementById('edit-film-original').value;
+  const newName = document.getElementById('edit-film-name').value.trim();
+  const raw = document.getElementById('edit-film-entries').value;
+  if (!newName) { toast(t('fill_required'), 'error'); return; }
+  const entries = raw.split(/\r?\n/).map(line => line.trim()).filter(Boolean).map(line => {
+    const parts = line.split('|');
+    return { brand: (parts[0] || '').trim(), models: parts.slice(1).join('|').trim() };
+  }).filter(entry => entry.brand && entry.models);
+  if (entries.length === 0) { toast(t('fill_required'), 'error'); return; }
+  await api('/api/admin/film/fg/' + encodeURIComponent(originalName), { method: 'PUT', body: JSON.stringify({ newName, entries }) });
+  toast(t('save_success'), 'success');
+  closeModal();
+  loadAdminFilm();
 }
 
 async function loadAdminUsers() {
@@ -3800,6 +3917,7 @@ function switchPanel(panel, el) {
   if(el) el.classList.add('active');
   applyTranslations(); // Apply i18n to the newly shown panel
   if(panel==='dashboard') loadAdminDashboard();
+  else if(panel==='traffic-stats') loadTrafficStats();
   else if(panel==='ipad-mgmt') loadAdminiPad();
   else if(panel==='watch-mgmt') loadAdminWatch();
   else if(panel==='film-mgmt') loadAdminFilm();

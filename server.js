@@ -245,7 +245,7 @@ function getDefaultDBData() {
     settings: DEFAULT_SETTINGS,
     translations: {},
     filmSearchStats: [],
-    siteVisits: { total: 0, byDate: {} }
+    siteVisits: { total: 0, byDate: {}, pages: {}, referrers: {} }
   };
 }
 
@@ -303,6 +303,7 @@ const DEFAULT_TRANSLATIONS = {
     special_warning: '⚠',
     admin_title: '后台管理',
     admin_dashboard: '数据概览',
+    admin_traffic_stats: '流量统计',
     admin_ipad_mgmt: 'iPad 管理',
     admin_watch_mgmt: 'Watch 管理',
     admin_film_mgmt: '膜数据管理',
@@ -322,6 +323,11 @@ const DEFAULT_TRANSLATIONS = {
     stat_film_search: '膜搜索统计',
     film_search_stats: '热门搜索型号',
     search_keywords_stats: '热门搜索关键字',
+    traffic_7d: '近 7 天',
+    traffic_30d: '近 30 天',
+    traffic_daily_trend: '每日访问趋势',
+    traffic_top_pages: '热门页面',
+    traffic_referrers: '访问来源',
     film_search_count: '搜索次数',
     film_search_last: '最后搜索',
     quick_actions: '快速操作',
@@ -517,6 +523,7 @@ const DEFAULT_TRANSLATIONS = {
     special_warning: '⚠',
     admin_title: 'Admin Panel',
     admin_dashboard: 'Dashboard',
+    admin_traffic_stats: 'Traffic Stats',
     admin_ipad_mgmt: 'iPad Management',
     admin_watch_mgmt: 'Watch Management',
     admin_film_mgmt: 'Film Management',
@@ -536,6 +543,11 @@ const DEFAULT_TRANSLATIONS = {
     stat_film_search: 'Film Search Stats',
     film_search_stats: 'Popular Searches',
     search_keywords_stats: 'Popular Search Keywords',
+    traffic_7d: 'Last 7 Days',
+    traffic_30d: 'Last 30 Days',
+    traffic_daily_trend: 'Daily Visits',
+    traffic_top_pages: 'Top Pages',
+    traffic_referrers: 'Referrers',
     film_search_count: 'Searches',
     film_search_last: 'Last Searched',
     quick_actions: 'Quick Actions',
@@ -731,6 +743,7 @@ const DEFAULT_TRANSLATIONS = {
     special_warning: '⚠',
     admin_title: 'Panel de Administración',
     admin_dashboard: 'Panel',
+    admin_traffic_stats: 'Estadísticas de Tráfico',
     admin_ipad_mgmt: 'Gestión iPad',
     admin_watch_mgmt: 'Gestión Watch',
     admin_film_mgmt: 'Gestión de Cristales',
@@ -750,6 +763,11 @@ const DEFAULT_TRANSLATIONS = {
     stat_film_search: 'Búsquedas de Cristales',
     film_search_stats: 'Búsquedas Populares',
     search_keywords_stats: 'Palabras Clave Populares',
+    traffic_7d: 'Últimos 7 días',
+    traffic_30d: 'Últimos 30 días',
+    traffic_daily_trend: 'Visitas Diarias',
+    traffic_top_pages: 'Páginas Populares',
+    traffic_referrers: 'Referencias',
     film_search_count: 'Búsquedas',
     film_search_last: 'Última Búsqueda',
     quick_actions: 'Acciones Rápidas',
@@ -1669,16 +1687,68 @@ app.post('/api/track-visit', async (req, res) => {
   try {
     const db = await readDB();
     const today = new Date().toISOString().slice(0, 10);
-    const siteVisits = db.siteVisits || { total: 0, byDate: {} };
+    const siteVisits = db.siteVisits || { total: 0, byDate: {}, pages: {}, referrers: {} };
+    const pathName = String(req.body?.path || req.path || '/').slice(0, 120);
+    let referrer = 'Direct';
+    try {
+      const rawReferrer = String(req.body?.referrer || '').trim();
+      if (rawReferrer) referrer = new URL(rawReferrer).hostname || rawReferrer.slice(0, 80);
+    } catch {
+      referrer = String(req.body?.referrer || 'Direct').slice(0, 80) || 'Direct';
+    }
     siteVisits.total = Number(siteVisits.total || 0) + 1;
     siteVisits.byDate = siteVisits.byDate || {};
+    siteVisits.pages = siteVisits.pages || {};
+    siteVisits.referrers = siteVisits.referrers || {};
     siteVisits.byDate[today] = Number(siteVisits.byDate[today] || 0) + 1;
+    siteVisits.pages[pathName] = Number(siteVisits.pages[pathName] || 0) + 1;
+    siteVisits.referrers[referrer] = Number(siteVisits.referrers[referrer] || 0) + 1;
     db.siteVisits = siteVisits;
     await writeDB(db);
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+function sumVisitsByDate(byDate, days) {
+  let total = 0;
+  for (let i = 0; i < days; i++) {
+    const d = new Date();
+    d.setUTCDate(d.getUTCDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    total += Number(byDate?.[key] || 0);
+  }
+  return total;
+}
+
+function topEntries(obj, keyName, limit = 10) {
+  return Object.entries(obj || {})
+    .map(([key, count]) => ({ [keyName]: key, count: Number(count || 0) }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit);
+}
+
+app.get('/api/admin/traffic-stats', authMiddleware, async (req, res) => {
+  const db = await readDB();
+  const today = new Date().toISOString().slice(0, 10);
+  const siteVisits = db.siteVisits || { total: 0, byDate: {}, pages: {}, referrers: {} };
+  const daily = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date();
+    d.setUTCDate(d.getUTCDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    daily.push({ date: key, count: Number(siteVisits.byDate?.[key] || 0) });
+  }
+  res.json({
+    totalVisits: Number(siteVisits.total || 0),
+    todayVisits: Number(siteVisits.byDate?.[today] || 0),
+    last7Days: sumVisitsByDate(siteVisits.byDate, 7),
+    last30Days: sumVisitsByDate(siteVisits.byDate, 30),
+    daily,
+    topPages: topEntries(siteVisits.pages, 'path'),
+    referrers: topEntries(siteVisits.referrers, 'referrer')
+  });
 });
 
 // ============ ADMIN APIs ============
@@ -1773,8 +1843,14 @@ app.post('/api/admin/film/fg', authMiddleware, async (req, res) => {
 
 app.put('/api/admin/film/fg/:filmName', authMiddleware, async (req, res) => {
   const db = await readDB();
-  const { entries } = req.body;
-  db.film.fullGlue[req.params.filmName] = entries;
+  const originalName = decodeURIComponent(req.params.filmName);
+  const { entries, newName } = req.body;
+  if (!db.film) db.film = { fullGlue: {}, twoPointFiveD: [], privacy: [] };
+  if (!db.film.fullGlue) db.film.fullGlue = {};
+  const targetName = String(newName || originalName).trim();
+  if (!targetName || !Array.isArray(entries)) return res.status(400).json({ error: 'Invalid film group data' });
+  if (targetName !== originalName) delete db.film.fullGlue[originalName];
+  db.film.fullGlue[targetName] = entries;
   await writeDB(db);
   res.json({ ok: true });
 });
