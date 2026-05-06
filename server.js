@@ -2779,7 +2779,11 @@ function extractEspecificacionesFromHtml(html) {
   const after = html.slice(match.index + match[0].length);
   const nextH2 = after.search(/<h2[^>]*>/i);
   const block = nextH2 > 0 ? after.slice(0, nextH2) : after;
-  return htmlToPlainText(block);
+  const text = htmlToPlainText(block);
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const relIdx = lines.findIndex(l => /Productos relacionados/i.test(l));
+  const end = relIdx >= 0 ? relIdx : Math.min(lines.length, 14);
+  return lines.slice(0, end).join('\n').trim();
 }
 
 function buildProductDescriptionFromText(text) {
