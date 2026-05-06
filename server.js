@@ -3161,7 +3161,10 @@ app.post('/api/admin/products/scrape', authMiddleware, requireAdmin, async (req,
 
 app.put('/api/admin/products/:sku', authMiddleware, requireAdmin, async (req, res) => {
   try {
-    if (!pool) return res.status(503).json({ error: 'Database not available' });
+    if (!pool) {
+      await connectDB();
+      if (!pool) return res.status(503).json({ error: 'Database not available' });
+    }
     const oldSku = decodeURIComponent(req.params.sku);
     const { sku: requestedSku, name, description, category, sourceUrl, mainImage, mainImageUrl, descriptions, imageGroups, videos } = req.body;
     const newSku = String(requestedSku || oldSku).trim();
@@ -3288,6 +3291,7 @@ async function startServer() {
 }
 
 if (process.env.VERCEL) {
+  connectDB().catch(err => console.error('DB connection failed:', err.message));
   initDB().catch(err => console.error('Initialization failed:', err.message));
   module.exports = app;
 } else {
