@@ -135,7 +135,7 @@ input,textarea,select{font-family:inherit}
 .nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px}
 .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:0;height:52px}
 .nav-logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;color:var(--text)}
-.nav-logo img{height:44px!important;width:44px!important;border-radius:8px!important;object-fit:contain}
+.nav-logo img{height:66px!important;width:66px!important;border-radius:10px!important;object-fit:contain}
 .nav-tabs{display:flex;gap:4px;flex:1}
 .nav-tab{padding:8px 14px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--text2);border-radius:var(--radius-sm);transition:all 0.15s}
 .nav-tab:hover{color:var(--text);background:var(--surface-hover)}
@@ -403,7 +403,7 @@ input,textarea,select{font-family:inherit}
   .nav{padding:0 12px!important}
   .nav-inner{padding:0!important;gap:0!important}
   .nav-logo span{display:none!important}
-  .nav-logo img{width:40px!important;height:40px!important}
+  .nav-logo img{width:60px!important;height:60px!important}
   .nav-actions{gap:8px!important}
   .nav-badge{display:none}
   
@@ -471,6 +471,7 @@ input,textarea,select{font-family:inherit}
   [data-theme="dark"] .mobile-menu{background:rgba(15,23,42,0.98)}
   .mobile-menu-inner{max-width:420px;margin:0 auto}
   .mobile-menu-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-size:18px;font-weight:700}
+  .mobile-menu-logo{height:42px;width:42px;border-radius:8px;object-fit:contain}
   .mobile-menu-close{border:none;background:transparent;color:var(--text2);font-size:24px;line-height:1;cursor:pointer;padding:4px 8px}
   .mobile-nav-tabs{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}
   .mobile-nav-tab{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:7px;font-size:14px;font-weight:500;color:var(--text)}
@@ -1733,7 +1734,7 @@ input,textarea,select{font-family:inherit}
 <div id="mobile-menu" class="mobile-menu" style="display:none">
   <div class="mobile-menu-inner">
     <div class="mobile-menu-head">
-      <span>TEMCO</span>
+      <img class="mobile-menu-logo" src="/Logo.png" alt="TEMCO">
       <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Close">&times;</button>
     </div>
     <div class="mobile-nav-tabs">
@@ -2615,7 +2616,7 @@ function trackSiteVisit() {
 function applyBrandAssets(settings = {}) {
   const cacheKey = Date.now();
   const logoUrl = settings.logoDataUrl || ('/Logo.png?v=' + cacheKey);
-  document.querySelectorAll('img[src^="/Logo.png"], #current-logo').forEach(img => { img.src = logoUrl; });
+  document.querySelectorAll('.nav-logo img, .login-logo img, .mobile-menu-logo, #current-logo').forEach(img => { img.src = logoUrl; });
 
   const faviconUrl = settings.faviconDataUrl || ('/favicon.ico?v=' + cacheKey);
   const faviconType = settings.faviconMimeType || (faviconUrl.startsWith('data:image/png') ? 'image/png' : 'image/x-icon');
