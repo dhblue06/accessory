@@ -1958,10 +1958,6 @@ input,textarea,select{font-family:inherit}
           <a href="#" onclick="switchPage('google');return false" data-i18n="nav_google_child">Google</a>
         </div>
       </div>
-      <a class="nav-tab" data-page="products" onclick="switchPage('products');return false" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        <span>产品素材库</span>
-      </a>
       <div class="nav-parent" onmouseleave="closeNavDropdown(this)" onclick="toggleNavDropdown(this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
         <span data-i18n="nav_tools">小工具</span>
@@ -2343,7 +2339,7 @@ input,textarea,select{font-family:inherit}
             <div class="form-group"><label class="form-label" data-i18n="calc_product_cost_eur">产品成本 (€)</label><div class="calc-input-wrap"><input id="profit-cost" class="form-input" type="number" value="10" step="0.01" min="0" oninput="calcProfit()"><span class="calc-input-suffix">€</span></div></div>
             <div class="form-group"><label class="form-label" data-i18n="calc_markup_percent">加价率 (%)</label><div class="calc-input-wrap"><input id="profit-markup" class="form-input" type="number" value="20" step="1" min="0" oninput="calcProfit()"><span class="calc-input-suffix">%</span></div></div>
             <div class="form-group"><label class="form-label" data-i18n="calc_customer_cost_optional">客户成本 (可选)</label><div class="calc-input-wrap"><input id="profit-cc" class="form-input" type="number" value="0" step="0.01" min="0" oninput="calcProfit()"><span class="calc-input-suffix">€</span></div></div>
-            <div class="form-group"><label class="form-label" data-i18n="calc_shipping_optional">运费 (可选)</label><div class="calc-input-wrap"><input id="profit-sc" class="form-input" type="number" value="3" step="0.01" min="0" oninput="calcProfit()"><span class="calc-input-suffix">€</span></div></div>
+            <div class="form-group"><label class="form-label" data-i18n="calc_shipping_optional">运费 (可选)</label><div class="calc-input-wrap"><input id="profit-sc" class="form-input" type="number" value="0" step="0.01" min="0" oninput="calcProfit()"><span class="calc-input-suffix">€</span></div></div>
             <div class="calc-actions">
               <button class="btn btn-secondary" onclick="resetProfit()" data-i18n="calc_reset">重置</button>
               <button class="btn btn-primary" onclick="calcProfit()" data-i18n="calc_calculate">计算</button>
@@ -2352,9 +2348,9 @@ input,textarea,select{font-family:inherit}
           <div class="calc-results-panel">
             <div class="calc-results-title" data-i18n="calc_result">计算结果</div>
             <div class="calc-result-row"><span data-i18n="calc_selling_price">销售价格</span><span class="calc-result-value" id="profit-price">12.00 €</span></div>
-            <div class="calc-result-row"><span data-i18n="calc_profit">利润</span><span class="calc-result-value" id="profit-profit">-1.00 €</span></div>
-            <div class="calc-result-row"><span data-i18n="calc_profit_margin">利润率</span><span class="calc-result-value" id="profit-margin">-10.0%</span></div>
-            <div class="calc-result-row calc-result-total"><span data-i18n="calc_total_cost">总成本</span><span class="calc-result-value" id="profit-total">13.00 €</span></div>
+            <div class="calc-result-row"><span data-i18n="calc_profit">利润</span><span class="calc-result-value" id="profit-profit">2.00 €</span></div>
+            <div class="calc-result-row"><span data-i18n="calc_profit_margin">利润率</span><span class="calc-result-value" id="profit-margin">16.7%</span></div>
+            <div class="calc-result-row calc-result-total"><span data-i18n="calc_total_cost">总成本</span><span class="calc-result-value" id="profit-total">10.00 €</span></div>
           </div>
         </div>
       </div>
@@ -3511,7 +3507,7 @@ function calcProfit() {
   document.getElementById('profit-total').textContent = totalCost.toFixed(2) + ' €';
 }
 function resetProfit() {
-  ['profit-cost','profit-markup','profit-cc','profit-sc'].forEach((id,i) => document.getElementById(id).value = [10,20,0,3][i]); calcProfit();
+  ['profit-cost','profit-markup','profit-cc','profit-sc'].forEach((id,i) => document.getElementById(id).value = [10,20,0,0][i]); calcProfit();
 }
 function calcDiscount() {
   const orig = parseFloat(document.getElementById('discount-original').value) || 0;
