@@ -2052,6 +2052,7 @@ input,textarea,select{font-family:inherit}
       <div class="amazon-hero-meta">
         <p id="amazon-updated"></p>
         <p data-i18n="amazon_update_schedule">每周五更新数据，Amazon 数据源</p>
+        <p id="amazon-member-note" style="display:none;font-size:11px;color:var(--accent-red);margin-top:4px" data-i18n="amazon_member_note">注册会员可查看完整 Top100 数据</p>
       </div>
       <div id="amazon-mode-filter" class="amazon-mode-tabs">
         <button class="amazon-mode-btn active" data-mode="BESTSELLER"
@@ -2079,7 +2080,6 @@ input,textarea,select{font-family:inherit}
       </div>
     </div>
     <div id="amazon-footer" style="text-align:center;padding:20px 0">
-      <div id="amazon-member-note" style="display:none;font-size:11px;color:var(--accent-red);margin-bottom:8px">注册会员可查看完整 Top100 数据</div>
       <button id="amazon-load-more-btn" class="btn btn-secondary" onclick="loadMoreAmazon()"
         data-i18n="btn_load_more">加载更多</button>
     </div>
@@ -2275,7 +2275,7 @@ input,textarea,select{font-family:inherit}
       <img src="/film-hero-img.webp" alt="" draggable="false">
     </div>
   </div>
-  <p id="film-limit-note" style="text-align:center;font-size:11px;color:var(--accent-red);padding:6px 20px;margin:0;display:none">非会员每日可查询 3 次，注册会员无限使用</p>
+  <p id="film-limit-note" style="text-align:center;font-size:11px;color:var(--accent-red);padding:6px 20px;margin:0;display:none" data-i18n="film_member_note">非会员每日可查询 3 次，注册会员无限使用</p>
 
   <div class="film-page-body">
     <div id="brand-filters" class="filter-bar" style="margin:0;border-bottom:1px solid var(--border);padding:14px 0"></div>
@@ -2296,6 +2296,7 @@ input,textarea,select{font-family:inherit}
       <div class="google-hero-meta">
         <p id="google-updated"></p>
         <p data-i18n="google_update_schedule">每周五更新数据，Google Merchant Center 数据源</p>
+        <p id="google-member-note" style="display:none;font-size:11px;color:var(--accent-red);margin-top:4px" data-i18n="google_member_note">注册会员可查看完整 Top50 数据</p>
       </div>
     </div>
     <div class="amazon-hero-img google-hero-img">
@@ -2316,7 +2317,6 @@ input,textarea,select{font-family:inherit}
     </div>
 
     <div style="text-align:center;padding:10px 0;color:var(--text3);font-size:11px" data-i18n="google_data_from">数据来源: Google Merchant Center</div>
-    <div id="google-member-note" style="display:none;text-align:center;padding:0 0 16px;font-size:11px;color:var(--accent-red)">注册会员可查看完整 Top50 数据</div>
   </div>
 </div>
 
@@ -5210,11 +5210,11 @@ async function fetchAmazonData() {
   try {
     const res = await fetch('/api/amazon');
     const json = await res.json();
-    let rows = json.data || [];
-    // Limit for non-members: 15 items
+    amazonAllData = json.data || [];
+    // Limit for non-members: 20 items (display only, keep full data for category filters)
     const isMember = !!localStorage.getItem('ag_token');
-    if (!isMember) rows = rows.slice(0, 15);
-    amazonAllData = rows;
+    if (!isMember) amazonDisplayLimit = 20;
+    else amazonDisplayLimit = 100;
     // Show member note
     const noteEl = document.getElementById('amazon-member-note');
     if (noteEl) noteEl.style.display = isMember ? 'none' : 'block';
@@ -5344,12 +5344,14 @@ function renderAmazonData() {
   }
   el.innerHTML = html;
   const loadMoreBtn = document.getElementById('amazon-load-more-btn');
-  if (loadMoreBtn) loadMoreBtn.style.display = filtered.length > shown.length ? 'inline-flex' : 'none';
+  const isMember = !!localStorage.getItem('ag_token');
+  if (loadMoreBtn) loadMoreBtn.style.display = (isMember && filtered.length > shown.length) ? 'inline-flex' : 'none';
 }
 
 // ============ GOOGLE WEEKLY REPORT ============
 let googleAllData = [];
 let googleCategory = '';
+let googleDisplayLimit = 50;
 
 const GOOGLE_CAT_TRANS = {
   '🛡️ 手机壳': { zh: '🛡️ 手机壳', en: '🛡️ Phone Cases', es: '🛡️ Fundas' },
@@ -5410,11 +5412,10 @@ async function fetchGoogleData() {
   try {
     const res = await fetch('/api/google');
     const json = await res.json();
-    let data = json.data || [];
-    // Limit for non-members: 10 items
+    googleAllData = json.data || [];
+    // Limit display only, keep full data for category filters
     const isMember = !!localStorage.getItem('ag_token');
-    if (!isMember) data = data.slice(0, 10);
-    googleAllData = data;
+    googleDisplayLimit = isMember ? 999 : 10;
     // Show member note
     const noteEl = document.getElementById('google-member-note');
     if (noteEl) noteEl.style.display = isMember ? 'none' : 'block';
@@ -5459,6 +5460,8 @@ function renderGoogleData() {
     return;
   }
   let items = googleCategory ? googleAllData.filter(r => r.category === googleCategory) : googleAllData;
+  // Apply display limit
+  items = items.slice(0, googleDisplayLimit || 50);
   if (items.length === 0) { el.innerHTML = '<div class="amazon-empty"><div>' + (t('google_not_found') || '未找到') + '</div></div>'; return; }
   el.innerHTML = '<div class="data-table-wrap" style="overflow-x:auto"><table class="data-table" style="width:100%"><thead><tr>' +
     '<th style="width:50px;text-align:center">' + (t('google_rank') || '排名') + '</th><th>' + (t('google_brand') || '品牌') + '</th><th>' + (t('google_product') || '产品') + '</th><th style="width:140px;text-align:center">' + (t('google_trend') || '热度') + '</th></tr></thead><tbody>' +
