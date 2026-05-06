@@ -4771,6 +4771,10 @@ function setGoogleCategory(cat, btn) {
 
 function renderGoogleData() {
   const el = document.getElementById('google-results');
+  if (!googleAllData || googleAllData.length === 0) {
+    el.innerHTML = '<div class="amazon-empty"><div>暂无数据</div><div style="font-size:12px;color:var(--text3);margin-top:8px">请先在管理后台同步 Google 数据</div></div>';
+    return;
+  }
   let items = googleCategory ? googleAllData.filter(r => r.category === googleCategory) : googleAllData;
   if (items.length === 0) { el.innerHTML = '<div class="amazon-empty"><div>未找到</div></div>'; return; }
   el.innerHTML = '<div class="data-table-wrap" style="overflow-x:auto"><table class="data-table" style="width:100%"><thead><tr>' +
