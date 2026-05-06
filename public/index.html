@@ -3871,9 +3871,18 @@ async function editProduct(sku) {
       <div style="margin-bottom:8px;padding:10px;background:var(--surface2);border-radius:var(--radius)">
         <div style="font-size:11px;font-weight:600;margin-bottom:4px">${v.title}</div>
         <div style="display:flex;flex-direction:column;gap:4px">
-          <input id="video-${vi}-url" class="form-input" value="${v.url || ''}" placeholder="视频 URL" style="font-size:11px">
-          <input id="video-${vi}-embed" class="form-input" value="${v.embedUrl || ''}" placeholder="嵌入 URL (YouTube/Drive)" style="font-size:11px">
-          <input id="video-${vi}-download" class="form-input" value="${v.downloadUrl || ''}" placeholder="下载 URL" style="font-size:11px">
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:10px;color:var(--text3);width:60px;flex-shrink:0">在线播放</span>
+            <input id="video-${vi}-url" class="form-input" value="${v.url || ''}" placeholder="YouTube / Drive 视频链接" style="font-size:11px;flex:1">
+          </div>
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:10px;color:var(--text3);width:60px;flex-shrink:0">嵌入链接</span>
+            <input id="video-${vi}-embed" class="form-input" value="${v.embedUrl || ''}" placeholder="iframe 嵌入 URL（可选）" style="font-size:11px;flex:1">
+          </div>
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:10px;color:var(--text3);width:60px;flex-shrink:0">下载链接</span>
+            <input id="video-${vi}-download" class="form-input" value="${v.downloadUrl || ''}" placeholder="文件下载直链" style="font-size:11px;flex:1">
+          </div>
         </div>
       </div>
     `).join('') || '<div style="color:var(--text3);font-size:12px;padding:8px">无视频</div>'}
