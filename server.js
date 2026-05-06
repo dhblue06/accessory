@@ -2770,6 +2770,15 @@ function extractJsonLdProducts(html) {
   return products;
 }
 
+function extractEspecificacionesFromHtml(html) {
+  const match = html.match(/<h2[^>]*>\s*Especificaciones:?\s*<\/h2>/i);
+  if (!match) return '';
+  const after = html.slice(match.index + match[0].length);
+  const nextH2 = after.search(/<h2[^>]*>/i);
+  const block = nextH2 > 0 ? after.slice(0, nextH2) : after;
+  return htmlToPlainText(block);
+}
+
 function buildProductDescriptionFromText(text) {
   const lines = String(text || '').split(/\n+/).map(line => line.trim()).filter(Boolean);
   const detailsIdx = lines.findIndex(line => /^Detalles:?$/i.test(line));
@@ -2795,6 +2804,7 @@ function extractScrapedProduct(html, url) {
     titleFromTag
   ).replace(/\s+en\s+TECNOTEMCO.*$/i, '');
   const description = (
+    extractEspecificacionesFromHtml(html) ||
     buildProductDescriptionFromText(plainText) ||
     cleanScrapedText(jsonLdProduct.description) ||
     extractHtmlMeta(html, 'og:description') ||
