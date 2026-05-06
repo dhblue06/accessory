@@ -2507,7 +2507,7 @@ function rowToProduct(row) {
 }
 
 async function startDataSyncScheduler() {
-  const SYNC_INTERVAL_MS = parseInt(process.env.DATA_SYNC_INTERVAL_MS || '3600000', 10);
+  const SYNC_INTERVAL_MS = parseInt(process.env.DATA_SYNC_INTERVAL_MS || '86400000', 10);
   if (productSyncInterval) clearInterval(productSyncInterval);
   productSyncInterval = setInterval(async () => {
     console.log('[data-sync] Scheduled sync triggered');
