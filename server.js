@@ -2675,7 +2675,7 @@ app.put('/api/admin/products/:sku', authMiddleware, requireAdmin, async (req, re
   try {
     if (!pool) return res.status(503).json({ error: 'Database not available' });
     const sku = decodeURIComponent(req.params.sku);
-    const { name, category, mainImageUrl, descriptions } = req.body;
+    const { name, category, mainImageUrl, descriptions, videos } = req.body;
     const { rows } = await pool.query('SELECT data FROM products WHERE sku = $1', [sku]);
     if (rows.length === 0) return res.status(404).json({ error: 'Product not found' });
     const product = rows[0].data;
@@ -2686,6 +2686,9 @@ app.put('/api/admin/products/:sku', authMiddleware, requireAdmin, async (req, re
     }
     if (descriptions !== undefined) {
       product.descriptions = { ...product.descriptions, ...descriptions };
+    }
+    if (videos !== undefined) {
+      product.videos = videos;
     }
     await pool.query('UPDATE products SET data = $1, synced_at = NOW() WHERE sku = $2', [JSON.stringify(product), sku]);
     productService.clearCache();

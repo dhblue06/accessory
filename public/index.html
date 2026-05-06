@@ -3866,6 +3866,17 @@ async function editProduct(sku) {
     <textarea id="edit-product-desc-es" class="form-input" rows="3" style="font-size:12px;resize:vertical">${escapeHtml(product.descriptions?.es || '')}</textarea>
     <h4 style="font-size:12px;font-weight:600;margin-bottom:8px;margin-top:8px">文案（ZH）</h4>
     <textarea id="edit-product-desc-zh" class="form-input" rows="3" style="font-size:12px;resize:vertical">${escapeHtml(product.descriptions?.zh || '')}</textarea>
+    <h4 style="font-size:12px;font-weight:600;margin:12px 0 8px">视频</h4>
+    ${(product.videos || []).map((v, vi) => `
+      <div style="margin-bottom:8px;padding:10px;background:var(--surface2);border-radius:var(--radius)">
+        <div style="font-size:11px;font-weight:600;margin-bottom:4px">${v.title}</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <input id="video-${vi}-url" class="form-input" value="${v.url || ''}" placeholder="视频 URL" style="font-size:11px">
+          <input id="video-${vi}-embed" class="form-input" value="${v.embedUrl || ''}" placeholder="嵌入 URL (YouTube/Drive)" style="font-size:11px">
+          <input id="video-${vi}-download" class="form-input" value="${v.downloadUrl || ''}" placeholder="下载 URL" style="font-size:11px">
+        </div>
+      </div>
+    `).join('') || '<div style="color:var(--text3);font-size:12px;padding:8px">无视频</div>'}
   `;
   document.getElementById('modal-save').onclick = saveProductEdit;
   document.getElementById('modal-overlay').classList.remove('hidden');
@@ -3878,10 +3889,17 @@ async function saveProductEdit() {
   const mainImageUrl = document.getElementById('edit-product-mainimg').value.trim();
   const descEs = document.getElementById('edit-product-desc-es').value.trim();
   const descZh = document.getElementById('edit-product-desc-zh').value.trim();
+  const product = await api('/api/products/' + sku);
+  const videos = (product.videos || []).map((v, vi) => ({
+    ...v,
+    url: document.getElementById('video-' + vi + '-url')?.value || v.url,
+    embedUrl: document.getElementById('video-' + vi + '-embed')?.value || v.embedUrl,
+    downloadUrl: document.getElementById('video-' + vi + '-download')?.value || v.downloadUrl
+  }));
   try {
     await api('/api/admin/products/' + encodeURIComponent(sku), {
       method: 'PUT',
-      body: JSON.stringify({ name, category, mainImageUrl, descriptions: { es: descEs, zh: descZh } })
+      body: JSON.stringify({ name, category, mainImageUrl, descriptions: { es: descEs, zh: descZh }, videos })
     });
     toast('产品已更新', 'success');
     closeModal();
@@ -4714,8 +4732,19 @@ function getVideoProxyUrl(url) {
 }
 
 function renderProductVideo(video) {
-  const videoUrl = getVideoProxyUrl(video.url || video.embedUrl || video.videoUrl || video.directUrl || video.downloadUrl);
+  const videoUrl = getVideoProxyUrl(video.url || video.videoUrl || video.directUrl || video.downloadUrl);
   const openUrl = video.embedUrl || video.url || videoUrl;
+  // YouTube embed detection
+  const youtubeMatch = openUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/);
+  if (youtubeMatch) {
+    return `<iframe style="width:100%;aspect-ratio:16/9;border-radius:var(--radius);border:none" src="https://www.youtube.com/embed/${youtubeMatch[1]}" allowfullscreen></iframe>`;
+  }
+  // Google Drive embed
+  const driveId = getDriveFileId(openUrl);
+  if (driveId && (openUrl.includes('drive.google.com') || openUrl.includes('googleusercontent'))) {
+    return `<iframe style="width:100%;aspect-ratio:16/9;border-radius:var(--radius);border:none" src="https://drive.google.com/file/d/${driveId}/preview" allowfullscreen></iframe>`;
+  }
+  // Fallback to video tag
   return `
     <video class="video-iframe" controls preload="metadata" playsinline
       onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
