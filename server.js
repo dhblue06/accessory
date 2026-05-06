@@ -119,6 +119,9 @@ async function ensureProductSchema() {
     )
   `);
   await pool.query(`
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS source_hash TEXT DEFAULT ''
+  `);
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS products_meta (
       id TEXT PRIMARY KEY DEFAULT 'syncMeta',
       count INTEGER DEFAULT 0,
