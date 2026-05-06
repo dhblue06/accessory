@@ -2163,23 +2163,29 @@ app.get('/api/admin/sync/all', authMiddleware, requireAdmin, async (req, res) =>
 
 // --- Google Sheet Sync ---
 const GOOGLE_SHEET_ID = process.env.GOOGLE_SHEET_ID || '1UdyeRo6vo-VR-Maut0ryAiJJ0tU6obQqdFIcWfnzZPQ';
-const GOOGLE_SHEET_NAME = process.env.GOOGLE_SHEET_NAME || 'Sheet1';
+const GOOGLE_SHEET_GID = process.env.GOOGLE_SHEET_GID || '1211820114';
+const GOOGLE_SHEET_NAME = process.env.GOOGLE_SHEET_NAME || '';
 
 async function syncGoogleToDB() {
   await connectDB();
   if (!pool) throw new Error('Database is not connected');
   console.log('[google-sync] Fetching from Google Sheet...');
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(GOOGLE_SHEET_NAME)}`;
+    let url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:json`;
+    if (GOOGLE_SHEET_NAME) url += `&sheet=${encodeURIComponent(GOOGLE_SHEET_NAME)}`;
+    else url += `&gid=${GOOGLE_SHEET_GID}`;
     const { data } = await axios.get(url, { timeout: 30000 });
     const match = data.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
     if (!match) throw new Error('Invalid gviz response');
     const json = JSON.parse(match[1]);
+    const cols = json.table?.cols || [];
     const rows = (json.table?.rows || []).map(row => {
       const c = row.c || [];
       return { category: c[0]?.v||'', brand: c[1]?.v||'', title: c[2]?.v||'', rank: parseInt(c[3]?.v)||0, rankChange: c[4]?.v||'', trend: c[5]?.v||'', updatedAt: c[6]?.v||'' };
     }).filter(r => r.title && r.title !== 'Title' && r.rank > 0);
-    if (rows.length === 0) throw new Error('No valid Google rows found');
+    console.log(`[google-sync] Columns found: ${cols.map(col => col.label || col.id).join(', ')}`);
+    console.log(`[google-sync] Sample row: ${JSON.stringify(rows[0] || 'none')}`);
+    if (rows.length === 0) throw new Error('No valid Google rows found - check column mapping');
     await pool.query('INSERT INTO app_data (key, value, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()', ['google', JSON.stringify(rows)]);
     console.log(`[google-sync] ✅ Synced ${rows.length} items`);
     return rows.length;
