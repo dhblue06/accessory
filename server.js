@@ -2336,11 +2336,28 @@ function toDownloadUrl(url) {
   return url;
 }
 
+function toDriveDirectUrl(url) {
+  if (!url) return null;
+  const fileId = extractDriveFileId(url);
+  if (fileId) return `https://drive.google.com/uc?export=download&id=${fileId}`;
+  return url;
+}
+
 function toVideoEmbedUrl(url) {
   if (!url) return null;
   const fileId = extractDriveFileId(url);
   if (fileId) return `https://drive.google.com/file/d/${fileId}/preview`;
   return url;
+}
+
+function normalizeProductVideoUrls(product) {
+  if (!product || !Array.isArray(product.videos)) return product;
+  product.videos = product.videos.map(video => {
+    const source = video.url || video.embedUrl || video.downloadUrl;
+    const directUrl = toDriveDirectUrl(source);
+    return { ...video, videoUrl: video.videoUrl || directUrl, downloadUrl: directUrl || video.downloadUrl };
+  });
+  return product;
 }
 
 function rowToProduct(row) {
@@ -2404,12 +2421,12 @@ function rowToProduct(row) {
 
   const adUrl = extractUrlFromCell(cellAt(row, COL.VIDEO_AD));
   if (adUrl) {
-    product.videos.push({ type: 'ad', title: '广告视频', url: adUrl, embedUrl: toVideoEmbedUrl(adUrl), downloadUrl: toDownloadUrl(adUrl) });
+    product.videos.push({ type: 'ad', title: '广告视频', url: adUrl, embedUrl: toVideoEmbedUrl(adUrl), videoUrl: toDriveDirectUrl(adUrl), downloadUrl: toDriveDirectUrl(adUrl) });
     product.stats.videoCount++;
   }
   const tutorialUrl = extractUrlFromCell(cellAt(row, COL.VIDEO_TUT));
   if (tutorialUrl) {
-    product.videos.push({ type: 'tutorial', title: '使用说明视频', url: tutorialUrl, embedUrl: toVideoEmbedUrl(tutorialUrl), downloadUrl: toDownloadUrl(tutorialUrl) });
+    product.videos.push({ type: 'tutorial', title: '使用说明视频', url: tutorialUrl, embedUrl: toVideoEmbedUrl(tutorialUrl), videoUrl: toDriveDirectUrl(tutorialUrl), downloadUrl: toDriveDirectUrl(tutorialUrl) });
     product.stats.videoCount++;
   }
   if (product.descriptions.es) product.stats.docCount++;
@@ -2446,7 +2463,7 @@ const productService = {
     if (!pool) { this._cache = []; return []; }
     try {
       const { rows } = await pool.query('SELECT data FROM products ORDER BY sku');
-      this._cache = rows.map(r => r.data);
+      this._cache = rows.map(r => normalizeProductVideoUrls(r.data));
       const meta = await pool.query('SELECT count, source, updated_at FROM products_meta WHERE id = $1', ['syncMeta']);
       this._cacheMeta = meta.rows[0] || { count: 0, source: 'empty', updatedAt: null };
     } catch (err) {

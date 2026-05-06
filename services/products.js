@@ -73,6 +73,13 @@ function toDownloadUrl(url) {
   return url;
 }
 
+function toDriveDirectUrl(url) {
+  if (!url) return null;
+  const fileId = extractDriveFileId(url);
+  if (fileId) return `https://drive.google.com/uc?export=download&id=${fileId}`;
+  return url;
+}
+
 function toVideoEmbedUrl(url) {
   if (!url) return null;
   const fileId = extractDriveFileId(url);
@@ -213,7 +220,8 @@ function rowToProduct(row) {
       title: '广告视频',
       url: adUrl,
       embedUrl: toVideoEmbedUrl(adUrl),
-      downloadUrl: toDownloadUrl(adUrl)
+      videoUrl: toDriveDirectUrl(adUrl),
+      downloadUrl: toDriveDirectUrl(adUrl)
     });
     product.stats.videoCount++;
   }
@@ -225,7 +233,8 @@ function rowToProduct(row) {
       title: '使用说明视频',
       url: tutorialUrl,
       embedUrl: toVideoEmbedUrl(tutorialUrl),
-      downloadUrl: toDownloadUrl(tutorialUrl)
+      videoUrl: toDriveDirectUrl(tutorialUrl),
+      downloadUrl: toDriveDirectUrl(tutorialUrl)
     });
     product.stats.videoCount++;
   }
