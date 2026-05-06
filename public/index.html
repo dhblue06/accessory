@@ -5429,12 +5429,6 @@ async function fetchGoogleData() {
     el.innerHTML = '<div class="amazon-empty"><div style="font-size:40px">⚠️</div><div>加载失败</div></div>';
   }
 }
-    renderGoogleCategoryFilters();
-    renderGoogleData();
-  } catch(e) {
-    el.innerHTML = '<div class="amazon-empty"><div style="font-size:40px">⚠️</div><div>加载失败</div></div>';
-  }
-}
 
 function renderGoogleCategoryFilters() {
   const el = document.getElementById('google-cat-filter');
