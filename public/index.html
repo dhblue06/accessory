@@ -3353,7 +3353,7 @@ async function init() {
   applyTheme();
   // Set initial language button text
   const langEl = document.getElementById('lang-current');
-  if (langEl) langEl.textContent = lang === 'zh' ? 'CN' : lang.toUpperCase();
+  if (langEl) langEl.textContent = currentLang === 'zh' ? 'CN' : currentLang.toUpperCase();
   trackSiteVisit();
 
   if (window.location.hash === '#admin' || window.location.hash === '#member') {
