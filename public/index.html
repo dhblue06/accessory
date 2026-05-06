@@ -4770,8 +4770,9 @@ async function fetchGoogleData() {
 function renderGoogleCategoryFilters() {
   const el = document.getElementById('google-cat-filter');
   const cats = [...new Set(googleAllData.map(r => r.category).filter(Boolean))];
-  el.innerHTML = '<button class="amazon-mode-btn active" data-cat="" onclick="setGoogleCategory(\'\',this)" style="font-size:12px">全部</button>' +
-    cats.map(c => `<button class="amazon-mode-btn" data-cat="${c}" onclick="setGoogleCategory('${c.replace(/'/g,"\\'")}',this)" style="font-size:12px">${c}</button>`).join('');
+  el.innerHTML = cats.map(c => `<button class="amazon-mode-btn ${!googleCategory && cats.indexOf(c) === 0 ? 'active' : ''}" data-cat="${c}" onclick="setGoogleCategory('${c.replace(/'/g,"\\'")}',this)" style="font-size:12px">${c}</button>`).join('');
+  // Auto-select first category
+  if (!googleCategory && cats.length > 0) { googleCategory = cats[0]; }
 }
 
 function setGoogleCategory(cat, btn) {
@@ -4789,15 +4790,23 @@ function renderGoogleData() {
   let items = googleCategory ? googleAllData.filter(r => r.category === googleCategory) : googleAllData;
   if (items.length === 0) { el.innerHTML = '<div class="amazon-empty"><div>未找到</div></div>'; return; }
   el.innerHTML = '<div class="data-table-wrap" style="overflow-x:auto"><table class="data-table" style="width:100%"><thead><tr>' +
-    '<th style="width:50px;text-align:center">排名</th><th>品牌</th><th>产品</th><th style="width:100px;text-align:center">热度</th></tr></thead><tbody>' +
+    '<th style="width:50px;text-align:center">排名</th><th>品牌</th><th>产品</th><th style="width:140px;text-align:center">热度</th></tr></thead><tbody>' +
     items.map((item, i) => {
       const trend = getGoogleTrendLabel(item.trend);
       const changeHtml = getGoogleRankChange(item);
+      const searchQ = encodeURIComponent(item.title + ' ' + (item.brand || ''));
+      const productLink = `https://www.google.es/search?q=${searchQ}&udm=28`;
+      const trendsLink = `https://trends.google.com/trends/explore?date=today%203-m&geo=ES&q=${encodeURIComponent(item.title)}`;
       return `<tr>
         <td style="text-align:center;font-weight:700;font-size:16px;font-family:'JetBrains Mono',monospace">${item.rank <= 3 ? ['🥇','🥈','🥉'][item.rank-1] : item.rank}</td>
         <td><span style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase">${item.brand || '—'}</span></td>
-        <td><div style="font-size:13px;font-weight:500">${item.title}</div>${changeHtml ? '<div style="margin-top:2px">' + changeHtml + '</div>' : ''}</td>
-        <td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600;${trend.style}">${trend.text}</span></td>
+        <td><a href="${productLink}" target="_blank" style="font-size:13px;font-weight:500;color:var(--text);text-decoration:none" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color=''">${item.title}</a>${changeHtml ? '<div style="margin-top:2px">' + changeHtml + '</div>' : ''}</td>
+        <td style="text-align:center"><span style="display:inline-flex;align-items:center;gap:6px;justify-content:center">
+          <span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600;${trend.style}">${trend.text}</span>
+          <a href="${trendsLink}" target="_blank" title="查看90天趋势" style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);color:var(--text3);text-decoration:none;transition:all 0.15s" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='';this.style.borderColor=''">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+          </a>
+        </span></td>
       </tr>`;
     }).join('') + '</tbody></table></div>';
 }
