@@ -2079,10 +2079,7 @@ input,textarea,select{font-family:inherit}
       </div>
     </div>
     <div id="amazon-footer" style="text-align:center;padding:20px 0">
-      <div id="amazon-login-tip" data-i18n="amazon_login_tip"
-        style="display:none;margin-bottom:12px;color:var(--accent-red)">
-        登录后可查看完整100条
-      </div>
+      <div id="amazon-member-note" style="display:none;font-size:11px;color:var(--accent-red);margin-bottom:8px">注册会员可查看完整 Top100 数据</div>
       <button id="amazon-load-more-btn" class="btn btn-secondary" onclick="loadMoreAmazon()"
         data-i18n="btn_load_more">加载更多</button>
     </div>
@@ -2278,6 +2275,7 @@ input,textarea,select{font-family:inherit}
       <img src="/film-hero-img.webp" alt="" draggable="false">
     </div>
   </div>
+  <p id="film-limit-note" style="text-align:center;font-size:11px;color:var(--accent-red);padding:6px 20px;margin:0;display:none">非会员每日可查询 3 次，注册会员无限使用</p>
 
   <div class="film-page-body">
     <div id="brand-filters" class="filter-bar" style="margin:0;border-bottom:1px solid var(--border);padding:14px 0"></div>
@@ -2317,7 +2315,8 @@ input,textarea,select{font-family:inherit}
       </div>
     </div>
 
-    <div style="text-align:center;padding:20px 0;color:var(--text3);font-size:11px" data-i18n="google_data_from">数据来源: Google Merchant Center</div>
+    <div style="text-align:center;padding:10px 0;color:var(--text3);font-size:11px" data-i18n="google_data_from">数据来源: Google Merchant Center</div>
+    <div id="google-member-note" style="display:none;text-align:center;padding:0 0 16px;font-size:11px;color:var(--accent-red)">注册会员可查看完整 Top50 数据</div>
   </div>
 </div>
 
@@ -3311,7 +3310,7 @@ async function loadSettings() {
 // ============ ROUTING ============
 function goHome() {
   showFront();
-  switchPage('amazon');
+  switchPage('film');
 }
 
 function showFront() {
@@ -4114,6 +4113,9 @@ async function loadFilm() {
   const q = document.getElementById('film-search').value.trim();
   const brand = filmBrand || '';
   const el = document.getElementById('film-results');
+  // Show/hide free query limit note
+  const noteEl = document.getElementById('film-limit-note');
+  if (noteEl) noteEl.style.display = localStorage.getItem('ag_token') ? 'none' : 'block';
 
   // Fetch fresh data if first load or search/brand changed
   if (filmData.length === 0 || q !== filmSearchQ || brand !== filmSearchBrand) {
@@ -5076,6 +5078,8 @@ function saveFilmFreeUsage(usage) {
 }
 
 function canRunFilmQuery(q, brand) {
+  // Members have unlimited queries
+  if (localStorage.getItem('ag_token')) return true;
   const queryKey = (q || brand) ? `${q}|${brand}`.toLowerCase() : '';
   if (!queryKey) return true;
   const usage = getFilmFreeUsage();
@@ -5206,8 +5210,14 @@ async function fetchAmazonData() {
   try {
     const res = await fetch('/api/amazon');
     const json = await res.json();
-    const rows = json.data || [];
+    let rows = json.data || [];
+    // Limit for non-members: 15 items
+    const isMember = !!localStorage.getItem('ag_token');
+    if (!isMember) rows = rows.slice(0, 15);
     amazonAllData = rows;
+    // Show member note
+    const noteEl = document.getElementById('amazon-member-note');
+    if (noteEl) noteEl.style.display = isMember ? 'none' : 'block';
     // Display update date
     const updatedEl = document.getElementById('amazon-updated');
     if (updatedEl && json.latestDate) {
@@ -5400,14 +5410,25 @@ async function fetchGoogleData() {
   try {
     const res = await fetch('/api/google');
     const json = await res.json();
-    googleAllData = json.data || [];
+    let data = json.data || [];
+    // Limit for non-members: 10 items
+    const isMember = !!localStorage.getItem('ag_token');
+    if (!isMember) data = data.slice(0, 10);
+    googleAllData = data;
+    // Show member note
+    const noteEl = document.getElementById('google-member-note');
+    if (noteEl) noteEl.style.display = isMember ? 'none' : 'block';
     const updatedEl = document.getElementById('google-updated');
     if (updatedEl && json.updatedAt) {
       const d = new Date(json.updatedAt);
-      const locale = currentLang === 'zh' ? 'zh-CN' : currentLang === 'es' ? 'es-ES' : 'en-US';
-      const label = t('google_updated') || t('amazon_updated') || '数据更新:';
-      updatedEl.textContent = label + ' ' + d.toLocaleDateString(locale);
+      updatedEl.textContent = '数据更新: ' + d.toLocaleDateString('zh-CN');
     }
+    renderGoogleCategoryFilters();
+    renderGoogleData();
+  } catch(e) {
+    el.innerHTML = '<div class="amazon-empty"><div style="font-size:40px">⚠️</div><div>加载失败</div></div>';
+  }
+}
     renderGoogleCategoryFilters();
     renderGoogleData();
   } catch(e) {
