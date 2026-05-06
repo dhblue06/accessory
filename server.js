@@ -3153,7 +3153,7 @@ app.put('/api/admin/products/:sku', authMiddleware, requireAdmin, async (req, re
   try {
     if (!pool) return res.status(503).json({ error: 'Database not available' });
     const oldSku = decodeURIComponent(req.params.sku);
-    const { sku: requestedSku, name, category, sourceUrl, mainImage, mainImageUrl, descriptions, imageGroups, videos } = req.body;
+    const { sku: requestedSku, name, description, category, sourceUrl, mainImage, mainImageUrl, descriptions, imageGroups, videos } = req.body;
     const newSku = String(requestedSku || oldSku).trim();
     if (!newSku) return res.status(400).json({ error: 'SKU is required' });
     const { rows } = await pool.query('SELECT data FROM products WHERE sku = $1', [oldSku]);
@@ -3161,6 +3161,7 @@ app.put('/api/admin/products/:sku', authMiddleware, requireAdmin, async (req, re
     const product = rows[0].data;
     product.sku = newSku;
     if (name !== undefined) product.name = name;
+    if (description !== undefined) product.description = description;
     if (category !== undefined) product.category = category;
     if (sourceUrl !== undefined) product.sourceUrl = sourceUrl;
     if (mainImage !== undefined) {
