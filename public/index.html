@@ -1552,6 +1552,141 @@ input,textarea,select{font-family:inherit}
   box-shadow:0 2px 8px rgba(59,130,246,0.16);
 }
 
+#calculator-page{
+  max-width:100%!important;
+  background:linear-gradient(180deg,#eef4ff 0%,#e8f0ff 100%);
+  min-height:calc(100vh - 56px);
+}
+.calc-page-body{
+  max-width:1368px;
+  margin:0 auto;
+  padding:18px 0 36px;
+}
+.calc-tabs{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  flex-wrap:wrap;
+  margin-bottom:34px;
+}
+.calc-tab{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  min-width:180px;
+  height:56px;
+  padding:0 26px;
+  border-radius:12px;
+  border:1px solid rgba(148,163,184,0.22);
+  background:rgba(255,255,255,0.9);
+  color:#1f2937;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 1px 2px rgba(15,23,42,0.04);
+  transition:all 0.16s ease;
+}
+.calc-tab:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 18px rgba(15,23,42,0.08);
+}
+.calc-tab.active{
+  background:#2563eb;
+  color:#fff;
+  border-color:#2563eb;
+  box-shadow:0 8px 18px rgba(37,99,235,0.28);
+}
+.calc-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px;
+  box-shadow:0 14px 28px rgba(15,23,42,0.12);
+}
+.calc-split{
+  display:grid;
+  grid-template-columns:minmax(320px,1fr) minmax(320px,1fr);
+  gap:18px;
+  align-items:stretch;
+}
+.calc-section-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:22px;
+}
+.calc-input-wrap{
+  position:relative;
+}
+.calc-input-wrap .form-input{
+  height:42px;
+  padding-right:34px;
+}
+.calc-input-suffix{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--text2);
+  font-size:14px;
+}
+.calc-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:28px;
+}
+.calc-actions .btn{
+  width:100%;
+  height:36px;
+  border-radius:8px;
+  font-weight:700;
+}
+.calc-actions .btn-primary{
+  background:#000;
+  border-color:#000;
+}
+.calc-results-panel{
+  background:#f8fafc;
+  border-radius:10px;
+  padding:20px;
+  min-height:364px;
+}
+.calc-results-title{
+  font-size:16px;
+  font-weight:800;
+  margin-bottom:18px;
+}
+.calc-result-row{
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  font-size:14px;
+  line-height:1.9;
+}
+.calc-result-value{
+  font-weight:700;
+  font-family:'JetBrains Mono',monospace;
+  white-space:nowrap;
+}
+.calc-result-total{
+  border-top:1px solid var(--border);
+  margin-top:10px;
+  padding-top:10px;
+  color:#1d4ed8;
+  font-weight:800;
+}
+@media(max-width:768px){
+  .calc-page-body{padding:16px}
+  .calc-tabs{justify-content:flex-start;gap:8px;margin-bottom:16px}
+  .calc-tab{min-width:calc(50% - 4px);height:44px;font-size:14px;padding:0 10px}
+  .calc-split{grid-template-columns:1fr}
+  .calc-card{padding:18px;border-radius:12px}
+}
+
 [data-theme="dark"] .amazon-hero-bg{
   background:linear-gradient(135deg,#1e2d4a 0%,#1a2540 50%,#162030 100%) !important;
 }
@@ -2177,29 +2312,38 @@ input,textarea,select{font-family:inherit}
 
 <!-- CALCULATOR PAGE -->
 <div id="calculator-page" class="page" style="padding:0!important">
-  <div class="film-page-body" style="max-width:700px;margin:0 auto;padding:24px 20px">
+  <div class="calc-page-body">
     <!-- Tabs -->
-    <div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap">
-      <button class="calc-tab active" data-tab="profit" onclick="switchCalcTab('profit',this)" style="padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff;border:none" data-i18n="calc_profit">利润计算器</button>
-      <button class="calc-tab" data-tab="discount" onclick="switchCalcTab('discount',this)" style="padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;background:var(--surface2);color:var(--text);border:1px solid var(--border)" data-i18n="calc_discount">折扣计算器</button>
-      <button class="calc-tab" data-tab="vat" onclick="switchCalcTab('vat',this)" style="padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;background:var(--surface2);color:var(--text);border:1px solid var(--border)" data-i18n="calc_vat">增值税计算器</button>
-      <button class="calc-tab" data-tab="scientific" onclick="switchCalcTab('scientific',this)" style="padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;background:var(--surface2);color:var(--text);border:1px solid var(--border)" data-i18n="calc_scientific">科学计算器</button>
+    <div class="calc-tabs">
+      <button class="calc-tab active" data-tab="profit" onclick="switchCalcTab('profit',this)"><span>▦</span><span data-i18n="calc_profit_calculator">利润计算器</span></button>
+      <button class="calc-tab" data-tab="discount" onclick="switchCalcTab('discount',this)"><span>%</span><span data-i18n="calc_discount">折扣计算器</span></button>
+      <button class="calc-tab" data-tab="vat" onclick="switchCalcTab('vat',this)"><span>▣</span><span data-i18n="calc_vat">IVA计算器</span></button>
+      <button class="calc-tab" data-tab="scientific" onclick="switchCalcTab('scientific',this)"><span>▱</span><span data-i18n="calc_online">在线计算器</span></button>
     </div>
 
     <!-- Profit Calculator -->
     <div id="calc-profit" class="calc-panel">
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px">
-        <div class="form-group"><label class="form-label" data-i18n="calc_product_cost">产品成本 (€)</label><input id="profit-cost" class="form-input" type="number" value="10" step="0.01" min="0" oninput="calcProfit()"></div>
-        <div class="form-group"><label class="form-label" data-i18n="calc_markup">加价率 (%)</label><input id="profit-markup" class="form-input" type="number" value="50" step="1" min="0" oninput="calcProfit()"></div>
-        <div class="form-group"><label class="form-label" data-i18n="calc_customer_cost">客户成本 (€)</label><input id="profit-cc" class="form-input" type="number" value="0" step="0.01" min="0" oninput="calcProfit()"></div>
-        <div class="form-group"><label class="form-label" data-i18n="calc_shipping_cost">运费成本 (€)</label><input id="profit-sc" class="form-input" type="number" value="0" step="0.01" min="0" oninput="calcProfit()"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
-          <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_selling_price">售价</div><div style="font-size:20px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace" id="profit-price">15.00€</div></div>
-          <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_profit">利润</div><div style="font-size:20px;font-weight:700;color:var(--accent-green);font-family:'JetBrains Mono',monospace" id="profit-profit">5.00€</div></div>
-          <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_profit_margin">利润率</div><div style="font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace" id="profit-margin">50%</div></div>
-          <div style="background:var(--surface2);border-radius:var(--radius);padding:12px;text-align:center"><div style="font-size:11px;color:var(--text3)" data-i18n="calc_total_cost">总成本</div><div style="font-size:20px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace" id="profit-total">10.00€</div></div>
+      <div class="calc-card">
+        <div class="calc-split">
+          <div>
+            <div class="calc-section-title"><span style="color:#2563eb">▦</span><span data-i18n="calc_profit_margin_short">利润率</span></div>
+            <div class="form-group"><label class="form-label" data-i18n="calc_product_cost_eur">产品成本 (€)</label><div class="calc-input-wrap"><input id="profit-cost" class="form-input" type="number" value="10" step="0.01" min="0" oninput="calcProfit()"><span class="calc-input-suffix">€</span></div></div>
+            <div class="form-group"><label class="form-label" data-i18n="calc_markup_percent">加价率 (%)</label><div class="calc-input-wrap"><input id="profit-markup" class="form-input" type="number" value="20" step="1" min="0" oninput="calcProfit()"><span class="calc-input-suffix">%</span></div></div>
+            <div class="form-group"><label class="form-label" data-i18n="calc_customer_cost_optional">客户成本 (可选)</label><div class="calc-input-wrap"><input id="profit-cc" class="form-input" type="number" value="0" step="0.01" min="0" oninput="calcProfit()"><span class="calc-input-suffix">€</span></div></div>
+            <div class="form-group"><label class="form-label" data-i18n="calc_shipping_optional">运费 (可选)</label><div class="calc-input-wrap"><input id="profit-sc" class="form-input" type="number" value="3" step="0.01" min="0" oninput="calcProfit()"><span class="calc-input-suffix">€</span></div></div>
+            <div class="calc-actions">
+              <button class="btn btn-secondary" onclick="resetProfit()" data-i18n="calc_reset">重置</button>
+              <button class="btn btn-primary" onclick="calcProfit()" data-i18n="calc_calculate">计算</button>
+            </div>
+          </div>
+          <div class="calc-results-panel">
+            <div class="calc-results-title" data-i18n="calc_result">计算结果</div>
+            <div class="calc-result-row"><span data-i18n="calc_selling_price">销售价格</span><span class="calc-result-value" id="profit-price">12.00 €</span></div>
+            <div class="calc-result-row"><span data-i18n="calc_profit_calculator">利润计算器</span><span class="calc-result-value" id="profit-profit">-1.00 €</span></div>
+            <div class="calc-result-row"><span data-i18n="calc_profit_margin">利润率</span><span class="calc-result-value" id="profit-margin">-10.0%</span></div>
+            <div class="calc-result-row calc-result-total"><span data-i18n="calc_total_cost">总成本</span><span class="calc-result-value" id="profit-total">10.00 €</span></div>
+          </div>
         </div>
-        <button class="btn btn-secondary" style="margin-top:12px;width:100%" onclick="resetProfit()" data-i18n="calc_reset">重置</button>
       </div>
     </div>
 
@@ -3330,8 +3474,8 @@ function closeNavDropdown(el) {
 function switchCalcTab(tab, btn) {
   document.querySelectorAll('.calc-panel').forEach(p => p.style.display = 'none');
   document.getElementById('calc-' + tab).style.display = 'block';
-  document.querySelectorAll('.calc-tab').forEach(b => { b.style.background = 'var(--surface2)'; b.style.color = 'var(--text)'; b.style.border = '1px solid var(--border)'; });
-  btn.style.background = 'var(--accent)'; btn.style.color = '#fff'; btn.style.border = 'none';
+  document.querySelectorAll('.calc-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
 }
 function switchVatSub(sub, btn) {
   document.getElementById('vat-add').style.display = sub === 'add' ? 'block' : 'none';
@@ -3347,13 +3491,13 @@ function calcProfit() {
   const price = cost * (1 + markup / 100);
   const profit = price - cost - cc - sc;
   const margin = cost > 0 ? (profit / cost) * 100 : 0;
-  document.getElementById('profit-price').textContent = price.toFixed(2) + '€';
-  document.getElementById('profit-profit').textContent = profit.toFixed(2) + '€';
+  document.getElementById('profit-price').textContent = price.toFixed(2) + ' €';
+  document.getElementById('profit-profit').textContent = profit.toFixed(2) + ' €';
   document.getElementById('profit-margin').textContent = margin.toFixed(1) + '%';
-  document.getElementById('profit-total').textContent = cost.toFixed(2) + '€';
+  document.getElementById('profit-total').textContent = cost.toFixed(2) + ' €';
 }
 function resetProfit() {
-  ['profit-cost','profit-markup','profit-cc','profit-sc'].forEach((id,i) => document.getElementById(id).value = [10,50,0,0][i]); calcProfit();
+  ['profit-cost','profit-markup','profit-cc','profit-sc'].forEach((id,i) => document.getElementById(id).value = [10,20,0,3][i]); calcProfit();
 }
 function calcDiscount() {
   const orig = parseFloat(document.getElementById('discount-original').value) || 0;
