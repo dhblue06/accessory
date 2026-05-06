@@ -1698,32 +1698,32 @@ input,textarea,select{font-family:inherit}
       <img src="/Logo.png" alt="Logo">
     </a>
     <div class="nav-tabs" id="nav-tabs">
-      <div class="nav-parent" onclick="toggleNavDropdown(this)">
+      <div class="nav-parent" onmouseleave="closeNavDropdown(this)" onclick="toggleNavDropdown(this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        <span>钢化膜</span>
+        <span data-i18n="nav_film_parent">钢化膜</span>
         <span class="arrow">▾</span>
         <div class="nav-dropdown">
-          <a href="#" onclick="switchPage('film');return false">通用型号查询</a>
-          <a href="#" onclick="switchPage('ipad');return false">iPad</a>
-          <a href="#" onclick="switchPage('watch');return false">Apple Watch</a>
+          <a href="#" onclick="switchPage('film');return false" data-i18n="nav_film_child">通用型号查询</a>
+          <a href="#" onclick="switchPage('ipad');return false" data-i18n="nav_ipad_child">iPad</a>
+          <a href="#" onclick="switchPage('watch');return false" data-i18n="nav_watch_child">Apple Watch</a>
         </div>
       </div>
-      <div class="nav-parent" onclick="toggleNavDropdown(this)">
+      <div class="nav-parent" onmouseleave="closeNavDropdown(this)" onclick="toggleNavDropdown(this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        <span>选品助手</span>
+        <span data-i18n="nav_sourcing">选品助手</span>
         <span class="arrow">▾</span>
         <div class="nav-dropdown">
-          <a href="#" onclick="switchPage('amazon');return false">Amazon</a>
-          <a href="#" onclick="switchPage('google');return false">Google</a>
+          <a href="#" onclick="switchPage('amazon');return false" data-i18n="nav_amazon_child">Amazon</a>
+          <a href="#" onclick="switchPage('google');return false" data-i18n="nav_google_child">Google</a>
         </div>
       </div>
       <a class="nav-tab" data-page="calculator" onclick="switchPage('calculator');return false" href="#">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
-        <span>商业计算器</span>
+        <span data-i18n="nav_calculator">商业计算器</span>
       </a>
       <a class="nav-tab" data-page="products" onclick="switchPage('products');return false" href="#">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        <span>产品素材库</span>
+        <span data-i18n="nav_products">产品素材库</span>
       </a>
     </div>
     <div class="nav-actions">
@@ -3063,6 +3063,10 @@ function toggleNavDropdown(el) {
   const isOpen = el.classList.contains('open');
   document.querySelectorAll('.nav-parent.open').forEach(p => p.classList.remove('open'));
   if (!isOpen) el.classList.add('open');
+}
+
+function closeNavDropdown(el) {
+  el.classList.remove('open');
 }
 
 function updateAuthUI() {
