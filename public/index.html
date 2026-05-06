@@ -2027,8 +2027,12 @@ input,textarea,select{font-family:inherit}
         <span data-i18n="admin_watch_mgmt">Watch 管理</span>
       </div>
       <div class="admin-sidebar-item" data-panel="film-mgmt" onclick="switchPanel('film-mgmt',this)">
-        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"/><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 5a1 1 0 112 0v3a1 1 0 11-2 0V5zm0 7a1 1 0 112 0v1a1 1 0 11-2 0v-1z"/></svg>
         <span data-i18n="admin_film_mgmt">膜数据管理</span>
+      </div>
+      <div class="admin-sidebar-item" data-panel="products-mgmt" onclick="switchPanel('products-mgmt',this)">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"/><path d="M4 7a1 1 0 011 1v9a1 1 0 01-1 1H3a1 1 0 01-1-1V8a1 1 0 011-1h1zm12 0a1 1 0 011 1v9a1 1 0 01-1 1h-1a1 1 0 01-1-1V8a1 1 0 011-1h1z"/></svg>
+        <span>产品素材管理</span>
       </div>
       <div class="admin-sidebar-item" data-panel="users-mgmt" onclick="switchPanel('users-mgmt',this)">
         <svg viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg>
@@ -2134,6 +2138,23 @@ input,textarea,select{font-family:inherit}
         <table class="data-table">
           <thead><tr><th data-i18n="th_film_model">膜型号</th><th data-i18n="th_brands">品牌数</th><th data-i18n="th_models">型号数</th><th data-i18n="th_action">操作</th></tr></thead>
           <tbody id="film-admin-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- PRODUCTS MGMT -->
+      <div id="panel-products-mgmt" class="admin-panel">
+        <div class="admin-header">
+          <h2 class="admin-title">产品素材管理</h2>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" onclick="syncProducts()">同步 Google Sheet</button>
+          </div>
+        </div>
+        <div class="form-group" style="max-width:300px;margin-bottom:16px">
+          <input id="admin-product-search" class="form-input" type="text" placeholder="搜索 SKU 或名称..." oninput="loadAdminProducts()">
+        </div>
+        <table class="data-table" id="admin-products-table">
+          <thead><tr><th>SKU</th><th>名称</th><th>分类</th><th>图片</th><th>操作</th></tr></thead>
+          <tbody id="admin-products-tbody"></tbody>
         </table>
       </div>
 
@@ -3800,6 +3821,74 @@ async function saveEditFilmGroup() {
   loadAdminFilm();
 }
 
+async function loadAdminProducts() {
+  const q = document.getElementById('admin-product-search')?.value || '';
+  const products = await api('/api/products?q=' + encodeURIComponent(q));
+  const tbody = document.getElementById('admin-products-tbody');
+  tbody.innerHTML = products.map(p => `<tr>
+    <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${escapeHtml(p.sku)}</td>
+    <td><strong>${escapeHtml(p.name)}</strong></td>
+    <td><span class="badge" style="background:var(--surface2);padding:2px 8px;border-radius:12px;font-size:11px">${escapeHtml(p.category)}</span></td>
+    <td>${p.mainImage ? '<img src="'+p.mainImage.url+'" style="width:40px;height:40px;border-radius:4px;object-fit:cover">' : '<span style="color:var(--text3)">无图</span>'}</td>
+    <td><button class="btn btn-secondary btn-sm" onclick="editProduct('${p.sku}')">编辑</button></td>
+  </tr>`).join('');
+}
+
+async function editProduct(sku) {
+  const product = await api('/api/products/' + sku);
+  const imgGroupsHtml = (product.imageGroups || []).map((g, gi) => `
+    <div style="margin-bottom:12px;padding:12px;background:var(--surface2);border-radius:var(--radius)">
+      <h4 style="font-size:12px;font-weight:600;margin-bottom:8px">${g.title}</h4>
+      ${g.items.map((item, ii) => `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <img src="${item.url}" style="width:32px;height:32px;border-radius:4px;object-fit:cover">
+          <input id="img-${gi}-${ii}-url" class="form-input" value="${item.url}" style="flex:1;font-size:11px" placeholder="图片 URL">
+          <select id="img-${gi}-${ii}-lang" class="form-input" style="width:70px;font-size:11px">
+            <option value="es" ${item.lang==='es'?'selected':''}>ES</option>
+            <option value="zh" ${item.lang==='zh'?'selected':''}>ZH</option>
+          </select>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+  document.getElementById('modal-title').textContent = '编辑产品: ' + sku;
+  document.getElementById('modal-body').innerHTML = `
+    <input type="hidden" id="edit-product-sku" value="${sku}">
+    <div class="form-group"><label class="form-label">SKU</label><input class="form-input" value="${escapeHtml(product.sku)}" disabled></div>
+    <div class="form-group"><label class="form-label">名称</label><input id="edit-product-name" class="form-input" value="${escapeHtml(product.name || '')}"></div>
+    <div class="form-group"><label class="form-label">分类</label><input id="edit-product-cat" class="form-input" value="${escapeHtml(product.category || '')}"></div>
+    <div style="margin-bottom:12px;padding:12px;background:var(--surface2);border-radius:var(--radius)">
+      <h4 style="font-size:12px;font-weight:600;margin-bottom:8px">主图</h4>
+      <input id="edit-product-mainimg" class="form-input" value="${product.mainImage ? product.mainImage.url : ''}" placeholder="主图 URL" style="font-size:11px">
+    </div>
+    ${imgGroupsHtml}
+    <h4 style="font-size:12px;font-weight:600;margin-bottom:8px">文案（ES）</h4>
+    <textarea id="edit-product-desc-es" class="form-input" rows="3" style="font-size:12px;resize:vertical">${escapeHtml(product.descriptions?.es || '')}</textarea>
+    <h4 style="font-size:12px;font-weight:600;margin-bottom:8px;margin-top:8px">文案（ZH）</h4>
+    <textarea id="edit-product-desc-zh" class="form-input" rows="3" style="font-size:12px;resize:vertical">${escapeHtml(product.descriptions?.zh || '')}</textarea>
+  `;
+  document.getElementById('modal-save').onclick = saveProductEdit;
+  document.getElementById('modal').style.display = 'flex';
+}
+
+async function saveProductEdit() {
+  const sku = document.getElementById('edit-product-sku').value;
+  const name = document.getElementById('edit-product-name').value.trim();
+  const category = document.getElementById('edit-product-cat').value.trim();
+  const mainImageUrl = document.getElementById('edit-product-mainimg').value.trim();
+  const descEs = document.getElementById('edit-product-desc-es').value.trim();
+  const descZh = document.getElementById('edit-product-desc-zh').value.trim();
+  try {
+    await api('/api/admin/products/' + encodeURIComponent(sku), {
+      method: 'PUT',
+      body: JSON.stringify({ name, category, mainImageUrl, descriptions: { es: descEs, zh: descZh } })
+    });
+    toast('产品已更新', 'success');
+    closeModal();
+    loadAdminProducts();
+  } catch(e) { toast('更新失败: ' + e.message, 'error'); }
+}
+
 async function loadAdminUsers() {
   const users = await api('/api/admin/users');
   adminUsersCache = users;
@@ -3915,6 +4004,7 @@ function switchPanel(panel, el) {
   else if(panel==='ipad-mgmt') loadAdminiPad();
   else if(panel==='watch-mgmt') loadAdminWatch();
   else if(panel==='film-mgmt') loadAdminFilm();
+  else if(panel==='products-mgmt') loadAdminProducts();
   else if(panel==='users-mgmt') loadAdminUsers();
   else if(panel==='settings-mgmt') loadSettings();
   else if(panel==='trans-mgmt') loadAdminTranslations();

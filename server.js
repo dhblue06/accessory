@@ -2671,6 +2671,30 @@ app.post('/api/admin/products/refresh', authMiddleware, requireAdmin, async (req
   }
 });
 
+app.put('/api/admin/products/:sku', authMiddleware, requireAdmin, async (req, res) => {
+  try {
+    if (!pool) return res.status(503).json({ error: 'Database not available' });
+    const sku = decodeURIComponent(req.params.sku);
+    const { name, category, mainImageUrl, descriptions } = req.body;
+    const { rows } = await pool.query('SELECT data FROM products WHERE sku = $1', [sku]);
+    if (rows.length === 0) return res.status(404).json({ error: 'Product not found' });
+    const product = rows[0].data;
+    if (name !== undefined) product.name = name;
+    if (category !== undefined) product.category = category;
+    if (mainImageUrl !== undefined) {
+      product.mainImage = mainImageUrl ? { ...product.mainImage, url: mainImageUrl, downloadUrl: product.mainImage?.downloadUrl || mainImageUrl, label: '主产品图' } : null;
+    }
+    if (descriptions !== undefined) {
+      product.descriptions = { ...product.descriptions, ...descriptions };
+    }
+    await pool.query('UPDATE products SET data = $1, synced_at = NOW() WHERE sku = $2', [JSON.stringify(product), sku]);
+    productService.clearCache();
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get('/api/cron/products/sync', async (req, res) => {
   const expectedSecret = process.env.CRON_SECRET || '';
   const providedSecret = req.headers.authorization?.replace('Bearer ', '') || req.query.secret || req.headers['x-cron-secret'];
