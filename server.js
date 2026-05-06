@@ -2615,6 +2615,43 @@ app.get('/api/products/download/:fileId', async (req, res) => {
   }
 });
 
+app.get('/api/proxy/video', async (req, res) => {
+  const fileId = String(req.query.id || '');
+  if (!/^[a-zA-Z0-9_-]+$/.test(fileId)) {
+    return res.status(400).json({ error: 'Invalid file id' });
+  }
+
+  const driveUrl = `https://drive.google.com/uc?export=download&id=${fileId}&confirm=t`;
+  try {
+    const headers = { 'User-Agent': 'Mozilla/5.0 AccessoryGuide/1.0' };
+    if (req.headers.range) headers.Range = req.headers.range;
+    const upstream = await axios.get(driveUrl, {
+      responseType: 'stream',
+      timeout: 90000,
+      maxRedirects: 5,
+      validateStatus: status => status >= 200 && status < 400,
+      headers
+    });
+
+    res.status(upstream.status);
+    res.setHeader('Content-Type', upstream.headers['content-type'] || 'video/mp4');
+    res.setHeader('Accept-Ranges', 'bytes');
+    if (upstream.headers['content-length']) res.setHeader('Content-Length', upstream.headers['content-length']);
+    if (upstream.headers['content-range']) res.setHeader('Content-Range', upstream.headers['content-range']);
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+
+    upstream.data.pipe(res);
+    upstream.data.on('error', err => {
+      console.error('Video proxy stream failed:', err.message);
+      if (!res.headersSent) res.sendStatus(502);
+      else res.destroy(err);
+    });
+  } catch (err) {
+    console.error('Video proxy failed:', err.message);
+    if (!res.headersSent) res.status(err.response?.status || 502).json({ error: 'Video proxy failed' });
+  }
+});
+
 app.get('/api/products/:sku', async (req, res) => {
   try {
     const product = await productService.getProductBySku(req.params.sku);

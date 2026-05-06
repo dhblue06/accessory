@@ -4610,18 +4610,21 @@ function productVideoTitle(video) {
   return video.type === 'tutorial' ? t('product_video_tutorial') : t('product_video_ad');
 }
 
-function toDriveDirectVideoUrl(url) {
+function getDriveFileId(url) {
   if (!url) return '';
   const text = String(url);
   const proxyMatch = text.match(/\/api\/products\/download\/([a-zA-Z0-9_-]+)/);
   const driveMatch = text.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || text.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  const fileId = proxyMatch?.[1] || driveMatch?.[1];
-  if (fileId) return `https://drive.google.com/uc?export=download&id=${fileId}`;
-  return text;
+  return proxyMatch?.[1] || driveMatch?.[1] || '';
+}
+
+function getVideoProxyUrl(url) {
+  const fileId = getDriveFileId(url);
+  return fileId ? `/api/proxy/video?id=${encodeURIComponent(fileId)}` : (url || '');
 }
 
 function renderProductVideo(video) {
-  const videoUrl = toDriveDirectVideoUrl(video.videoUrl || video.directUrl || video.downloadUrl || video.embedUrl || video.url);
+  const videoUrl = getVideoProxyUrl(video.url || video.embedUrl || video.videoUrl || video.directUrl || video.downloadUrl);
   const openUrl = video.embedUrl || video.url || videoUrl;
   return `
     <video class="video-iframe" controls preload="metadata" playsinline
